@@ -5,7 +5,7 @@ import gregtech.api.unification.Element;
 import gregtech.api.unification.material.type.*;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.MaterialStack;
-import net.minecraft.init.Enchantments;
+import net.minecraft.enchantment.Enchantments;
 
 import static com.google.common.collect.ImmutableList.of;
 import static gregtech.api.unification.material.type.DustMaterial.MatFlags.*;

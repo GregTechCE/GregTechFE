@@ -3,7 +3,7 @@ package gregtech.api.unification.material;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableMap;
 import gregtech.api.GTValues;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 public enum MaterialIconType {
 
@@ -102,22 +102,22 @@ public enum MaterialIconType {
         values = builder.build();
     }
 
-    public ResourceLocation getBlockPath(MaterialIconSet materialIconSet) {
+    public Identifier getBlockPath(MaterialIconSet materialIconSet) {
         String iconSet = materialIconSet.name().toLowerCase();
         String iconType = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name());
-        return new ResourceLocation(GTValues.MODID, "blocks/material_sets/" + iconSet + "/" + iconType);
+        return new Identifier(GTValues.MODID, "blocks/material_sets/" + iconSet + "/" + iconType);
     }
 
-    public ResourceLocation getItemModelPath(MaterialIconSet materialIconSet) {
+    public Identifier getItemModelPath(MaterialIconSet materialIconSet) {
         String iconSet = materialIconSet.name().toLowerCase();
         String iconType = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name());
-        return new ResourceLocation(GTValues.MODID, "material_sets/" + iconSet + "/" + iconType);
+        return new Identifier(GTValues.MODID, "material_sets/" + iconSet + "/" + iconType);
     }
 
-    public ResourceLocation getItemOverlayPath(MaterialIconSet materialIconSet) {
+    public Identifier getItemOverlayPath(MaterialIconSet materialIconSet) {
         String iconSet = materialIconSet.name().toLowerCase();
         String iconType = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name());
-        return new ResourceLocation(GTValues.MODID, "material_sets/" + iconSet + "/" + iconType + "_overlay");
+        return new Identifier(GTValues.MODID, "material_sets/" + iconSet + "/" + iconType + "_overlay");
     }
 
 }

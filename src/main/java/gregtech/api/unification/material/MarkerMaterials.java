@@ -3,7 +3,7 @@ package gregtech.api.unification.material;
 import com.google.common.collect.HashBiMap;
 import gregtech.api.unification.material.type.MarkerMaterial;
 import gregtech.api.unification.material.type.Material;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.DyeColor;
 
 import static com.google.common.collect.ImmutableList.of;
 
@@ -73,10 +73,10 @@ public class MarkerMaterials {
         /**
          * Contains associations between MC EnumDyeColor and Color MarkerMaterial
          */
-        public static final HashBiMap<EnumDyeColor, MarkerMaterial> COLORS = HashBiMap.create();
+        public static final HashBiMap<DyeColor, MarkerMaterial> COLORS = HashBiMap.create();
 
         static {
-            for (EnumDyeColor color : EnumDyeColor.values()) {
+            for (DyeColor color : DyeColor.values()) {
                 COLORS.put(color, Color.valueOf(color.getName()));
             }
         }

@@ -1,12 +1,13 @@
 package gregtech.api.unification.material;
 
-import crafttweaker.annotations.ZenRegister;
+/*import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+*/
 
-@ZenClass("mods.gregtech.material.MaterialIconSet")
-@ZenRegister
+//@ZenClass("mods.gregtech.material.MaterialIconSet")
+//@ZenRegister
 public enum MaterialIconSet {
 
     NONE,
@@ -36,18 +37,18 @@ public enum MaterialIconSet {
     PAPER,
     NETHERSTAR;
 
-    @ZenGetter("name")
+    //@ZenGetter("name")
     public String getName() {
         return name().toLowerCase();
     }
 
-    @ZenMethod("get")
+    //@ZenMethod("get")
     public static MaterialIconSet getByName(String name) {
         return valueOf(name.toUpperCase());
     }
 
     @Override
-    @ZenMethod
+    //@ZenMethod
     public String toString() {
         return super.toString();
     }
