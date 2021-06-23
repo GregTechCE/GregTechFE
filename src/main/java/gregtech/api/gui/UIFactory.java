@@ -72,7 +72,7 @@ public abstract class UIFactory<E extends UIHolder> {
 
     @Environment(EnvType.CLIENT)
     public final void initClientUI(MinecraftClient client, PacketUIOpen<E> packet) {
-        client.executeTask(() -> {
+        client.submit(() -> {
             ClientPlayerEntity entityPlayer = client.player;
             Preconditions.checkNotNull(entityPlayer);
 
@@ -80,12 +80,13 @@ public abstract class UIFactory<E extends UIHolder> {
             uiTemplate.initWidgets();
 
             ModularUIScreen modularUIScreen = new ModularUIScreen(packet.windowId, entityPlayer.getInventory(), uiTemplate);
+            ModularUIScreenHandler screenHandler = modularUIScreen.getScreenHandler();
 
             for (PacketUIWidgetUpdate widgetUpdate : packet.initialWidgetUpdates) {
-                modularUIScreen.handleWidgetUpdate(widgetUpdate);
+                screenHandler.handleWidgetUpdate(widgetUpdate);
             }
 
-            entityPlayer.currentScreenHandler = modularUIScreen.getScreenHandler();
+            entityPlayer.currentScreenHandler = screenHandler;
             client.openScreen(modularUIScreen);
         });
     }

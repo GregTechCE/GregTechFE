@@ -10,6 +10,7 @@ import gregtech.api.util.GTUtility;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,6 +19,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.*;
@@ -243,6 +245,43 @@ public class ModularUIScreenHandler extends ScreenHandler implements WidgetUIAcc
             PacketUIClientAction widgetUpdate = new PacketUIClientAction(this.syncId, widgetId, packetBuffer);
             widgetUpdate.sendToClient();
         }
+    }
+
+    public static void handleClientAction(MinecraftServer server, ServerPlayerEntity playerEntity, PacketUIClientAction packet) {
+        server.submit(() -> {
+            ScreenHandler openContainer = playerEntity.currentScreenHandler;
+
+            if (openContainer instanceof ModularUIScreenHandler handler && openContainer.syncId == packet.windowId) {
+                ModularUI modularUI = handler.getModularUI();
+                Widget targetWidget = modularUI.guiWidgets.get(packet.widgetId);
+
+                PacketByteBuf payloadBuffer = packet.updateData;
+                int actionId = payloadBuffer.readVarInt();
+                targetWidget.handleClientAction(actionId, payloadBuffer);
+            }
+        });
+    }
+
+    public void handleWidgetUpdate(PacketUIWidgetUpdate packet) {
+        if (packet.windowId == this.syncId) {
+            ModularUI modularUI = getModularUI();
+            Widget targetWidget = modularUI.guiWidgets.get(packet.widgetId);
+
+            PacketByteBuf payloadBuffer = packet.updateData;
+            int updateId = payloadBuffer.readVarInt();
+            targetWidget.readUpdateInfo(updateId, payloadBuffer);
+        }
+    }
+
+    public static void handleWidgetUpdate(MinecraftClient client, PacketUIWidgetUpdate packet) {
+        client.submit(() -> {
+            PlayerEntity playerEntity = Objects.requireNonNull(client.player);
+            ScreenHandler openContainer = playerEntity.currentScreenHandler;
+
+            if (openContainer instanceof ModularUIScreenHandler handler && openContainer.syncId == packet.windowId) {
+                handler.handleWidgetUpdate(packet);
+            }
+        });
     }
 
     public List<PacketUIWidgetUpdate> accumulateWidgetUpdates() {

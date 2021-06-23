@@ -205,16 +205,6 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
         }
     }
 
-    public void handleWidgetUpdate(PacketUIWidgetUpdate packet) {
-        if (packet.windowId == getScreenHandler().syncId) {
-            Widget widget = modularUI.guiWidgets.get(packet.widgetId);
-            int updateId = packet.updateData.readVarInt();
-            if (widget != null) {
-                widget.readUpdateInfo(updateId, packet.updateData);
-            }
-        }
-    }
-
     @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         for (Widget widget : modularUI.guiWidgets.values()) {

@@ -7,7 +7,7 @@ import net.minecraft.screen.slot.Slot;
 
 import java.awt.*;
 
-class WidgetSlot extends Slot implements Scissored {
+class WidgetSlot extends Slot {
 
     private final SlotWidget slotWidget;
 
@@ -41,10 +41,5 @@ class WidgetSlot extends Slot implements Scissored {
     @Override
     public boolean isEnabled() {
         return slotWidget.isEnabled();
-    }
-
-    @Override
-    public Rectangle getScissor() {
-        return slotWidget.scissor;
     }
 }
