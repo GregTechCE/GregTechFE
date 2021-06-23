@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
@@ -13,12 +14,18 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
@@ -33,12 +40,86 @@ public class GuiUtils {
         return new float[] {r, g, b, a};
     }
 
+    public static boolean handleTextClick(Style style, @Nullable Consumer<String> onTextInsertion) {
+        if (InputHelper.isShiftDown()) {
+            if (style.getInsertion() != null) {
+                if (onTextInsertion != null) {
+                    onTextInsertion.accept(style.getInsertion());
+                }
+                return true;
+            }
+        }
+
+        ClickEvent clickEvent = style.getClickEvent();
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (clickEvent == null) {
+            return false;
+        }
+
+        switch (clickEvent.getAction()) {
+            case COPY_TO_CLIPBOARD -> {
+                client.keyboard.setClipboard(clickEvent.getValue());
+            }
+            case SUGGEST_COMMAND -> {
+                if (onTextInsertion != null) {
+                    onTextInsertion.accept(clickEvent.getValue());
+                }
+            }
+            case RUN_COMMAND -> {
+                if (client.player != null) {
+                    client.player.sendChatMessage(clickEvent.getValue());
+                }
+            }
+            case OPEN_URL -> {
+                try {
+                    URI uri = new URI(clickEvent.getValue());
+                    String uriScheme = uri.getScheme().toLowerCase(Locale.ROOT);
+                    if (uriScheme.equals("http") || uriScheme.equals("https")) {
+                        Util.getOperatingSystem().open(uri);
+                    }
+                } catch (URISyntaxException ignored) {
+                }
+            }
+        }
+        return true;
+    }
+
+    public static void drawHoverEvent(MatrixStack matrices, int x, int y, HoverEvent hoverEvent) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        int width = client.getWindow().getScaledWidth();
+        HoverEvent.ItemStackContent itemStackContent = hoverEvent.getValue(HoverEvent.Action.SHOW_ITEM);
+
+        if (itemStackContent != null) {
+            renderTooltip(matrices, itemStackContent.asStack(), x, y);
+        } else {
+            HoverEvent.EntityContent entityContent = hoverEvent.getValue(HoverEvent.Action.SHOW_ENTITY);
+            if (entityContent != null) {
+                if (client.options.advancedItemTooltips) {
+                    renderTooltip(matrices, entityContent.asTooltip(), Optional.empty(), x, y);
+                }
+
+            } else {
+                Text text = hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT);
+                if (text != null) {
+                    renderOrderedTooltip(matrices, client.textRenderer.wrapLines(text, Math.max(width / 2, 200)), x, y);
+                }
+            }
+        }
+    }
+
     public static void drawString(MatrixStack matrices, String text, int x, int y, int color, boolean center) {
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
         int xOffset = center ? (-textRenderer.getWidth(text) / 2) : 0;
         int yOffset = center ? (-textRenderer.fontHeight / 2) : 0;
         textRenderer.draw(matrices, text, x + xOffset, y + yOffset, color);
+    }
+
+    public static void renderOrderedTooltip(MatrixStack matrices, List<OrderedText> lines, int x, int y) {
+        List<TooltipComponent> tooltipComponents = lines.stream()
+                .map(TooltipComponent::of)
+                .collect(Collectors.toList());
+        renderTooltipFromComponents(matrices, tooltipComponents, x, y);
     }
 
     public static void renderTooltip(MatrixStack matrices, ItemStack stack, int x, int y) {

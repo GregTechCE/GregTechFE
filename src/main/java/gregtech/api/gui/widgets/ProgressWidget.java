@@ -48,7 +48,7 @@ public class ProgressWidget extends Widget {
     }
 
     @Override
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
         Position pos = getPosition();
         Size size = getSize();
         if (emptyBarArea != null) {

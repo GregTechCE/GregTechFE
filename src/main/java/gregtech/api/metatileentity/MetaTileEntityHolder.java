@@ -6,7 +6,6 @@ import gregtech.api.GregTechAPI;
 import gregtech.api.block.machines.BlockMachine;
 import gregtech.api.cover.CoverBehavior;
 import gregtech.api.gui.UIHolder;
-import gregtech.api.util.GTControlledRegistry;
 import gregtech.api.util.GTLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;

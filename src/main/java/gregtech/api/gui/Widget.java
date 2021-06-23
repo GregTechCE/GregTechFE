@@ -125,6 +125,7 @@ public abstract class Widget {
     /**
      * Called clientside every tick with this modular UI open
      */
+    @Environment(EnvType.CLIENT)
     public void updateScreen() {
     }
 
@@ -132,22 +133,21 @@ public abstract class Widget {
      * Called each draw tick to draw this widget in GUI
      */
     @Environment(EnvType.CLIENT)
-    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY, RenderContext renderContext) {
     }
 
     /**
      * Called each draw tick to draw this widget in GUI
      */
     @Environment(EnvType.CLIENT)
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
     }
 
     /**
      * Called when mouse wheel is moved in GUI
-     * For some -redacted- reason mouseX position is relative against GUI not game window as in other mouse events
      */
     @Environment(EnvType.CLIENT)
-    public boolean mouseWheelMove(int mouseX, int mouseY, int wheelDelta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         return false;
     }
 
@@ -155,7 +155,7 @@ public abstract class Widget {
      * Called when mouse is clicked in GUI
      */
     @Environment(EnvType.CLIENT)
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return false;
     }
 
@@ -163,7 +163,7 @@ public abstract class Widget {
      * Called when mouse is pressed and hold down in GUI
      */
     @Environment(EnvType.CLIENT)
-    public boolean mouseDragged(int mouseX, int mouseY, int button, long timeDragged) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         return false;
     }
 
@@ -171,15 +171,22 @@ public abstract class Widget {
      * Called when mouse is released in GUI
      */
     @Environment(EnvType.CLIENT)
-    public boolean mouseReleased(int mouseX, int mouseY, int button) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         return false;
     }
 
-    /**
-     * Called when key is typed in GUI
-     */
     @Environment(EnvType.CLIENT)
-    public boolean keyTyped(char charTyped, int keyCode) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public boolean charTyped(char chr, int modifiers) {
         return false;
     }
 

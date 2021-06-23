@@ -36,10 +36,11 @@ import java.util.function.Consumer;
 
 public class PhantomFluidWidget extends Widget implements IIngredientSlot, IGhostIngredientTarget {
 
-    protected TextureArea backgroundTexture = GuiTextures.FLUID_SLOT;
-
     private final FixedFluidInv fluidInventory;
     private final int slotIndex;
+
+    protected TextureArea backgroundTexture = GuiTextures.FLUID_SLOT;
+
     protected FluidVolume lastFluidStack = FluidVolumeUtil.EMPTY;
 
     public PhantomFluidWidget(int xPosition, int yPosition, int width, int height, FixedFluidInv fluidInventory, int slotIndex) {
@@ -94,7 +95,7 @@ public class PhantomFluidWidget extends Widget implements IIngredientSlot, IGhos
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isMouseOverElement(mouseX, mouseY)) {
             writeClientAction(1, buffer -> {});
             return true;
@@ -126,7 +127,7 @@ public class PhantomFluidWidget extends Widget implements IIngredientSlot, IGhos
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
         Position pos = getPosition();
         Size size = getSize();
         if (backgroundTexture != null) {
@@ -139,7 +140,7 @@ public class PhantomFluidWidget extends Widget implements IIngredientSlot, IGhos
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY, RenderContext renderContext) {
         if (isMouseOverElement(mouseX, mouseY)) {
             if (!lastFluidStack.isEmpty()) {
                 List<Text> lines = lastFluidStack.getFullTooltip();

@@ -43,6 +43,11 @@ public class RenderUtil {
         widthT--;
         heightT--;
 
+        //Skip drawing if we have no contents or tank has a zero capacity
+        if (contents.isEmpty() || tankCapacity.isZero()) {
+            return;
+        }
+
         MinecraftClient client = MinecraftClient.getInstance();
         Sprite fluidStillSprite = client.getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(contents.getSprite());
 

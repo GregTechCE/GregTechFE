@@ -84,7 +84,7 @@ public class SliderWidget extends Widget {
     }
 
     @Override
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
         Position pos = getPosition();
         Size size = getSize();
         if (backgroundArea != null) {
@@ -119,7 +119,7 @@ public class SliderWidget extends Widget {
     }
 
     @Override
-    public boolean mouseDragged(int mouseX, int mouseY, int button, long timeDragged) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.isMouseDown) {
             handleMouseMovement(mouseX, mouseY);
             return true;
@@ -128,7 +128,7 @@ public class SliderWidget extends Widget {
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isMouseOverElement(mouseX, mouseY)) {
             handleMouseMovement(mouseX, mouseY);
             this.isMouseDown = true;
@@ -138,7 +138,7 @@ public class SliderWidget extends Widget {
     }
 
     @Override
-    public boolean mouseReleased(int mouseX, int mouseY, int button) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         this.isMouseDown = false;
         return false;
     }

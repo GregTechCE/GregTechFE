@@ -2,15 +2,17 @@ package gregtech.api.gui.widgets;
 
 import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
-import gregtech.api.util.MCGuiUtil;
 import gregtech.api.util.Position;
 import gregtech.api.util.Size;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import gregtech.mixin.ClickableWidgetMixin;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -18,8 +20,8 @@ import java.util.function.Supplier;
 
 public class TextFieldWidget extends Widget {
 
-    @SideOnly(Side.CLIENT)
-    protected GuiTextField textField;
+    @Environment(EnvType.CLIENT)
+    protected net.minecraft.client.gui.widget.TextFieldWidget textField;
 
     protected int maxStringLength = 32;
     protected Predicate<String> textValidator;
@@ -27,54 +29,74 @@ public class TextFieldWidget extends Widget {
     protected final Consumer<String> textResponder;
     protected String currentString;
 
-    public TextFieldWidget(int xPosition, int yPosition, int width, int height, boolean enableBackground, Supplier<String> textSupplier, Consumer<String> textResponder) {
+    public TextFieldWidget(int xPosition, int yPosition, int width, int height, Supplier<String> textSupplier, Consumer<String> textResponder) {
         super(new Position(xPosition, yPosition), new Size(width, height));
-        if (isClientSide()) {
-            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-            this.textField = new GuiTextField(0, fontRenderer, xPosition, yPosition, width, height);
-            this.textField.setCanLoseFocus(true);
-            this.textField.setEnableBackgroundDrawing(enableBackground);
-            this.textField.setMaxStringLength(maxStringLength);
-            this.textField.setGuiResponder(MCGuiUtil.createTextFieldResponder(this::onTextChanged));
-        }
         this.textSupplier = textSupplier;
         this.textResponder = textResponder;
+
+        if (isClientSide()) {
+            initClientWidget();
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void initClientWidget() {
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+        Position position = getPosition();
+        Size size = getSize();
+
+        Text narratorText = new LiteralText("");
+        this.textField = new net.minecraft.client.gui.widget.TextFieldWidget(textRenderer, position.x, position.y, size.width, size.height, narratorText);
+
+        this.textField.setMaxLength(maxStringLength);
+        this.textField.setTextPredicate(this.textValidator);
+        this.textField.setChangedListener(this::onTextChanged);
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     protected void onPositionUpdate() {
-        if (isClientSide() && textField != null) {
-            Position position = getPosition();
-            GuiTextField textField = this.textField;
-            textField.x = position.x;
-            textField.y = position.y;
-        }
+        Position position = getPosition();
+        this.textField.setX(position.x);
+        ((ClickableWidgetMixin) this.textField).setY(position.y);
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     protected void onSizeUpdate() {
-        if (isClientSide() && textField != null) {
-            Size size = getSize();
-            GuiTextField textField = this.textField;
-            textField.width = size.width;
-            textField.height = size.height;
-        }
+        Size size = getSize();
+        this.textField.setWidth(size.width);
+        ((ClickableWidgetMixin) this.textField).setHeight(size.height);
     }
 
     @Override
-    public void drawInBackground(int mouseX, int mouseY, RenderContext context) {
-        super.drawInBackground(mouseX, mouseY, context);
-        this.textField.drawTextBox();
+    @Environment(EnvType.CLIENT)
+    public void updateScreen() {
+        this.textField.tick();
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    @Environment(EnvType.CLIENT)
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return this.textField.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean keyTyped(char charTyped, int keyCode) {
-        return this.textField.textboxKeyTyped(charTyped, keyCode);
+    @Environment(EnvType.CLIENT)
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return this.textField.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public boolean charTyped(char chr, int modifiers) {
+        return this.textField.charTyped(chr, modifiers);
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
+        this.textField.renderButton(matrices, mouseX, mouseY, deltaTicks);
     }
 
     @Override
@@ -87,7 +109,7 @@ public class TextFieldWidget extends Widget {
     }
 
     @Override
-    public void readUpdateInfo(int id, PacketBuffer buffer) {
+    public void readUpdateInfo(int id, PacketByteBuf buffer) {
         super.readUpdateInfo(id, buffer);
         if (id == 1) {
             this.currentString = buffer.readString(Short.MAX_VALUE);
@@ -102,11 +124,12 @@ public class TextFieldWidget extends Widget {
     }
 
     @Override
-    public void handleClientAction(int id, PacketBuffer buffer) {
+    public void handleClientAction(int id, PacketByteBuf buffer) {
         super.handleClientAction(id, buffer);
         if (id == 1) {
-            String clientText = buffer.readString(Short.MAX_VALUE);
+            String clientText = buffer.readString();
             clientText = clientText.substring(0, Math.min(clientText.length(), maxStringLength));
+
             if (textValidator.test(clientText)) {
                 this.currentString = clientText;
                 this.textResponder.accept(clientText);
@@ -114,17 +137,10 @@ public class TextFieldWidget extends Widget {
         }
     }
 
-    public TextFieldWidget setTextColor(int textColor) {
+    public TextFieldWidget setTextColor(int editableTextColor, int uneditableTextColor) {
         if (isClientSide()) {
-            this.textField.setTextColor(textColor);
-        }
-        return this;
-    }
-
-    public TextFieldWidget setMaxStringLength(int maxStringLength) {
-        this.maxStringLength = maxStringLength;
-        if (isClientSide()) {
-            this.textField.setMaxStringLength(maxStringLength);
+            this.textField.setEditableColor(editableTextColor);
+            this.textField.setUneditableColor(uneditableTextColor);
         }
         return this;
     }
@@ -132,7 +148,22 @@ public class TextFieldWidget extends Widget {
     public TextFieldWidget setValidator(Predicate<String> validator) {
         this.textValidator = validator;
         if (isClientSide()) {
-            this.textField.setValidator(validator::test);
+            this.textField.setTextPredicate(validator);
+        }
+        return this;
+    }
+
+    public TextFieldWidget setMaxStringLength(int maxStringLength) {
+        this.maxStringLength = maxStringLength;
+        if (isClientSide()) {
+            this.textField.setMaxLength(maxStringLength);
+        }
+        return this;
+    }
+
+    public TextFieldWidget setBackgroundDrawn(boolean drawBackground) {
+        if (isClientSide()) {
+            this.textField.setDrawsBackground(drawBackground);
         }
         return this;
     }

@@ -83,7 +83,7 @@ public class CycleButtonWidget extends Widget {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
         Position pos = getPosition();
         Size size = getSize();
 
@@ -101,7 +101,7 @@ public class CycleButtonWidget extends Widget {
     }
 
     @Override
-    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY, RenderContext renderContext) {
         boolean isHovered = isMouseOverElement(mouseX, mouseY);
         boolean wasHovered = isMouseHovered;
         if (isHovered && !wasHovered) {
@@ -140,7 +140,7 @@ public class CycleButtonWidget extends Widget {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         if (isMouseOverElement(mouseX, mouseY)) {
             //Allow only the RMB to reverse cycle

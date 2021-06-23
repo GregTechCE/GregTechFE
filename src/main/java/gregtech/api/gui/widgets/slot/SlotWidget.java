@@ -28,7 +28,7 @@ public class SlotWidget extends Widget implements NativeWidget {
     protected boolean canPutItems;
     protected SlotLocationInfo locationInfo = new SlotLocationInfo(false, false);
 
-    protected TextureArea[] backgroundTexture;
+    protected TextureArea[] backgroundTexture = new TextureArea[0];
     protected Rectangle scissor;
 
     public SlotWidget(Inventory inventory, int slotIndex, int xPosition, int yPosition, boolean canTakeItems, boolean canPutItems) {
@@ -63,8 +63,8 @@ public class SlotWidget extends Widget implements NativeWidget {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
-        if (isEnabled() && backgroundTexture != null) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
+        if (isEnabled()) {
             Position pos = getPosition();
             Size size = getSize();
             for (TextureArea backgroundTexture : this.backgroundTexture) {
@@ -93,6 +93,11 @@ public class SlotWidget extends Widget implements NativeWidget {
     @Override
     public void applyScissor(final int parentX, final int parentY, final int parentWidth, final int parentHeight) {
         this.scissor = new Rectangle(parentX, parentY, parentWidth, parentHeight);
+    }
+
+    @Override
+    public Rectangle getScissor() {
+        return scissor;
     }
 
     @Override

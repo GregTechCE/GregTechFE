@@ -35,8 +35,8 @@ public class ClickButtonWidget extends Widget {
     }
 
     @Override
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
-        super.drawInBackground(matrices, mouseX, mouseY, context);
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
+        super.drawInBackground(matrices, mouseX, mouseY, deltaTicks, renderContext);
         Position position = getPosition();
         Size size = getSize();
         if (buttonTexture instanceof SizedTextureArea) {
@@ -51,7 +51,7 @@ public class ClickButtonWidget extends Widget {
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isMouseOverElement(mouseX, mouseY)) {
             triggerButton(button);
             return true;

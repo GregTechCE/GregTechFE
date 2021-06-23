@@ -116,7 +116,7 @@ public class SimpleGeneratorMetaTileEntity extends TieredMetaTileEntity {
         Builder builder = ModularUI.defaultBuilder();
         builder.image(7, 16, 81, 55, GuiTextures.DISPLAY);
         TankWidget tankWidget = new TankWidget(importFluids.getTankAt(0), 69, 52, 18, 18)
-            .setHideTooltip(true).setAlwaysShowFull(true);
+            .setAlwaysShowFull(true);
         builder.widget(tankWidget);
         builder.label(11, 20, "gregtech.gui.fluid_amount", 0xFFFFFF);
         builder.dynamicLabel(11, 30, tankWidget::getFormattedFluidAmount, 0xFFFFFF);

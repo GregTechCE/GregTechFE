@@ -68,14 +68,14 @@ public class TabGroup extends AbstractWidgetGroup {
     }
 
     @Override
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
-        super.drawInBackground(matrices, mouseX, mouseY, context);
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
+        super.drawInBackground(matrices, mouseX, mouseY, deltaTicks, renderContext);
         this.tabListRenderer.renderTabs(matrices, getPosition(), tabInfos, sizes.getWidth(), sizes.getHeight(), selectedTabIndex);
     }
 
     @Override
-    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        super.drawInForeground(matrices, mouseX, mouseY);
+    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY, RenderContext renderContext) {
+        super.drawInForeground(matrices, mouseX, mouseY, renderContext);
         Pair<ITabInfo, int[]> tabOnMouse = getTabOnMouse(mouseX, mouseY);
 
         if (tabOnMouse != null) {
@@ -88,7 +88,7 @@ public class TabGroup extends AbstractWidgetGroup {
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         Pair<ITabInfo, int[]> tabOnMouse = getTabOnMouse(mouseX, mouseY);
 

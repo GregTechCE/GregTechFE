@@ -7,7 +7,6 @@ import gregtech.api.unification.Element;
 import gregtech.api.unification.material.IMaterialHandler;
 import gregtech.api.unification.material.MaterialIconSet;
 import gregtech.api.unification.stack.MaterialStack;
-import gregtech.api.util.GTControlledRegistry;
 import gregtech.api.util.GTLog;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;

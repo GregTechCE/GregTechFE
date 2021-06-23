@@ -7,7 +7,6 @@ import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.UIFactory;
 import gregtech.api.gui.impl.ModularUIContainer;
 import gregtech.api.gui.impl.ModularUIScreen;
-import gregtech.api.util.ClipboardUtil;
 import gregtech.api.util.GTLog;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

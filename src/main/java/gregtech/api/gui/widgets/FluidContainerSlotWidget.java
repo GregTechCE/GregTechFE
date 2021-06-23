@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 
 public class FluidContainerSlotWidget extends SlotWidget {
 
-    private boolean requireFilledContainer;
+    private final boolean requireFilledContainer;
 
     public FluidContainerSlotWidget(FixedItemInv itemHandler, int slotIndex, int xPosition, int yPosition, boolean requireFilledContainer) {
         super(itemHandler, slotIndex, xPosition, yPosition, true, true);

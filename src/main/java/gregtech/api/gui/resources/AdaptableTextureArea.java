@@ -4,19 +4,19 @@ import gregtech.api.GTValues;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class AdoptableTextureArea extends SizedTextureArea {
+public class AdaptableTextureArea extends SizedTextureArea {
 
     private final int pixelCornerWidth;
     private final int pixelCornerHeight;
 
-    public AdoptableTextureArea(Identifier imageLocation, float offsetX, float offsetY, float width, float height, float pixelImageWidth, float pixelImageHeight, int pixelCornerWidth, int pixelCornerHeight) {
+    public AdaptableTextureArea(Identifier imageLocation, float offsetX, float offsetY, float width, float height, float pixelImageWidth, float pixelImageHeight, int pixelCornerWidth, int pixelCornerHeight) {
         super(imageLocation, offsetX, offsetY, width, height, pixelImageWidth, pixelImageHeight);
         this.pixelCornerWidth = pixelCornerWidth;
         this.pixelCornerHeight = pixelCornerHeight;
     }
 
-    public static AdoptableTextureArea fullImage(String imageLocation, int imageWidth, int imageHeight, int cornerWidth, int cornerHeight) {
-        return new AdoptableTextureArea(new Identifier(GTValues.MODID, imageLocation), 0.0f, 0.0f, 1.0f, 1.0f, imageWidth, imageHeight, cornerWidth, cornerHeight);
+    public static AdaptableTextureArea fullImage(String imageLocation, int imageWidth, int imageHeight, int cornerWidth, int cornerHeight) {
+        return new AdaptableTextureArea(new Identifier(GTValues.MODID, imageLocation), 0.0f, 0.0f, 1.0f, 1.0f, imageWidth, imageHeight, cornerWidth, cornerHeight);
     }
 
     @Override

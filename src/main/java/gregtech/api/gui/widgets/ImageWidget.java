@@ -48,11 +48,12 @@ public class ImageWidget extends Widget {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
-        if (!this.isVisible || area == null) return;
-        Position position = getPosition();
-        Size size = getSize();
-        area.draw(matrices, position.x, position.y, size.width, size.height);
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
+        if (isVisible) {
+            Position position = getPosition();
+            Size size = getSize();
+            area.draw(matrices, position.x, position.y, size.width, size.height);
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package gregtech.api.gui.widgets;
 
 import gregtech.api.gui.GuiUtils;
+import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
 import gregtech.api.util.Position;
 import gregtech.api.util.Size;
@@ -51,7 +52,7 @@ public class DynamicLabelWidget extends Widget {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY, RenderContext renderContext) {
         String suppliedText = textSupplier.get();
 
         if (!suppliedText.equals(lastTextValue)) {

@@ -1,32 +1,27 @@
 package gregtech.api.gui.impl;
 
-import gregtech.api.gui.RenderContext;
-import gregtech.api.gui.Scissored;
-import gregtech.api.gui.ModularUI;
-import gregtech.api.gui.Widget;
+import com.mojang.blaze3d.systems.RenderSystem;
+import gregtech.api.gui.*;
 import gregtech.api.net.PacketUIWidgetUpdate;
 import gregtech.api.util.RenderUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import gregtech.mixin.HandledScreenMixin;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.event.GuiContainerEvent;
-import net.minecraftforge.common.MinecraftForge;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
-import java.awt.Rectangle;
-import java.io.IOException;
-import java.util.Objects;
+import java.awt.*;
 
+@Environment(EnvType.CLIENT)
 public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> implements RenderContext {
 
     private final ModularUI modularUI;
@@ -41,18 +36,162 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
     }
 
     @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        RenderSystem.disableDepthTest();
+
+        for (Drawable drawable : ((HandledScreenMixin) this).getDrawables()) {
+            drawable.render(matrices, mouseX, mouseY, delta);
+        }
+
+        refreshFocusedSlot(mouseX, mouseY);
+        drawBackground(matrices, delta, mouseX, mouseY);
+
+        drawSlotContents(matrices);
+        drawFocusedSlotOutline(matrices);
+
+        drawForeground(matrices, mouseX, mouseY);
+
+        drawDraggedItemStack(mouseX, mouseY);
+        drawTouchDropReturningStack();
+
+        RenderSystem.enableDepthTest();
+    }
+
+    private void applySlotScissor(Slot slot, Runnable action) {
+        Rectangle scissor = null;
+        if (slot instanceof NativeWidget nativeWidget) {
+            scissor = nativeWidget.getScissor();
+        }
+
+        if (scissor != null) {
+            RenderUtil.pushScissorFrame(scissor.x, scissor.y, scissor.width, scissor.height);
+        }
+        action.run();
+        if (scissor != null) {
+            RenderUtil.popScissorFrame();
+        }
+    }
+
+    private void drawFocusedSlotOutline(MatrixStack matrices) {
+        if (this.focusedSlot != null) {
+            applySlotScissor(focusedSlot, () -> {
+                int slotAbsoluteX = this.x + focusedSlot.x;
+                int slotAbsoluteY = this.y + focusedSlot.y;
+                GuiUtils.drawSelectionBox(matrices, slotAbsoluteX, slotAbsoluteY, 16, 16, getZOffset());
+            });
+        }
+    }
+
+    private void refreshFocusedSlot(int mouseX, int mouseY) {
+        this.focusedSlot = null;
+
+        for (Slot slot : this.handler.slots) {
+            if (slot.isEnabled()) {
+                int slotAbsoluteX = this.x + slot.x;
+                int slotAbsoluteY = this.y + slot.y;
+
+                if (isPointWithinBounds(slotAbsoluteX, slotAbsoluteY, 16, 16, mouseX, mouseY)) {
+                    this.focusedSlot = slot;
+                }
+            }
+        }
+    }
+
+    private void drawSlotAbsolute(MatrixStack matrices, Slot slot) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        matrixStack.translate(this.x, this.y, 0.0);
+        ((HandledScreenMixin) this).drawSlot(matrices, slot);
+        matrixStack.pop();
+    }
+
+    private void drawSlotContents(MatrixStack matrices) {
+        for(Slot slot : this.handler.slots) {
+            if (slot.isEnabled()) {
+                applySlotScissor(slot, () -> drawSlotAbsolute(matrices, slot));
+            }
+        }
+    }
+
+    private void drawDraggedItemStack(int mouseX, int mouseY) {
+        HandledScreenMixin mixin = (HandledScreenMixin) this;
+
+        ItemStack draggedStack = mixin.getTouchDragStack();
+        boolean isTouchDragged = true;
+        boolean touchIsRightClickDrag = mixin.isTouchIsRightClickDrag();
+
+        int draggedStackRemainder = mixin.getDraggedStackRemainder();
+        if (draggedStack.isEmpty()) {
+            draggedStack = this.handler.getCursorStack();
+            isTouchDragged = false;
+        }
+
+        if (!draggedStack.isEmpty()) {
+            int stackXOffset = 8;
+            int stackYOffset = isTouchDragged ? 16 : 8;
+            String alternativeText = null;
+
+            if (isTouchDragged && touchIsRightClickDrag) {
+                draggedStack = draggedStack.copy();
+                draggedStack.setCount(MathHelper.ceil(draggedStack.getCount() / 2.0f));
+
+            } else if (cursorDragging && this.cursorDragSlots.size() > 1) {
+                draggedStack = draggedStack.copy();
+                draggedStack.setCount(draggedStackRemainder);
+
+                if (draggedStack.isEmpty()) {
+                    alternativeText = Formatting.YELLOW + "0";
+                }
+            }
+            GuiUtils.drawItemStack(draggedStack, mouseX - stackXOffset, mouseY - stackYOffset, alternativeText);
+        }
+    }
+
+    private void drawTouchDropReturningStack() {
+        HandledScreenMixin mixin = (HandledScreenMixin) this;
+
+        ItemStack touchDropReturningStack = mixin.getTouchDropReturningStack();
+        float touchDropTime = mixin.getTouchDropTime();
+        Slot touchDropOriginSlot = mixin.getTouchDropOriginSlot();
+
+        int touchDropX = mixin.getTouchDropX();
+        int touchDropY = mixin.getTouchDropY();
+
+        if (!touchDropReturningStack.isEmpty()) {
+            float animationProgress = (Util.getMeasuringTimeMs() - touchDropTime) / 100.0f;
+
+            if (animationProgress >= 1.0F) {
+                animationProgress = 1.0F;
+                ((HandledScreenMixin) this).setTouchDropReturningStack(ItemStack.EMPTY);
+            }
+
+            int touchDropDeltaX = touchDropOriginSlot.x - touchDropX;
+            int touchDropDeltaY = touchDropOriginSlot.y - touchDropY;
+
+            int xPos = this.x + touchDropX + (int)(touchDropDeltaX * animationProgress);
+            int yPos = this.y + touchDropY + (int)(touchDropDeltaY * animationProgress);
+            GuiUtils.drawItemStack(touchDropReturningStack, xPos, yPos, null);
+        }
+    }
+
+    @Override
     public void init() {
         //noinspection ConstantConditions
         this.client.keyboard.setRepeatEvents(true);
-        this.width = modularUI.getWidth();
-        this.height = modularUI.getHeight();
+
+        this.backgroundWidth = modularUI.getWidth();
+        this.backgroundHeight = modularUI.getHeight();
         super.init();
+
         this.modularUI.updateScreenSize(width, height);
     }
 
     @Override
     public void removed() {
         super.removed();
+
         //noinspection ConstantConditions
         this.client.keyboard.setRepeatEvents(false);
     }
@@ -60,7 +199,10 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
     @Override
     public void tick() {
         super.tick();
-        modularUI.guiWidgets.values().forEach(Widget::updateScreen);
+
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            widget.updateScreen();
+        }
     }
 
     public void handleWidgetUpdate(PacketUIWidgetUpdate packet) {
@@ -74,199 +216,88 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.hoveredSlot = null;
-        drawDefaultBackground();
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            widget.drawInForeground(matrices, mouseX, mouseY, this);
+        }
+    }
 
-        GlStateManager.disableRescaleNormal();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
+    @Override
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        modularUI.backgroundPath.draw(matrices, x, y, backgroundWidth, backgroundHeight);
 
-        drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            widget.drawInBackground(matrices, mouseX, mouseY, delta, this);
+        }
+    }
 
-        RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(guiLeft, guiTop, 0.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableRescaleNormal();
-
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        for (int i = 0; i < this.inventorySlots.inventorySlots.size(); ++i) {
-            Slot slot = this.inventorySlots.inventorySlots.get(i);
-            Rectangle scissor = null;
-            if (slot instanceof Scissored) {
-                scissor = ((Scissored) slot).getScissor();
-                if (scissor != null) {
-                    RenderUtil.pushScissorFrame(scissor.x, scissor.y, scissor.width, scissor.height);
-                }
-            }
-            if (slot.isEnabled()) {
-                this.drawSlotContents(slot);
-            }
-            if (isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY) && slot.isEnabled()) {
-                renderSlotOverlay(slot);
-                setHoveredSlot(slot);
-            }
-            if (scissor != null) {
-                RenderUtil.popScissorFrame();
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            if (widget.mouseClicked(mouseX, mouseY, button)) {
+                return true;
             }
         }
-
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.popMatrix();
-
-        drawGuiContainerForegroundLayer(mouseX, mouseY);
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(guiLeft, guiTop, 0.0F);
-        RenderHelper.enableGUIStandardItemLighting();
-
-        MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.DrawForeground(this, mouseX, mouseY));
-
-        GlStateManager.enableDepth();
-        renderItemStackOnMouse(mouseX, mouseY);
-        renderReturningItemStack();
-
-        GlStateManager.popMatrix();
-        GlStateManager.enableLighting();
-        RenderHelper.enableStandardItemLighting();
-
-        renderHoveredToolTip(mouseX, mouseY);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
-
-    public void setHoveredSlot(Slot hoveredSlot) {
-        this.hoveredSlot = hoveredSlot;
-    }
-
-    public void drawSlotContents(Slot slot) {
-        GlStateManager.enableDepth();
-        RenderHelper.enableGUIStandardItemLighting();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        drawSlot(slot);
-        GlStateManager.enableDepth();
-        GlStateManager.enableBlend();
-        GlStateManager.disableLighting();
-    }
-
-    public void renderSlotOverlay(Slot slot) {
-        GlStateManager.disableDepth();
-        int slotX = slot.xPos;
-        int slotY = slot.yPos;
-        GlStateManager.colorMask(true, true, true, false);
-        drawGradientRect(slotX, slotY, slotX + 16, slotY + 16, -2130706433, -2130706433);
-        GlStateManager.colorMask(true, true, true, true);
-        GlStateManager.enableDepth();
-        GlStateManager.enableBlend();
-    }
-
-    private void renderItemStackOnMouse(int mouseX, int mouseY) {
-        InventoryPlayer inventory = this.mc.player.inventory;
-        ItemStack itemStack = this.draggedStack.isEmpty() ? inventory.getItemStack() : this.draggedStack;
-
-        if (!itemStack.isEmpty()) {
-            int dragOffset = this.draggedStack.isEmpty() ? 8 : 16;
-            if (!this.draggedStack.isEmpty() && this.isRightMouseClick) {
-                itemStack = itemStack.copy();
-                itemStack.setCount(MathHelper.ceil((float) itemStack.getCount() / 2.0F));
-
-            } else if (this.dragSplitting && this.dragSplittingSlots.size() > 1) {
-                itemStack = itemStack.copy();
-                itemStack.setCount(this.dragSplittingRemnant);
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            if (widget.mouseReleased(mouseX, mouseY, button)) {
+                return true;
             }
-            this.drawItemStack(itemStack, mouseX - guiLeft - 8, mouseY - guiTop - dragOffset, null);
         }
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
-    private void renderReturningItemStack() {
-        if (!this.returningStack.isEmpty()) {
-            float partialTicks = (float) (Minecraft.getSystemTime() - this.returningStackTime) / 100.0F;
-            if (partialTicks >= 1.0F) {
-                partialTicks = 1.0F;
-                this.returningStack = ItemStack.EMPTY;
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            if (widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) {
+                return true;
             }
-            int deltaX = this.returningStackDestSlot.xPos - this.touchUpX;
-            int deltaY = this.returningStackDestSlot.yPos - this.touchUpY;
-            int currentX = this.touchUpX + (int) ((float) deltaX * partialTicks);
-            int currentY = this.touchUpY + (int) ((float) deltaY * partialTicks);
-            //noinspection ConstantConditions
-            this.drawItemStack(this.returningStack, currentX, currentY, null);
         }
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        modularUI.guiWidgets.values().forEach(widget -> {
-            GlStateManager.pushMatrix();
-            GlStateManager.color(1.0f, 1.0f, 1.0f);
-            widget.drawInForeground(mouseX, mouseY);
-            GlStateManager.popMatrix();
-        });
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        modularUI.backgroundPath.draw(guiLeft, guiTop, xSize, ySize);
-        modularUI.guiWidgets.values().forEach(widget -> {
-            GlStateManager.pushMatrix();
-            GlStateManager.color(1.0f, 1.0f, 1.0f);
-            GlStateManager.enableBlend();
-            widget.drawInBackground(mouseX, mouseY, this);
-            GlStateManager.popMatrix();
-        });
-    }
-
-    @Override
-    public void handleMouseInput() throws IOException {
-        super.handleMouseInput();
-        int wheelMovement = Mouse.getEventDWheel();
-        if (wheelMovement != 0) {
-            int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
-            int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-            mouseWheelMove(mouseX - guiLeft, mouseY, wheelMovement);
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            if (widget.mouseScrolled(mouseX, mouseY, amount)) {
+                return true;
+            }
         }
-    }
-
-    protected void mouseWheelMove(int mouseX, int mouseY, int wheelDelta) {
-        //noinspection ResultOfMethodCallIgnored
-        modularUI.guiWidgets.values().stream().anyMatch(widget -> widget.mouseWheelMove(mouseX, mouseY, wheelDelta));
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        boolean result = modularUI.guiWidgets.values().stream().anyMatch(widget -> widget.mouseClicked(mouseX, mouseY, mouseButton));
-        if (!result) {
-            super.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            if (widget.keyPressed(keyCode, scanCode, modifiers)) {
+                return true;
+            }
         }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        boolean result = modularUI.guiWidgets.values().stream().anyMatch(widget ->
-            widget.mouseDragged(mouseX, mouseY, clickedMouseButton, timeSinceLastClick));
-        if (!result) {
-            super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            if (widget.keyReleased(keyCode, scanCode, modifiers)) {
+                return true;
+            }
         }
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        boolean result = modularUI.guiWidgets.values().stream().anyMatch(widget -> widget.mouseReleased(mouseX, mouseY, state));
-        if (!result) {
-            super.mouseReleased(mouseX, mouseY, state);
+    public boolean charTyped(char chr, int modifiers) {
+        for (Widget widget : modularUI.guiWidgets.values()) {
+            if (widget.charTyped(chr, modifiers)) {
+                return true;
+            }
         }
+        return super.charTyped(chr, modifiers);
     }
-
-    @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        boolean result = modularUI.guiWidgets.values().stream().anyMatch(widget -> widget.keyTyped(typedChar, keyCode));
-        if (!result) {
-            super.keyTyped(typedChar, keyCode);
-        }
-    }
-
 }

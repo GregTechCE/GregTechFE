@@ -226,46 +226,70 @@ public class AbstractWidgetGroup extends Widget implements IGhostIngredientTarge
     }
 
     @Override
-    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY, RenderContext renderContext) {
         for (Widget widget : widgets) {
             if (isWidgetVisible(widget)) {
-                widget.drawInForeground(matrices, mouseX, mouseY);
+                widget.drawInForeground(matrices, mouseX, mouseY, renderContext);
             }
         }
     }
 
     @Override
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
         for (Widget widget : widgets) {
             if (isWidgetVisible(widget)) {
-                widget.drawInBackground(matrices, mouseX, mouseY, context);
+                widget.drawInBackground(matrices, mouseX, mouseY, deltaTicks, renderContext);
             }
         }
     }
 
     @Override
-    public boolean mouseWheelMove(int mouseX, int mouseY, int wheelDelta) {
-        return widgets.stream().filter(this::isWidgetClickable).anyMatch(it -> it.mouseWheelMove(mouseX, mouseY, wheelDelta));
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return widgets.stream()
+                .filter(this::isWidgetClickable)
+                .anyMatch(it -> it.mouseScrolled(mouseX, mouseY, amount));
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        return widgets.stream().filter(this::isWidgetClickable).anyMatch(it -> it.mouseClicked(mouseX, mouseY, button));
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return widgets.stream()
+                .filter(this::isWidgetClickable)
+                .anyMatch(it -> it.mouseClicked(mouseX, mouseY, button));
     }
 
     @Override
-    public boolean mouseDragged(int mouseX, int mouseY, int button, long timeDragged) {
-        return widgets.stream().filter(this::isWidgetClickable).anyMatch(it -> it.mouseDragged(mouseX, mouseY, button, timeDragged));
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return widgets.stream()
+                .filter(this::isWidgetClickable)
+                .anyMatch(it -> it.mouseDragged(mouseX, mouseY, button, deltaX, deltaY));
     }
 
     @Override
-    public boolean mouseReleased(int mouseX, int mouseY, int button) {
-        return widgets.stream().filter(this::isWidgetClickable).anyMatch(it -> it.mouseReleased(mouseX, mouseY, button));
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return widgets.stream()
+                .filter(this::isWidgetClickable)
+                .anyMatch(it -> it.mouseReleased(mouseX, mouseY, button));
     }
 
     @Override
-    public boolean keyTyped(char charTyped, int keyCode) {
-        return widgets.stream().filter(this::isWidgetClickable).anyMatch(it -> it.keyTyped(charTyped, keyCode));
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return widgets.stream()
+                .filter(this::isWidgetClickable)
+                .anyMatch(it -> it.keyPressed(keyCode, scanCode, modifiers));
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        return widgets.stream()
+                .filter(this::isWidgetClickable)
+                .anyMatch(it -> it.keyReleased(keyCode, scanCode, modifiers));
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        return widgets.stream()
+                .filter(this::isWidgetClickable)
+                .anyMatch(it -> it.charTyped(chr, modifiers));
     }
 
     @Override

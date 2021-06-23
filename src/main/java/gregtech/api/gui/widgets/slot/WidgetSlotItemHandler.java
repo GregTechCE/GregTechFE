@@ -2,14 +2,13 @@ package gregtech.api.gui.widgets.slot;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.compat.SlotFixedItemInv;
-import gregtech.api.gui.Scissored;
 import gregtech.api.util.EmptyScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 import java.awt.*;
 
-class WidgetSlotItemHandler extends SlotFixedItemInv implements Scissored {
+class WidgetSlotItemHandler extends SlotFixedItemInv {
 
     private final SlotWidget slotWidget;
 
@@ -44,10 +43,5 @@ class WidgetSlotItemHandler extends SlotFixedItemInv implements Scissored {
     @Override
     public boolean isEnabled() {
         return slotWidget.isEnabled();
-    }
-
-    @Override
-    public Rectangle getScissor() {
-        return slotWidget.scissor;
     }
 }

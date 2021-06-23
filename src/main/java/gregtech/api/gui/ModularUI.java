@@ -36,8 +36,6 @@ public final class ModularUI implements SizeProvider {
     private final ImmutableList<Runnable> uiOpenCallback;
     private final ImmutableList<Runnable> uiCloseCallback;
 
-    public boolean isJEIHandled;
-
     /**
      * UIHolder of this modular UI
      */

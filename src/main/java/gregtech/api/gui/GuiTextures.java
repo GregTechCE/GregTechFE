@@ -1,23 +1,23 @@
 package gregtech.api.gui;
 
-import gregtech.api.gui.resources.AdoptableTextureArea;
+import gregtech.api.gui.resources.AdaptableTextureArea;
 import gregtech.api.gui.resources.SizedTextureArea;
 import gregtech.api.gui.resources.TextureArea;
 
 public class GuiTextures {
 
     //BASE TEXTURES
-    public static final TextureArea BACKGROUND = AdoptableTextureArea.fullImage("textures/gui/base/background.png", 176, 166, 3, 3);
-    public static final TextureArea BORDERED_BACKGROUND = AdoptableTextureArea.fullImage("textures/gui/base/bordered_background.png", 195, 136, 4, 4);
-    public static final TextureArea BOXED_BACKGROUND = AdoptableTextureArea.fullImage("textures/gui/base/boxed_background.png", 256, 174, 11, 11);
+    public static final TextureArea BACKGROUND = AdaptableTextureArea.fullImage("textures/gui/base/background.png", 176, 166, 3, 3);
+    public static final TextureArea BORDERED_BACKGROUND = AdaptableTextureArea.fullImage("textures/gui/base/bordered_background.png", 195, 136, 4, 4);
+    public static final TextureArea BOXED_BACKGROUND = AdaptableTextureArea.fullImage("textures/gui/base/boxed_background.png", 256, 174, 11, 11);
 
     //deprecated texture areas retained for binary & source compatibility
     @Deprecated public static final TextureArea BACKGROUND_SMALL = BACKGROUND; //replaced by normal background
     @Deprecated public static final TextureArea BACKGROUND_EXTENDED = BACKGROUND; //replaced by normal background
     @Deprecated public static final TextureArea BORDERED_BACKGROUND_EXTENDED = BORDERED_BACKGROUND; //replaced by normal background
 
-    public static final TextureArea SLOT = AdoptableTextureArea.fullImage("textures/gui/base/slot.png", 18, 18, 1, 1);
-    public static final TextureArea FLUID_SLOT = AdoptableTextureArea.fullImage("textures/gui/base/fluid_slot.png", 18, 18, 1, 1);
+    public static final TextureArea SLOT = AdaptableTextureArea.fullImage("textures/gui/base/slot.png", 18, 18, 1, 1);
+    public static final TextureArea FLUID_SLOT = AdaptableTextureArea.fullImage("textures/gui/base/fluid_slot.png", 18, 18, 1, 1);
     public static final TextureArea SLOT_DARKENED = TextureArea.fullImage("textures/gui/base/darkened_slot.png");
     public static final TextureArea DISPLAY = TextureArea.fullImage("textures/gui/base/display.png");
     public static final TextureArea FLUID_TANK_BACKGROUND = TextureArea.fullImage("textures/gui/base/fluid_tank_background.png");

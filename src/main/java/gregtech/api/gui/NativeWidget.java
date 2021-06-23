@@ -7,10 +7,11 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ClickType;
 
+import java.awt.*;
+
 /**
  * Native widget is widget wrapping native Slot
  * That means controls are delegated to vanilla {@link net.minecraft.screen.ScreenHandler}
- * Rendering is still handled by widget via helpers in {@link RenderContext}
  */
 public interface NativeWidget extends EnableNotifiedWidget {
 
@@ -20,9 +21,17 @@ public interface NativeWidget extends EnableNotifiedWidget {
     /**
      * You should return MC slot handle instance you created earlier
      *
+     * Important!!! X/Y position of the slot is important and should be 1 pixel
+     * more to the right/bottom, because slot has an actual size of 16, but
+     * clickable area around it is also one pixel
+     * Also slot coordinates are relative to the gui top/left corner,
+     * due to vanilla implementation restrictions
+     *
      * @return MC slot
      */
     Slot getHandle();
+
+    Rectangle getScissor();
 
     /**
      * @return true if this slot belongs to player inventory

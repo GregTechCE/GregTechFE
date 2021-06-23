@@ -1,6 +1,5 @@
 package gregtech.api.gui.widgets.slot;
 
-import gregtech.api.gui.Scissored;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;

@@ -8,7 +8,6 @@ import gregtech.api.unification.material.type.DustMaterial;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.ore.StoneType;
 import gregtech.api.util.BaseCreativeTab;
-import gregtech.api.util.GTControlledRegistry;
 import gregtech.api.util.IBlockOre;
 import gregtech.common.items.MetaItems;
 import net.minecraft.util.ResourceLocation;

@@ -14,10 +14,10 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class LabelWidget extends Widget {
 
-    protected boolean centered = false;
-    protected String text;
-    protected Object[] formatting;
+    protected final String text;
+    protected final Object[] formatting;
     private final int color;
+    protected boolean centered = false;
 
     public LabelWidget(int xPosition, int yPosition, String text, Object... formatting) {
         this(xPosition, yPosition, text, 0x404040, formatting);
@@ -48,18 +48,16 @@ public class LabelWidget extends Widget {
         }
     }
 
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
+        String resultText = getResultText();
+        Position pos = getPosition();
+        GuiUtils.drawString(matrices, resultText, pos.x, pos.y, color, centered);
+    }
+
     public LabelWidget setCentered() {
         this.centered = true;
         return this;
     }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
-        String resultText = getResultText();
-        Position pos = getPosition();
-
-        GuiUtils.drawString(matrices, resultText, pos.x, pos.y, color, centered);
-    }
-
 }

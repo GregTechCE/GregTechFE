@@ -1,7 +1,5 @@
 package gregtech.api.util;
 
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;

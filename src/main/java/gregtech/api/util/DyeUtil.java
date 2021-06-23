@@ -2,6 +2,7 @@ package gregtech.api.util;
 
 import com.google.common.base.CaseFormat;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.DyeColor;
 
 import java.awt.*;
 import java.util.Collections;
@@ -13,7 +14,7 @@ public class DyeUtil {
     /**
      * Determines dye color nearest to specified RGB color
      */
-    public static EnumDyeColor determineDyeColor(int rgbColor) {
+    public static DyeColor determineDyeColor(int rgbColor) {
         Color c = new Color(rgbColor);
 
         Map<Double, EnumDyeColor> distances = new HashMap<>();

@@ -1,33 +1,21 @@
 package gregtech.api.gui.widgets;
 
-import gregtech.api.gui.ClickData;
-import gregtech.api.gui.RenderContext;
-import gregtech.api.gui.Widget;
+import gregtech.api.gui.*;
 import gregtech.api.util.Position;
 import gregtech.api.util.Size;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextHandler;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiUtilRenderComponents;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.client.util.ChatMessages;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.ClickEvent.Action;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -40,12 +28,11 @@ import java.util.stream.Collectors;
 public class AdvancedTextWidget extends Widget {
     protected int maxWidthLimit;
 
-    @Environment(EnvType.CLIENT)
-    private WrapScreen wrapScreen;
-
-    protected Consumer<List<Text>> textSupplier;
     protected BiConsumer<String, ClickData> clickHandler;
-    private List<Text> displayText = new ArrayList<>();
+    protected Consumer<List<Text>> textSupplier;
+    private List<Text> cachedText = Collections.emptyList();
+    private List<OrderedText> displayText = Collections.emptyList();
+
     private final int color;
 
     public AdvancedTextWidget(int xPosition, int yPosition, Consumer<List<Text>> text, int color) {
@@ -84,48 +71,17 @@ public class AdvancedTextWidget extends Widget {
         return this;
     }
 
-    @Environment(EnvType.CLIENT)
-    private WrapScreen getWrapScreen() {
-        if (wrapScreen == null) {
-            wrapScreen = new WrapScreen();
-        }
-        return wrapScreen;
-    }
-
-    @Environment(EnvType.CLIENT)
-    private void resizeWrapScreen() {
-        if (sizes != null) {
-            getWrapScreen().(Minecraft.getMinecraft(), sizes.getScreenWidth(), sizes.getScreenHeight());
-        }
-    }
-
-    @Override
-    public void initWidget() {
-        super.initWidget();
-        if (isClientSide()) {
-            resizeWrapScreen();
-        }
-    }
-
-    @Override
-    protected void onPositionUpdate() {
-        super.onPositionUpdate();
-        if (isClientSide()) {
-            resizeWrapScreen();
-        }
-    }
-
     @Override
     public void detectAndSendChanges() {
         ArrayList<Text> textBuffer = new ArrayList<>();
-        textSupplier.accept(textBuffer);
+        this.textSupplier.accept(textBuffer);
 
-        if (!displayText.equals(textBuffer)) {
-            this.displayText = textBuffer;
+        if (!cachedText.equals(textBuffer)) {
+            this.cachedText = textBuffer;
 
             writeUpdateInfo(1, buffer -> {
-                buffer.writeVarInt(displayText.size());
-                for (Text textComponent : displayText) {
+                buffer.writeVarInt(cachedText.size());
+                for (Text textComponent : cachedText) {
                     buffer.writeString(Text.Serializer.toJson(textComponent));
                 }
             });
@@ -135,68 +91,67 @@ public class AdvancedTextWidget extends Widget {
     @Override
     public void readUpdateInfo(int id, PacketByteBuf buffer) {
         if (id == 1) {
-            this.displayText.clear();
+            this.cachedText.clear();
             int count = buffer.readVarInt();
 
             for (int i = 0; i < count; i++) {
                 String jsonText = buffer.readString();
-                this.displayText.add(Text.Serializer.fromJson(jsonText));
+                this.cachedText.add(Text.Serializer.fromJson(jsonText));
             }
-            formatDisplayText();
+            refreshDisplayText();
             updateComponentTextSize();
         }
     }
 
-    protected ITextComponent getTextUnderMouse(int mouseX, int mouseY) {
+    @Environment(EnvType.CLIENT)
+    protected Style getTextUnderMouse(int mouseX, int mouseY) {
         TextRenderer fontRenderer = MinecraftClient.getInstance().textRenderer;
+        TextHandler textHandler = fontRenderer.getTextHandler();
 
         Position position = getPosition();
         int selectedLine = (mouseY - position.y) / (fontRenderer.fontHeight + 2);
 
         if (mouseX >= position.x && selectedLine >= 0 && selectedLine < displayText.size()) {
-            Text selectedComponent = displayText.get(selectedLine);
 
+            OrderedText selectedComponent = displayText.get(selectedLine);
             int mouseOffset = mouseX - position.x;
-            int currentOffset = 0;
-            selectedComponent.visit()
-
-            for (Text lineComponent : selectedComponent.) {
-                currentOffset += fontRenderer.getWidth(lineComponent.asString());
-                if (currentOffset >= mouseOffset) {
-                    return lineComponent;
-                }
-            }
+            return textHandler.getStyleAt(selectedComponent, mouseOffset);
         }
         return null;
     }
 
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     private void updateComponentTextSize() {
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        int maxStringWidth = 0;
-        int totalHeight = 0;
-        for (ITextComponent textComponent : displayText) {
-            maxStringWidth = Math.max(maxStringWidth, fontRenderer.getStringWidth(textComponent.getFormattedText()));
-            totalHeight += fontRenderer.FONT_HEIGHT + 2;
+        TextRenderer fontRenderer = MinecraftClient.getInstance().textRenderer;
+        TextHandler textHandler = fontRenderer.getTextHandler();
+
+        int totalHeight = this.displayText.size() * (fontRenderer.fontHeight + 2);
+        if (!displayText.isEmpty()) {
+            totalHeight -= 2;
         }
-        totalHeight -= 2;
-        setSize(new Size(maxStringWidth, totalHeight));
+
+        int maximumWidth = (int) this.displayText.stream()
+                .mapToDouble(textHandler::getWidth)
+                .max().orElse(0);
+
+        setSize(new Size(maximumWidth, totalHeight));
         if (uiAccess != null) {
             uiAccess.notifySizeChange();
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    private void formatDisplayText() {
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    @Environment(EnvType.CLIENT)
+    private void refreshDisplayText() {
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         int maxTextWidthResult = maxWidthLimit == 0 ? Integer.MAX_VALUE : maxWidthLimit;
-        this.displayText = displayText.stream()
-            .flatMap(c -> GuiUtilRenderComponents.splitText(c, maxTextWidthResult, fontRenderer, true, true).stream())
+
+        this.displayText = cachedText.stream()
+            .flatMap(c -> ChatMessages.breakRenderedChatMessageLines(c, maxTextWidthResult, textRenderer).stream())
             .collect(Collectors.toList());
     }
 
     @Override
-    public void handleClientAction(int id, PacketBuffer buffer) {
+    public void handleClientAction(int id, PacketByteBuf buffer) {
         super.handleClientAction(id, buffer);
         if (id == 1) {
             ClickData clickData = ClickData.readFromBuf(buffer);
@@ -207,15 +162,17 @@ public class AdvancedTextWidget extends Widget {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    private boolean handleCustomComponentClick(ITextComponent textComponent) {
-        Style style = textComponent.getStyle();
+    @Environment(EnvType.CLIENT)
+    private boolean handleCustomComponentClick(Style style) {
         if (style.getClickEvent() != null) {
             ClickEvent clickEvent = style.getClickEvent();
             String componentText = clickEvent.getValue();
-            if (clickEvent.getAction() == Action.OPEN_URL && componentText.startsWith("@!")) {
+
+            if (clickEvent.getAction() == ClickEvent.Action.OPEN_URL && componentText.startsWith("@!")) {
                 String rawText = componentText.substring(2);
-                ClickData clickData = new ClickData(Mouse.getEventButton(), isShiftDown(), isCtrlDown());
+                ClickData clickData = new ClickData(InputHelper.getActiveMouseButton(),
+                        InputHelper.isShiftDown(), InputHelper.isCtrlDown());
+
                 writeClientAction(1, buf -> {
                     clickData.writeToBuf(buf);
                     buf.writeString(rawText);
@@ -227,13 +184,13 @@ public class AdvancedTextWidget extends Widget {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        ITextComponent textComponent = getTextUnderMouse(mouseX, mouseY);
+    @Environment(EnvType.CLIENT)
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        Style textComponent = getTextUnderMouse((int) mouseX, (int) mouseY);
         if (textComponent != null) {
             if (handleCustomComponentClick(textComponent) ||
-                getWrapScreen().handleComponentClick(textComponent)) {
-                playButtonClickSound();
+                GuiUtils.handleTextClick(textComponent, null)) {
+                InputHelper.playButtonClickSound();
                 return true;
             }
         }
@@ -241,45 +198,24 @@ public class AdvancedTextWidget extends Widget {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void drawInBackground(int mouseX, int mouseY, RenderContext context) {
-        super.drawInBackground(mouseX, mouseY, context);
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    @Environment(EnvType.CLIENT)
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
+        TextRenderer fontRenderer = MinecraftClient.getInstance().textRenderer;
         Position position = getPosition();
+
         for (int i = 0; i < displayText.size(); i++) {
-            fontRenderer.drawString(displayText.get(i).getFormattedText(), position.x, position.y + i * (fontRenderer.FONT_HEIGHT + 2), color);
+            int yPosition = position.y + i * (fontRenderer.fontHeight + 2);
+            fontRenderer.draw(matrices, displayText.get(i), position.x, yPosition, color);
         }
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void drawInForeground(int mouseX, int mouseY) {
-        super.drawInForeground(mouseX, mouseY);
-        ITextComponent component = getTextUnderMouse(mouseX, mouseY);
-        if (component != null) {
-            getWrapScreen().handleComponentHover(component, mouseX, mouseY);
-        }
-    }
+    @Environment(EnvType.CLIENT)
+    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY, RenderContext renderContext) {
+        Style hoveredStyle = getTextUnderMouse(mouseX, mouseY);
 
-    /**
-     * Used to call mc-related chat component handling code,
-     * for example component hover rendering and default click handling
-     */
-    @SideOnly(Side.CLIENT)
-    private static class WrapScreen extends GuiScreen {
-        @Override
-        public void handleComponentHover(ITextComponent component, int x, int y) {
-            super.handleComponentHover(component, x, y);
-        }
-
-        @Override
-        public boolean handleComponentClick(ITextComponent component) {
-            return super.handleComponentClick(component);
-        }
-
-        @Override
-        protected void drawHoveringText(List<String> textLines, int x, int y, FontRenderer font) {
-            GuiUtils.drawHoveringText(textLines, x, y, width, height, 256, font);
+        if (hoveredStyle != null && hoveredStyle.getHoverEvent() != null) {
+            GuiUtils.drawHoverEvent(matrices, mouseX, mouseY, hoveredStyle.getHoverEvent());
         }
     }
 }

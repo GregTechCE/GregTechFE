@@ -52,7 +52,7 @@ public class SimpleTextWidget extends Widget {
     }
 
     @Override
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
         String text = getDisplayText();
         Position position = getPosition();
 

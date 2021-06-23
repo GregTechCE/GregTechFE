@@ -71,18 +71,18 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
     }
 
     @Override
-    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawInForeground(MatrixStack matrices, int mouseX, int mouseY, RenderContext renderContext) {
         //make sure mouse is not hovered on any element when outside of bounds
         if (!isPositionInsideScissor(mouseX, mouseY)) {
             mouseX = Integer.MAX_VALUE;
             mouseY = Integer.MAX_VALUE;
         }
 
-        super.drawInForeground(matrices, mouseX, mouseY);
+        super.drawInForeground(matrices, mouseX, mouseY, renderContext);
     }
 
     @Override
-    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, RenderContext context) {
+    public void drawInBackground(MatrixStack matrices, int mouseX, int mouseY, float deltaTicks, RenderContext renderContext) {
         //make sure mouse is not hovered on any element when outside of bounds
         if (!isPositionInsideScissor(mouseX, mouseY)) {
             mouseX = Integer.MAX_VALUE;
@@ -108,7 +108,7 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
         GuiUtils.drawGradientRect(matrices, scrollX + 1, scrollSliderY, paneSize - 2, scrollSliderHeight, 0xFF555555, 0xFF454545, 0);
 
         RenderUtil.useScissor(position.x, position.y, size.width - paneSize, size.height, () ->
-            super.drawInBackground(matrices, finalMouseX, finalMouseY, context));
+            super.drawInBackground(matrices, finalMouseX, finalMouseY, deltaTicks, renderContext));
     }
 
     @Override
@@ -142,9 +142,9 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
     }
 
     @Override
-    public boolean mouseWheelMove(int mouseX, int mouseY, int wheelDelta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (isMouseOverElement(mouseX, mouseY, true)) {
-            int direction = -MathHelper.clamp(wheelDelta, -1, 1);
+            int direction = -MathHelper.clamp(amount, -1, 1);
             int moveDelta = direction * (slotHeight / 2);
             addScrollOffset(moveDelta);
             return true;
@@ -153,7 +153,7 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.lastMouseX = mouseX;
         this.lastMouseY = mouseY;
         if (isOnScrollPane(mouseX, mouseY)) {
@@ -166,7 +166,7 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
     }
 
     @Override
-    public boolean mouseDragged(int mouseX, int mouseY, int button, long timeDragged) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         int mouseDelta = (mouseY - lastMouseY);
         this.lastMouseX = mouseX;
         this.lastMouseY = mouseY;
@@ -175,13 +175,13 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
             return true;
         }
         if (isPositionInsideScissor(mouseX, mouseY)) {
-            return super.mouseDragged(mouseX, mouseY, button, timeDragged);
+            return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
         return false;
     }
 
     @Override
-    public boolean mouseReleased(int mouseX, int mouseY, int button) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         this.draggedOnScrollBar = false;
         if (isPositionInsideScissor(mouseX, mouseY)) {
             return super.mouseReleased(mouseX, mouseY, button);
