@@ -6,9 +6,9 @@ import codechicken.lib.raytracer.RayTracer;
 import codechicken.lib.vec.Cuboid6;
 import gregtech.api.GregTechAPI;
 import gregtech.api.block.BuiltInRenderBlock;
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.tool.IScrewdriverItem;
-import gregtech.api.capability.tool.IWrenchItem;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.tool.ScrewdriverItem;
+import gregtech.api.capability.tool.WrenchItem;
 import gregtech.api.cover.CoverBehavior;
 import gregtech.api.cover.Coverable;
 import gregtech.api.cover.Coverable.CoverSideData;
@@ -210,7 +210,7 @@ public abstract class BlockPipe<PipeType extends Enum<PipeType> & IPipeType<Node
             return false;
 
         if (!(hit.cuboid6.data instanceof CoverSideData)) {
-            IWrenchItem wrenchItem = itemStack.getCapability(GregtechCapabilities.CAPABILITY_WRENCH, null);
+            WrenchItem wrenchItem = itemStack.getCapability(GTAttributes.CAPABILITY_WRENCH, null);
             if (wrenchItem != null) {
                 if (wrenchItem.damageItem(DamageValues.DAMAGE_FOR_WRENCH, true)) {
                     if (!entityPlayer.world.isRemote) {
@@ -228,7 +228,7 @@ public abstract class BlockPipe<PipeType extends Enum<PipeType> & IPipeType<Node
         if (coverBehavior == null)
             return false;
 
-        IScrewdriverItem screwdriver = itemStack.getCapability(GregtechCapabilities.CAPABILITY_SCREWDRIVER, null);
+        ScrewdriverItem screwdriver = itemStack.getCapability(GTAttributes.CAPABILITY_SCREWDRIVER, null);
         if (screwdriver != null) {
             if (screwdriver.damageItem(DamageValues.DAMAGE_FOR_SCREWDRIVER, true) &&
                 coverBehavior.onScrewdriverClick(entityPlayer, hand, hit) == EnumActionResult.SUCCESS) {

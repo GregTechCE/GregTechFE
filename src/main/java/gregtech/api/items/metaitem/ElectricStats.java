@@ -1,8 +1,7 @@
 package gregtech.api.items.metaitem;
 
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.IElectricItem;
-import gregtech.api.capability.impl.ElectricItem;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.ElectricItem;
 import gregtech.api.items.metaitem.stats.IItemBehaviour;
 import gregtech.api.items.metaitem.stats.IItemCapabilityProvider;
 import gregtech.api.items.metaitem.stats.IItemMaxStackSizeProvider;
@@ -22,7 +21,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import java.util.List;
 
-public class ElectricStats implements IItemComponent, IItemCapabilityProvider, IItemMaxStackSizeProvider, IItemBehaviour {
+public class ElectricStats {
 
     public static final ElectricStats EMPTY = new ElectricStats(0, 0, false, false);
 
@@ -42,7 +41,7 @@ public class ElectricStats implements IItemComponent, IItemCapabilityProvider, I
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
-        IElectricItem electricItem = itemStack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        ElectricItem electricItem = itemStack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
         if(electricItem != null && electricItem.canProvideChargeExternally() && player.isSneaking()) {
             if(!world.isRemote) {
                 boolean isInDischargeMode = isInDishargeMode(itemStack);
@@ -57,7 +56,7 @@ public class ElectricStats implements IItemComponent, IItemCapabilityProvider, I
 
     @Override
     public void onUpdate(ItemStack itemStack, Entity entity) {
-        IElectricItem electricItem = itemStack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        ElectricItem electricItem = itemStack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
         if(!entity.world.isRemote && entity instanceof EntityPlayer && electricItem != null &&
             electricItem.canProvideChargeExternally() &&
             isInDishargeMode(itemStack) && electricItem.getCharge() > 0L) {
@@ -68,7 +67,7 @@ public class ElectricStats implements IItemComponent, IItemCapabilityProvider, I
 
             for(int i = 0; i < inventoryPlayer.getSizeInventory(); i++) {
                 ItemStack itemInSlot = inventoryPlayer.getStackInSlot(i);
-                IElectricItem slotElectricItem = itemInSlot.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+                ElectricItem slotElectricItem = itemInSlot.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
                 if(slotElectricItem != null && !slotElectricItem.canProvideChargeExternally()) {
 
                     long chargedAmount = chargeElectricItem(transferLimit, electricItem, slotElectricItem);
@@ -81,7 +80,7 @@ public class ElectricStats implements IItemComponent, IItemCapabilityProvider, I
         }
     }
 
-    private static long chargeElectricItem(long maxDischargeAmount, IElectricItem source, IElectricItem target) {
+    private static long chargeElectricItem(long maxDischargeAmount, ElectricItem source, ElectricItem target) {
         long maxDischarged = source.discharge(maxDischargeAmount, source.getTier(), false, false, true);
         long maxReceived = target.charge(maxDischarged, source.getTier(), false, true);
         if(maxReceived > 0L) {
@@ -113,7 +112,7 @@ public class ElectricStats implements IItemComponent, IItemCapabilityProvider, I
 
     @Override
     public void addInformation(ItemStack itemStack, List<String> lines) {
-        IElectricItem electricItem = itemStack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        ElectricItem electricItem = itemStack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
         if(electricItem != null && electricItem.canProvideChargeExternally()) {
             lines.add(I18n.format("metaitem.electric.discharge_mode.tooltip"));
         }
@@ -126,7 +125,7 @@ public class ElectricStats implements IItemComponent, IItemCapabilityProvider, I
 
     @Override
     public int getMaxStackSize(ItemStack itemStack, int defaultValue) {
-        ElectricItem electricItem = (ElectricItem) itemStack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        gregtech.api.capability.impl.ElectricItem electricItem = (gregtech.api.capability.impl.ElectricItem) itemStack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
         if (electricItem == null || electricItem.getCharge() == 0) {
             return defaultValue;
         }
@@ -135,7 +134,7 @@ public class ElectricStats implements IItemComponent, IItemCapabilityProvider, I
 
     @Override
     public ICapabilityProvider createProvider(ItemStack itemStack) {
-        return new ElectricItem(itemStack, maxCharge, tier, chargeable, dischargeable);
+        return new gregtech.api.capability.impl.ElectricItem(itemStack, maxCharge, tier, chargeable, dischargeable);
     }
 
     public static ElectricStats createElectricItem(long maxCharge, long tier) {

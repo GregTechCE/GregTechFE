@@ -1,7 +1,7 @@
 package gregtech.api.items.toolitem;
 
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.tool.IWrenchItem;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.tool.WrenchItem;
 import gregtech.api.items.metaitem.stats.IItemCapabilityProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -14,15 +14,15 @@ public class WrenchItemStat implements IItemCapabilityProvider {
         return new CapabilityProvider(itemStack);
     }
 
-    private static class CapabilityProvider extends AbstractToolItemCapabilityProvider<IWrenchItem> implements IWrenchItem {
+    private static class CapabilityProvider extends AbstractToolItemCapabilityProvider<WrenchItem> implements WrenchItem {
 
         public CapabilityProvider(ItemStack itemStack) {
             super(itemStack);
         }
 
         @Override
-        protected Capability<IWrenchItem> getCapability() {
-            return GregtechCapabilities.CAPABILITY_WRENCH;
+        protected Capability<WrenchItem> getCapability() {
+            return GTAttributes.CAPABILITY_WRENCH;
         }
     }
 }

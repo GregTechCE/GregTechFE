@@ -1,25 +1,6 @@
 package gregtech.api.capability;
 
-import net.minecraft.item.ItemStack;
-
-import java.util.function.BiConsumer;
-
-public interface IElectricItem {
-
-    /**
-     * Determines if item can provide external discharging capability "in general"
-     * it ensures it can be inserted into battery discharger slots & so
-     *
-     * @return true if item can be discharged externally
-     */
-    boolean canProvideChargeExternally();
-
-    /**
-     * Adds charge listener to this electric item
-     *
-     * @param chargeListener listener will be called when charge changes
-     */
-    void addChargeListener(BiConsumer<ItemStack, Long> chargeListener);
+public interface ElectricItem {
 
     /**
      * Charge an item with a specified amount of energy.
@@ -49,11 +30,12 @@ public interface IElectricItem {
     long discharge(long amount, int dischargerTier, boolean ignoreTransferLimit, boolean externally, boolean simulate);
 
     /**
-     * Determine the transfer limit for the specified item
+     * Determines if item can provide external discharging capability "in general"
+     * it ensures it can be inserted into battery discharger slots & so
      *
-     * @return maximum transfer rate item can handle in EU/t
+     * @return true if item can be discharged externally
      */
-    long getTransferLimit();
+    boolean canProvideChargeExternally();
 
     /**
      * Determine the charge level for the specified item.
@@ -73,6 +55,13 @@ public interface IElectricItem {
     long getCharge();
 
     /**
+     * Get the tier of the specified item.
+     *
+     * @return The tier of the item.
+     */
+    int getTier();
+
+    /**
      * Determine if the specified electric item has at least a specific amount of EU.
      *
      * @param amount minimum amount of energy required
@@ -81,12 +70,4 @@ public interface IElectricItem {
     default boolean canUse(long amount) {
         return discharge(amount, Integer.MAX_VALUE, true, false, true) == amount;
     }
-
-    /**
-     * Get the tier of the specified item.
-     *
-     * @return The tier of the item.
-     */
-    int getTier();
-
 }

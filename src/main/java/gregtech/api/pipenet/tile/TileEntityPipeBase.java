@@ -2,7 +2,7 @@ package gregtech.api.pipenet.tile;
 
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
-import gregtech.api.capability.GregtechTileCapabilities;
+import gregtech.api.capability.internal.GTInternalAttributes;
 import gregtech.api.cover.CoverBehavior;
 import gregtech.api.metatileentity.SyncedTileEntityBase;
 import gregtech.api.pipenet.WorldPipeNet;
@@ -209,8 +209,8 @@ public abstract class TileEntityPipeBase<PipeType extends Enum<PipeType> & IPipe
     }
 
     public <T> T getCapabilityInternal(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == GregtechTileCapabilities.CAPABILITY_COVERABLE) {
-            return GregtechTileCapabilities.CAPABILITY_COVERABLE.cast(getCoverableImplementation());
+        if (capability == GTInternalAttributes.CAPABILITY_COVERABLE) {
+            return GTInternalAttributes.CAPABILITY_COVERABLE.cast(getCoverableImplementation());
         }
         return super.getCapability(capability, facing);
     }
@@ -218,7 +218,7 @@ public abstract class TileEntityPipeBase<PipeType extends Enum<PipeType> & IPipe
     @Nullable
     @Override
     public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        boolean isCoverable = capability == GregtechTileCapabilities.CAPABILITY_COVERABLE;
+        boolean isCoverable = capability == GTInternalAttributes.CAPABILITY_COVERABLE;
         CoverBehavior coverBehavior = facing == null ? null : coverableImplementation.getCoverAtSide(facing);
         T defaultValue = getCapabilityInternal(capability, facing);
         if(isCoverable) {

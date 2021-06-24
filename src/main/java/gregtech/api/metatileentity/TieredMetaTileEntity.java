@@ -5,7 +5,7 @@ import codechicken.lib.render.pipeline.ColourMultiplier;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import gregtech.api.GTValues;
-import gregtech.api.capability.IEnergyContainer;
+import gregtech.api.capability.EnergyContainer;
 import gregtech.api.capability.impl.EnergyContainerHandler;
 import gregtech.api.capability.impl.EnergyContainerHandler.IEnergyChangeListener;
 import gregtech.api.render.SimpleSidedCubeRenderer;
@@ -22,7 +22,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public abstract class TieredMetaTileEntity extends MetaTileEntity implements IEnergyChangeListener, ITieredMetaTileEntity {
 
     private final int tier;
-    protected IEnergyContainer energyContainer;
+    protected EnergyContainer energyContainer;
 
     public TieredMetaTileEntity(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId);
@@ -48,7 +48,7 @@ public abstract class TieredMetaTileEntity extends MetaTileEntity implements IEn
     }
 
     @Override
-    public void onEnergyChanged(IEnergyContainer container, boolean isInitialChange) {
+    public void onEnergyChanged(EnergyContainer container, boolean isInitialChange) {
     }
 
     @SideOnly(Side.CLIENT)

@@ -1,6 +1,6 @@
 package gregtech.api.recipes.machines;
 
-import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;

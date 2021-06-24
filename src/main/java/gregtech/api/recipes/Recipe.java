@@ -1,7 +1,7 @@
 package gregtech.api.recipes;
 
 import com.google.common.collect.ImmutableList;
-import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.recipes.recipeproperties.RecipeProperty;
 import gregtech.api.recipes.recipeproperties.RecipePropertyStorage;
 import gregtech.api.util.GTUtility;

@@ -10,8 +10,8 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
 import com.google.common.base.Preconditions;
 import gregtech.api.GregTechAPI;
-import gregtech.api.capability.GregtechTileCapabilities;
-import gregtech.api.capability.IEnergyContainer;
+import gregtech.api.capability.internal.GTInternalAttributes;
+import gregtech.api.capability.EnergyContainer;
 import gregtech.api.capability.impl.FluidHandlerProxy;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.ItemHandlerProxy;
@@ -325,7 +325,7 @@ public abstract class MetaTileEntity implements Coverable {
     public final boolean onCoverScrewdriverClick(EntityPlayer playerIn, EnumHand hand, CuboidRayTraceResult result) {
         EnumFacing hitFacing = Coverable.determineGridSideHit(result);
         boolean accessingActiveOutputSide = false;
-        if (this.getCapability(GregtechTileCapabilities.CAPABILITY_ACTIVE_OUTPUT_SIDE, hitFacing) != null) {
+        if (this.getCapability(GTInternalAttributes.CAPABILITY_ACTIVE_OUTPUT_SIDE, hitFacing) != null) {
             accessingActiveOutputSide = playerIn.isSneaking();
         }
         EnumFacing coverSide = Coverable.traceCoverSide(result);
@@ -793,7 +793,7 @@ public abstract class MetaTileEntity implements Coverable {
     }
 
     public final <T> T getCoverCapability(Capability<T> capability, EnumFacing side) {
-        boolean isCoverable = capability == GregtechTileCapabilities.CAPABILITY_COVERABLE;
+        boolean isCoverable = capability == GTInternalAttributes.CAPABILITY_COVERABLE;
         CoverBehavior coverBehavior = side == null ? null : getCoverAtSide(side);
         T originalCapability = getCapability(capability, side);
         if (coverBehavior != null && !isCoverable) {
@@ -803,8 +803,8 @@ public abstract class MetaTileEntity implements Coverable {
     }
 
     public <T> T getCapability(Capability<T> capability, EnumFacing side) {
-        if (capability == GregtechTileCapabilities.CAPABILITY_COVERABLE) {
-            return GregtechTileCapabilities.CAPABILITY_COVERABLE.cast(this);
+        if (capability == GTInternalAttributes.CAPABILITY_COVERABLE) {
+            return GTInternalAttributes.CAPABILITY_COVERABLE.cast(this);
         }
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY &&
             getFluidInventory().getTankProperties().length > 0) {
@@ -820,8 +820,8 @@ public abstract class MetaTileEntity implements Coverable {
                 break;
             }
         }
-        if (side != null && capabilityResult instanceof IEnergyContainer) {
-            IEnergyContainer energyContainer = (IEnergyContainer) capabilityResult;
+        if (side != null && capabilityResult instanceof EnergyContainer) {
+            EnergyContainer energyContainer = (EnergyContainer) capabilityResult;
             if (!energyContainer.inputsEnergy(side) && !energyContainer.outputsEnergy(side)) {
                 return null; //do not provide energy container if it can't input or output energy at all
             }

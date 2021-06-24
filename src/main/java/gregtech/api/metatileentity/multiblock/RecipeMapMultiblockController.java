@@ -5,8 +5,8 @@ import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import com.google.common.collect.Lists;
 import gregtech.api.GTValues;
-import gregtech.api.capability.IEnergyContainer;
-import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.EnergyContainer;
+import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.capability.impl.EnergyContainerList;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.ItemHandlerList;
@@ -37,7 +37,7 @@ public abstract class RecipeMapMultiblockController extends MultiblockWithDispla
     protected IItemHandlerModifiable outputInventory;
     protected IMultipleTankHandler inputFluidInventory;
     protected IMultipleTankHandler outputFluidInventory;
-    protected IEnergyContainer energyContainer;
+    protected EnergyContainer energyContainer;
 
     public RecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId);
@@ -46,7 +46,7 @@ public abstract class RecipeMapMultiblockController extends MultiblockWithDispla
         resetTileAbilities();
     }
 
-    public IEnergyContainer getEnergyContainer() {
+    public EnergyContainer getEnergyContainer() {
         return energyContainer;
     }
 
@@ -115,7 +115,7 @@ public abstract class RecipeMapMultiblockController extends MultiblockWithDispla
     protected void addDisplayText(List<ITextComponent> textList) {
         super.addDisplayText(textList);
         if (isStructureFormed()) {
-            IEnergyContainer energyContainer = recipeMapWorkable.getEnergyContainer();
+            EnergyContainer energyContainer = recipeMapWorkable.getEnergyContainer();
             if (energyContainer != null && energyContainer.getEnergyCapacity() > 0) {
                 long maxVoltage = energyContainer.getInputVoltage();
                 String voltageName = GTValues.VN[GTUtility.getTierByVoltage(maxVoltage)];

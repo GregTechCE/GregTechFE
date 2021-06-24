@@ -1,8 +1,8 @@
 package gregtech.api.capability.impl;
 
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.IElectricItem;
-import gregtech.api.capability.IEnergyContainer;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.ElectricItem;
+import gregtech.api.capability.EnergyContainer;
 import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GTUtility;
@@ -15,7 +15,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.function.Predicate;
 
-public class EnergyContainerHandler extends MTETrait implements IEnergyContainer {
+public class EnergyContainerHandler extends MTETrait implements EnergyContainer {
 
     private final long maxCapacity;
     private long energyStored;
@@ -66,8 +66,8 @@ public class EnergyContainerHandler extends MTETrait implements IEnergyContainer
 
     @Override
     public <T> T getCapability(Capability<T> capability) {
-        if(capability == GregtechCapabilities.CAPABILITY_ENERGY_CONTAINER) {
-            return GregtechCapabilities.CAPABILITY_ENERGY_CONTAINER.cast(this);
+        if(capability == GTAttributes.CAPABILITY_ENERGY_CONTAINER) {
+            return GTAttributes.CAPABILITY_ENERGY_CONTAINER.cast(this);
         }
         return null;
     }
@@ -109,7 +109,7 @@ public class EnergyContainerHandler extends MTETrait implements IEnergyContainer
         if (stackInSlot.isEmpty()) {
             return false;
         }
-        IElectricItem electricItem = stackInSlot.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        ElectricItem electricItem = stackInSlot.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
         if (electricItem == null || !electricItem.canProvideChargeExternally()) {
             return false;
         }
@@ -144,8 +144,8 @@ public class EnergyContainerHandler extends MTETrait implements IEnergyContainer
                 if (!outputsEnergy(side)) continue;
                 TileEntity tileEntity = metaTileEntity.getWorld().getTileEntity(metaTileEntity.getPos().offset(side));
                 EnumFacing oppositeSide = side.getOpposite();
-                if (tileEntity != null && tileEntity.hasCapability(GregtechCapabilities.CAPABILITY_ENERGY_CONTAINER, oppositeSide)) {
-                    IEnergyContainer energyContainer = tileEntity.getCapability(GregtechCapabilities.CAPABILITY_ENERGY_CONTAINER, oppositeSide);
+                if (tileEntity != null && tileEntity.hasCapability(GTAttributes.CAPABILITY_ENERGY_CONTAINER, oppositeSide)) {
+                    EnergyContainer energyContainer = tileEntity.getCapability(GTAttributes.CAPABILITY_ENERGY_CONTAINER, oppositeSide);
                     if (energyContainer == null || !energyContainer.inputsEnergy(oppositeSide)) continue;
                     amperesUsed += energyContainer.acceptEnergyFromNetwork(oppositeSide, outputVoltage, outputAmperes - amperesUsed);
                     if (amperesUsed == outputAmperes) break;
@@ -222,6 +222,6 @@ public class EnergyContainerHandler extends MTETrait implements IEnergyContainer
     }
 
     public interface IEnergyChangeListener {
-        void onEnergyChanged(IEnergyContainer container, boolean isInitialChange);
+        void onEnergyChanged(EnergyContainer container, boolean isInitialChange);
     }
 }

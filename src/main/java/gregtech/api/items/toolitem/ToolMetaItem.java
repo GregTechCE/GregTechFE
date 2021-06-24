@@ -5,8 +5,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import forestry.api.arboriculture.IToolGrafter;
 import gregtech.api.GTValues;
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.IElectricItem;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.ElectricItem;
 import gregtech.api.enchants.EnchantmentData;
 import gregtech.api.items.IToolItem;
 import gregtech.api.items.ToolDictNames;
@@ -116,7 +116,7 @@ public class ToolMetaItem<T extends ToolMetaItem<?>.MetaToolValueItem> extends M
             return item.getDurabilityManager().showsDurabilityBar(stack);
         }
         //don't show durability if item is not electric and it's damage is zero
-        return stack.hasCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null) || getItemDamage(stack) != 0;
+        return stack.hasCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null) || getItemDamage(stack) != 0;
     }
 
     @Override
@@ -126,8 +126,8 @@ public class ToolMetaItem<T extends ToolMetaItem<?>.MetaToolValueItem> extends M
             return item.getDurabilityManager().getDurabilityForDisplay(stack);
         }
         //if itemstack has electric charge ability, show electric charge percentage
-        if (stack.hasCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null)) {
-            IElectricItem electricItem = stack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        if (stack.hasCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null)) {
+            ElectricItem electricItem = stack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
             //noinspection ConstantConditions
             return 1.0 - (electricItem.getCharge() / (electricItem.getMaxCharge() * 1.0));
         }
@@ -322,14 +322,14 @@ public class ToolMetaItem<T extends ToolMetaItem<?>.MetaToolValueItem> extends M
     }
 
     public boolean isUsable(ItemStack stack, int damage) {
-        IElectricItem capability = stack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        ElectricItem capability = stack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
         int energyAmount = ConfigHolder.energyUsageMultiplier * damage;
         return capability == null || capability.canUse(energyAmount);
     }
 
     @Override
     public int damageItem(ItemStack stack, int vanillaDamage, boolean allowPartial, boolean simulate) {
-        IElectricItem capability = stack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        ElectricItem capability = stack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
         if (capability != null) {
             int energyAmount = ConfigHolder.energyUsageMultiplier * vanillaDamage;
             long discharged = capability.discharge(energyAmount, capability.getTier(), true, false, true);
@@ -392,8 +392,8 @@ public class ToolMetaItem<T extends ToolMetaItem<?>.MetaToolValueItem> extends M
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         ICapabilityProvider capabilityProvider = super.initCapabilities(stack, nbt);
-        if (capabilityProvider != null && capabilityProvider.hasCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null)) {
-            IElectricItem electricItem = capabilityProvider.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        if (capabilityProvider != null && capabilityProvider.hasCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null)) {
+            ElectricItem electricItem = capabilityProvider.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
             //noinspection ConstantConditions
             electricItem.addChargeListener((itemStack, newCharge) -> {
                 int newDamage = (newCharge == 0 ? 16000 : 0) + itemStack.getItemDamage() % 16000;
@@ -563,7 +563,7 @@ public class ToolMetaItem<T extends ToolMetaItem<?>.MetaToolValueItem> extends M
             return 0;
         }
         if (statsTag.hasKey("Damage")) {
-            boolean isElectricItem = itemStack.hasCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+            boolean isElectricItem = itemStack.hasCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
             int oldToolDamage = statsTag.getInteger("Damage");
             return isElectricItem ? oldToolDamage : oldToolDamage / 10;
         }

@@ -2,6 +2,9 @@ package gregtech.api.capability.impl;
 
 import gregtech.api.GTValues;
 import gregtech.api.capability.*;
+import gregtech.api.capability.internal.GTInternalAttributes;
+import gregtech.api.capability.internal.Controllable;
+import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.machines.FuelRecipeMap;
@@ -19,12 +22,12 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.function.Supplier;
 
-public class FuelRecipeLogic extends MTETrait implements IControllable, IFuelable {
+public class FuelRecipeLogic extends MTETrait implements Controllable, IFuelable {
 
     public final FuelRecipeMap recipeMap;
     protected FuelRecipe previousRecipe;
 
-    protected final Supplier<IEnergyContainer> energyContainer;
+    protected final Supplier<EnergyContainer> energyContainer;
     protected final Supplier<IMultipleTankHandler> fluidTank;
     public final long maxVoltage;
 
@@ -35,7 +38,7 @@ public class FuelRecipeLogic extends MTETrait implements IControllable, IFuelabl
     private boolean workingEnabled = true;
     private boolean wasActiveAndNeedsUpdate = false;
 
-    public FuelRecipeLogic(MetaTileEntity metaTileEntity, FuelRecipeMap recipeMap, Supplier<IEnergyContainer> energyContainer, Supplier<IMultipleTankHandler> fluidTank, long maxVoltage) {
+    public FuelRecipeLogic(MetaTileEntity metaTileEntity, FuelRecipeMap recipeMap, Supplier<EnergyContainer> energyContainer, Supplier<IMultipleTankHandler> fluidTank, long maxVoltage) {
         super(metaTileEntity);
         this.recipeMap = recipeMap;
         this.energyContainer = energyContainer;
@@ -99,11 +102,11 @@ public class FuelRecipeLogic extends MTETrait implements IControllable, IFuelabl
 
     @Override
     public <T> T getCapability(Capability<T> capability) {
-        if(capability == GregtechTileCapabilities.CAPABILITY_CONTROLLABLE) {
-            return GregtechTileCapabilities.CAPABILITY_CONTROLLABLE.cast(this);
+        if(capability == GTInternalAttributes.CAPABILITY_CONTROLLABLE) {
+            return GTInternalAttributes.CAPABILITY_CONTROLLABLE.cast(this);
         }
-        if(capability == GregtechCapabilities.CAPABILITY_FUELABLE) {
-            return GregtechCapabilities.CAPABILITY_FUELABLE.cast(this);
+        if(capability == GTAttributes.CAPABILITY_FUELABLE) {
+            return GTAttributes.CAPABILITY_FUELABLE.cast(this);
         }
         return null;
     }

@@ -1,22 +1,22 @@
 package gregtech.api.capability.impl;
 
-import gregtech.api.capability.IEnergyContainer;
+import gregtech.api.capability.EnergyContainer;
 import net.minecraft.util.EnumFacing;
 
 import java.util.List;
 
-public class EnergyContainerList implements IEnergyContainer {
+public class EnergyContainerList implements EnergyContainer {
 
-    private List<IEnergyContainer> energyContainerList;
+    private List<EnergyContainer> energyContainerList;
 
-    public EnergyContainerList(List<IEnergyContainer> energyContainerList) {
+    public EnergyContainerList(List<EnergyContainer> energyContainerList) {
         this.energyContainerList = energyContainerList;
     }
 
     @Override
     public long acceptEnergyFromNetwork(EnumFacing side, long voltage, long amperage) {
         long amperesUsed = 0L;
-        for (IEnergyContainer energyContainer : energyContainerList) {
+        for (EnergyContainer energyContainer : energyContainerList) {
             amperesUsed += energyContainer.acceptEnergyFromNetwork(null, voltage, amperage);
             if (amperage == amperesUsed) break;
         }
@@ -26,7 +26,7 @@ public class EnergyContainerList implements IEnergyContainer {
     @Override
     public long changeEnergy(long energyToAdd) {
         long energyAdded = 0L;
-        for (IEnergyContainer energyContainer : energyContainerList) {
+        for (EnergyContainer energyContainer : energyContainerList) {
             energyAdded += energyContainer.changeEnergy(energyToAdd - energyAdded);
             if (energyAdded == energyToAdd) break;
         }
@@ -36,14 +36,14 @@ public class EnergyContainerList implements IEnergyContainer {
     @Override
     public long getEnergyStored() {
         return energyContainerList.stream()
-            .mapToLong(IEnergyContainer::getEnergyStored)
+            .mapToLong(EnergyContainer::getEnergyStored)
             .sum();
     }
 
     @Override
     public long getEnergyCapacity() {
         return energyContainerList.stream()
-            .mapToLong(IEnergyContainer::getEnergyCapacity)
+            .mapToLong(EnergyContainer::getEnergyCapacity)
             .sum();
     }
 

@@ -1,21 +1,17 @@
 package gregtech.api.util;
 
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FixedFluidInvView;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.IElectricItem;
-import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.ElectricItem;
+import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.impl.ModularUIContainer;
 import gregtech.api.items.IToolItem;
@@ -32,7 +28,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -45,7 +40,6 @@ import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -66,15 +60,10 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static gregtech.api.GTValues.V;
 
@@ -296,9 +285,9 @@ public class GTUtility {
             IToolItem damagableItem = (IToolItem) item;
             return damagableItem.damageItem(itemStack, vanillaDamage, simulate);
 
-        } else if (itemStack.hasCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null)) {
+        } else if (itemStack.hasCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null)) {
             //if we're using electric item, use default energy multiplier for textures
-            IElectricItem capability = itemStack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+            ElectricItem capability = itemStack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
             int energyNeeded = vanillaDamage * ConfigHolder.energyUsageMultiplier;
             //noinspection ConstantConditions
             return capability.discharge(energyNeeded, Integer.MAX_VALUE, true, false, simulate) == energyNeeded;

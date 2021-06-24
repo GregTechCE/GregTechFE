@@ -1,8 +1,8 @@
 package gregtech.api.gui.widgets;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.IElectricItem;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.ElectricItem;
 import gregtech.api.gui.widgets.slot.SlotWidget;
 import net.minecraft.item.ItemStack;
 
@@ -14,7 +14,7 @@ public class DischargerSlotWidget extends SlotWidget {
 
     @Override
     public boolean canPutStack(ItemStack stack) {
-        IElectricItem capability = GregtechCapabilities.ELECTRIC_ITEM.getFirstOrNull(stack);
+        ElectricItem capability = GTAttributes.ELECTRIC_ITEM.getFirstOrNull(stack);
         return capability != null && capability.canProvideChargeExternally();
     }
 }

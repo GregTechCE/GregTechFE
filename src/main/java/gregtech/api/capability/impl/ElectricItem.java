@@ -1,8 +1,7 @@
 package gregtech.api.capability.impl;
 
 import gregtech.api.GTValues;
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.IElectricItem;
+import gregtech.api.capability.GTAttributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class ElectricItem implements IElectricItem, ICapabilityProvider {
+public class ElectricItem implements gregtech.api.capability.ElectricItem, ICapabilityProvider {
 
     protected ItemStack itemStack;
 
@@ -141,12 +140,12 @@ public class ElectricItem implements IElectricItem, ICapabilityProvider {
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM;
+        return capability == GTAttributes.CAPABILITY_ELECTRIC_ITEM;
     }
 
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM ? (T) this : null;
+        return capability == GTAttributes.CAPABILITY_ELECTRIC_ITEM ? (T) this : null;
     }
 }

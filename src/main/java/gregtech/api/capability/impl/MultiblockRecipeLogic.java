@@ -1,7 +1,7 @@
 package gregtech.api.capability.impl;
 
-import gregtech.api.capability.IEnergyContainer;
-import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.EnergyContainer;
+import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.recipes.Recipe;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -21,7 +21,7 @@ public class MultiblockRecipeLogic extends AbstractRecipeLogic {
         super.update();
     }
 
-    public IEnergyContainer getEnergyContainer() {
+    public EnergyContainer getEnergyContainer() {
         RecipeMapMultiblockController controller = (RecipeMapMultiblockController) metaTileEntity;
         return controller.getEnergyContainer();
     }

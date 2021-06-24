@@ -1,6 +1,6 @@
-package gregtech.api.capability;
+package gregtech.api.capability.internal;
 
-public interface IActiveOutputSide {
+public interface ActiveOutputSide {
 
     boolean isAutoOutputItems();
 

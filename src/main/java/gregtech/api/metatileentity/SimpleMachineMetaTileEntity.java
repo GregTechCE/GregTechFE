@@ -4,8 +4,8 @@ import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
-import gregtech.api.capability.GregtechTileCapabilities;
-import gregtech.api.capability.IActiveOutputSide;
+import gregtech.api.capability.internal.GTInternalAttributes;
+import gregtech.api.capability.internal.ActiveOutputSide;
 import gregtech.api.capability.impl.EnergyContainerHandler;
 import gregtech.api.capability.impl.FluidHandlerProxy;
 import gregtech.api.capability.impl.FluidTankList;
@@ -42,7 +42,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class SimpleMachineMetaTileEntity extends WorkableTieredMetaTileEntity implements IActiveOutputSide {
+public class SimpleMachineMetaTileEntity extends WorkableTieredMetaTileEntity implements ActiveOutputSide {
 
     private final boolean hasFrontFacing;
 
@@ -180,9 +180,9 @@ public class SimpleMachineMetaTileEntity extends WorkableTieredMetaTileEntity im
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemHandler);
             }
             return null;
-        } else if (capability == GregtechTileCapabilities.CAPABILITY_ACTIVE_OUTPUT_SIDE) {
+        } else if (capability == GTInternalAttributes.CAPABILITY_ACTIVE_OUTPUT_SIDE) {
             if (side == getOutputFacing()) {
-                return GregtechTileCapabilities.CAPABILITY_ACTIVE_OUTPUT_SIDE.cast(this);
+                return GTInternalAttributes.CAPABILITY_ACTIVE_OUTPUT_SIDE.cast(this);
             }
             return null;
         }

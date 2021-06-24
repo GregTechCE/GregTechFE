@@ -1,10 +1,9 @@
 package gregtech.api.cover;
 
 import gregtech.api.GTValues;
-import gregtech.api.capability.GregtechTileCapabilities;
+import gregtech.api.capability.internal.GTInternalAttributes;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.UIFactory;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -43,7 +42,7 @@ public class CoverBehaviorUIFactory extends UIFactory<CoverBehavior> {
             throw new IllegalStateException("readHolderFromSyncData called outside of world context");
         }
 
-        Coverable coverable = GregtechTileCapabilities.COVERABLE.getFirstOrNull(world, blockPos);
+        Coverable coverable = GTInternalAttributes.COVERABLE.getFirstOrNull(world, blockPos);
         if (coverable == null) {
             throw new IllegalStateException("Couldn't find coverable implementation at " + blockPos);
         }

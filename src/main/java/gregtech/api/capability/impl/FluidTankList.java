@@ -1,6 +1,6 @@
 package gregtech.api.capability.impl;
 
-import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.internal.IMultipleTankHandler;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

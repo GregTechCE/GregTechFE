@@ -1,8 +1,7 @@
 package gregtech.api.util;
 
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.IElectricItem;
-import gregtech.api.capability.impl.ElectricItem;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.ElectricItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -46,13 +45,13 @@ public class ShapedOreEnergyTransferRecipe extends ShapedOreRecipe {
     private void fixOutputItemMaxCharge() {
         long totalMaxCharge = getIngredients().stream()
             .mapToLong(it -> Arrays.stream(it.getMatchingStacks())
-                .map(stack -> stack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null))
+                .map(stack -> stack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null))
                 .filter(Objects::nonNull)
-                .mapToLong(IElectricItem::getMaxCharge)
+                .mapToLong(ElectricItem::getMaxCharge)
                 .max().orElse(0L)).sum();
-        IElectricItem electricItem = output.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
-        if (totalMaxCharge > 0L && electricItem instanceof ElectricItem) {
-            ((ElectricItem) electricItem).setMaxChargeOverride(totalMaxCharge);
+        ElectricItem electricItem = output.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
+        if (totalMaxCharge > 0L && electricItem instanceof gregtech.api.capability.impl.ElectricItem) {
+            ((gregtech.api.capability.impl.ElectricItem) electricItem).setMaxChargeOverride(totalMaxCharge);
         }
     }
 
@@ -65,7 +64,7 @@ public class ShapedOreEnergyTransferRecipe extends ShapedOreRecipe {
     }
 
     public static void chargeStackFromComponents(ItemStack toolStack, IInventory ingredients, Predicate<ItemStack> chargePredicate, boolean transferMaxCharge) {
-        IElectricItem electricItem = toolStack.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+        ElectricItem electricItem = toolStack.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
         long totalMaxCharge = 0L;
         if (electricItem != null && electricItem.getMaxCharge() > 0L) {
             for (int slotIndex = 0; slotIndex < ingredients.getSizeInventory(); slotIndex++) {
@@ -73,7 +72,7 @@ public class ShapedOreEnergyTransferRecipe extends ShapedOreRecipe {
                 if(!chargePredicate.test(stackInSlot)) {
                     continue;
                 }
-                IElectricItem batteryItem = stackInSlot.getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+                ElectricItem batteryItem = stackInSlot.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
                 if (batteryItem == null) {
                     continue;
                 }
@@ -85,8 +84,8 @@ public class ShapedOreEnergyTransferRecipe extends ShapedOreRecipe {
                 }
             }
         }
-        if(electricItem instanceof ElectricItem && transferMaxCharge) {
-            ((ElectricItem) electricItem).setMaxChargeOverride(totalMaxCharge);
+        if(electricItem instanceof gregtech.api.capability.impl.ElectricItem && transferMaxCharge) {
+            ((gregtech.api.capability.impl.ElectricItem) electricItem).setMaxChargeOverride(totalMaxCharge);
         }
     }
 }

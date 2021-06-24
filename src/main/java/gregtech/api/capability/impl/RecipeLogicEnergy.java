@@ -1,6 +1,6 @@
 package gregtech.api.capability.impl;
 
-import gregtech.api.capability.IEnergyContainer;
+import gregtech.api.capability.EnergyContainer;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.RecipeMap;
 
@@ -8,9 +8,9 @@ import java.util.function.Supplier;
 
 public class RecipeLogicEnergy extends AbstractRecipeLogic {
 
-    private final Supplier<IEnergyContainer> energyContainer;
+    private final Supplier<EnergyContainer> energyContainer;
 
-    public RecipeLogicEnergy(MetaTileEntity tileEntity, RecipeMap<?> recipeMap, Supplier<IEnergyContainer> energyContainer) {
+    public RecipeLogicEnergy(MetaTileEntity tileEntity, RecipeMap<?> recipeMap, Supplier<EnergyContainer> energyContainer) {
         super(tileEntity, recipeMap);
         this.energyContainer = energyContainer;
     }

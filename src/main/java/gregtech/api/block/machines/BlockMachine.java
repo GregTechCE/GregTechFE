@@ -8,9 +8,9 @@ import codechicken.lib.raytracer.RayTracer;
 import codechicken.lib.vec.Cuboid6;
 import com.google.common.collect.Lists;
 import gregtech.api.GregTechAPI;
-import gregtech.api.capability.GregtechCapabilities;
-import gregtech.api.capability.tool.IScrewdriverItem;
-import gregtech.api.capability.tool.IWrenchItem;
+import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.tool.ScrewdriverItem;
+import gregtech.api.capability.tool.WrenchItem;
 import gregtech.api.cover.CoverBehavior;
 import gregtech.api.cover.Coverable;
 import gregtech.api.cover.FacadeCover;
@@ -269,8 +269,8 @@ public class BlockMachine extends BlockCustomParticle implements ITileEntityProv
             return false;
         }
 
-        if (itemStack.hasCapability(GregtechCapabilities.CAPABILITY_SCREWDRIVER, null)) {
-            IScrewdriverItem screwdriver = itemStack.getCapability(GregtechCapabilities.CAPABILITY_SCREWDRIVER, null);
+        if (itemStack.hasCapability(GTAttributes.CAPABILITY_SCREWDRIVER, null)) {
+            ScrewdriverItem screwdriver = itemStack.getCapability(GTAttributes.CAPABILITY_SCREWDRIVER, null);
 
             if (screwdriver.damageItem(DamageValues.DAMAGE_FOR_SCREWDRIVER, true) &&
                 metaTileEntity.onCoverScrewdriverClick(playerIn, hand, rayTraceResult)) {
@@ -280,8 +280,8 @@ public class BlockMachine extends BlockCustomParticle implements ITileEntityProv
             return false;
         }
 
-        if (itemStack.hasCapability(GregtechCapabilities.CAPABILITY_WRENCH, null)) {
-            IWrenchItem wrenchItem = itemStack.getCapability(GregtechCapabilities.CAPABILITY_WRENCH, null);
+        if (itemStack.hasCapability(GTAttributes.CAPABILITY_WRENCH, null)) {
+            WrenchItem wrenchItem = itemStack.getCapability(GTAttributes.CAPABILITY_WRENCH, null);
             EnumFacing wrenchDirection = Coverable.determineGridSideHit(rayTraceResult);
 
             if (wrenchItem.damageItem(DamageValues.DAMAGE_FOR_WRENCH, true) &&

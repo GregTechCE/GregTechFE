@@ -1,9 +1,8 @@
-package gregtech.api.capability;
+package gregtech.api.capability.internal;
 
-public interface IControllable {
+public interface Controllable {
 
     boolean isWorkingEnabled();
 
     void setWorkingEnabled(boolean isActivationAllowed);
-
 }

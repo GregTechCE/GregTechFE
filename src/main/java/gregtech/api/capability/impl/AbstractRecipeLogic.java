@@ -1,9 +1,9 @@
 package gregtech.api.capability.impl;
 
 import gregtech.api.GTValues;
-import gregtech.api.capability.GregtechTileCapabilities;
-import gregtech.api.capability.IMultipleTankHandler;
-import gregtech.api.capability.IWorkable;
+import gregtech.api.capability.internal.GTInternalAttributes;
+import gregtech.api.capability.internal.IMultipleTankHandler;
+import gregtech.api.capability.internal.Workable;
 import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.Recipe;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.LongSupplier;
 
-public abstract class AbstractRecipeLogic extends MTETrait implements IWorkable {
+public abstract class AbstractRecipeLogic extends MTETrait implements Workable {
 
     private static final String ALLOW_OVERCLOCKING = "AllowOverclocking";
     private static final String OVERCLOCK_VOLTAGE = "OverclockVoltage";
@@ -96,10 +96,10 @@ public abstract class AbstractRecipeLogic extends MTETrait implements IWorkable 
 
     @Override
     public <T> T getCapability(Capability<T> capability) {
-        if(capability == GregtechTileCapabilities.CAPABILITY_WORKABLE) {
-            return GregtechTileCapabilities.CAPABILITY_WORKABLE.cast(this);
-        } else if(capability == GregtechTileCapabilities.CAPABILITY_CONTROLLABLE) {
-            return GregtechTileCapabilities.CAPABILITY_CONTROLLABLE.cast(this);
+        if(capability == GTInternalAttributes.CAPABILITY_WORKABLE) {
+            return GTInternalAttributes.CAPABILITY_WORKABLE.cast(this);
+        } else if(capability == GTInternalAttributes.CAPABILITY_CONTROLLABLE) {
+            return GTInternalAttributes.CAPABILITY_CONTROLLABLE.cast(this);
         }
         return null;
     }

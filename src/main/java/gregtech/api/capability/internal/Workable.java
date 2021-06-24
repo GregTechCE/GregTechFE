@@ -1,9 +1,9 @@
-package gregtech.api.capability;
+package gregtech.api.capability.internal;
 
 /**
  * For machines which have progress and can work
  */
-public interface IWorkable extends IControllable {
+public interface Workable extends Controllable {
 
     /**
      * @return current progress of machine

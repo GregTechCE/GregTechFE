@@ -7,7 +7,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import gnu.trove.map.TByteObjectMap;
 import gnu.trove.map.hash.TByteObjectHashMap;
 import gregtech.api.GTValues;
-import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
