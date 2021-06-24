@@ -1,7 +1,7 @@
 package gregtech.api.items;
 
-import gregtech.api.items.metaitem.ElectricStats;
-import gregtech.api.items.metaitem.FluidStats;
+import gregtech.api.items.stats.ElectricStats;
+import gregtech.api.items.stats.FluidStats;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 
 public class GTItemSettings extends FabricItemSettings {

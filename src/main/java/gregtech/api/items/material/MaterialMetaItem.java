@@ -1,11 +1,11 @@
-package gregtech.api.items.materialitem;
+package gregtech.api.items.material;
 
 import com.google.common.base.Preconditions;
 import gnu.trove.map.hash.TShortObjectHashMap;
 import gregtech.api.GTValues;
 import gregtech.api.GregTechAPI;
 import gregtech.api.damagesources.GTDamageSource;
-import gregtech.api.items.metaitem.StandardMetaItem;
+import gregtech.api.items.stats.StandardMetaItem;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.MaterialIconSet;
 import gregtech.api.unification.material.type.DustMaterial;
@@ -104,6 +104,7 @@ public class MaterialMetaItem extends StandardMetaItem {
     @Override
     @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack itemStack) {
+        ItemColors
         if (itemStack.getItemDamage() < metaItemOffset) {
             Material material = Material.MATERIAL_REGISTRY.getObjectById(itemStack.getItemDamage() % 1000);
             OrePrefix prefix = orePrefixes[itemStack.getItemDamage() / 1000];
@@ -150,6 +151,7 @@ public class MaterialMetaItem extends StandardMetaItem {
                 }
             }
         }
+        //TODO RADIATION DAMAGE TOO
     }
 
     @Override
@@ -165,22 +167,6 @@ public class MaterialMetaItem extends StandardMetaItem {
         }
     }
 
-    public Material getMaterial(ItemStack itemStack) {
-        int damage = itemStack.getItemDamage();
-        if (damage < this.metaItemOffset) {
-            return Material.MATERIAL_REGISTRY.getObjectById(damage % 1000);
-        }
-        return null;
-    }
-
-    public OrePrefix getOrePrefix(ItemStack itemStack) {
-        int damage = itemStack.getItemDamage();
-        if (damage < this.metaItemOffset) {
-            return this.orePrefixes[(damage / 1000)];
-        }
-        return null;
-    }
-
     @Override
     public int getItemBurnTime(ItemStack itemStack) {
         int damage = itemStack.getItemDamage();
@@ -192,6 +178,7 @@ public class MaterialMetaItem extends StandardMetaItem {
                 return (int) (dustMaterial.burnTime * prefix.materialAmount / GTValues.M);
             }
         }
+        FurnaceBlockEntity
         return super.getItemBurnTime(itemStack);
 
     }

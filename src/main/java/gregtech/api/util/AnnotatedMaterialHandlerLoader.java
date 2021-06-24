@@ -1,6 +1,6 @@
 package gregtech.api.util;
 
-import gregtech.api.unification.material.IMaterialHandler;
+import gregtech.api.unification.material.MaterialHandler;
 import gregtech.api.unification.material.type.Material;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
@@ -13,7 +13,7 @@ import java.util.Set;
 public class AnnotatedMaterialHandlerLoader {
 
     public static void discoverAndLoadAnnotatedMaterialHandlers(ASMDataTable asmDataTable) {
-        Set<ASMData> annotations = asmDataTable.getAll(IMaterialHandler.RegisterMaterialHandler.class.getName());
+        Set<ASMData> annotations = asmDataTable.getAll(MaterialHandler.RegisterMaterialHandler.class.getName());
         int materialHandlersRegistered = 0;
         for (ASMData annotationData : annotations) {
             String materialHandlerClassName = annotationData.getClassName();
@@ -30,7 +30,7 @@ public class AnnotatedMaterialHandlerLoader {
             Field instanceField = null;
             Constructor<?> constructor = null;
 
-            if (!IMaterialHandler.class.isAssignableFrom(materialHandlerClass)) {
+            if (!MaterialHandler.class.isAssignableFrom(materialHandlerClass)) {
                 denyReason = "class does not implement IMaterialHandler";
             } else if (Modifier.isAbstract(materialHandlerClass.getModifiers())) {
                 denyReason = "class is abstract and cannot be initialized";
@@ -50,18 +50,18 @@ public class AnnotatedMaterialHandlerLoader {
                 }
             }
 
-            IMaterialHandler materialHandler = null;
+            MaterialHandler materialHandler = null;
             if (denyReason == null) {
                 if (instanceField != null) {
                     try {
-                        materialHandler = (IMaterialHandler) instanceField.get(null);
+                        materialHandler = (MaterialHandler) instanceField.get(null);
                     } catch (ReflectiveOperationException exception) {
                         denyReason = "failed to retrieve INSTANCE field value";
                         loadingError = exception;
                     }
                 } else {
                     try {
-                        materialHandler = (IMaterialHandler) constructor.newInstance();
+                        materialHandler = (MaterialHandler) constructor.newInstance();
                     } catch (ReflectiveOperationException exception) {
                         denyReason = "failed to initialize material handler";
                         loadingError = exception;

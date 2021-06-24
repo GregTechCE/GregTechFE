@@ -2,6 +2,7 @@ package gregtech.api.util;
 
 import gregtech.api.capability.GTAttributes;
 import gregtech.api.capability.ElectricItem;
+import gregtech.api.capability.impl.ElectricItemImpl;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -50,8 +51,8 @@ public class ShapedOreEnergyTransferRecipe extends ShapedOreRecipe {
                 .mapToLong(ElectricItem::getMaxCharge)
                 .max().orElse(0L)).sum();
         ElectricItem electricItem = output.getCapability(GTAttributes.CAPABILITY_ELECTRIC_ITEM, null);
-        if (totalMaxCharge > 0L && electricItem instanceof gregtech.api.capability.impl.ElectricItem) {
-            ((gregtech.api.capability.impl.ElectricItem) electricItem).setMaxChargeOverride(totalMaxCharge);
+        if (totalMaxCharge > 0L && electricItem instanceof ElectricItemImpl) {
+            ((ElectricItemImpl) electricItem).setMaxChargeOverride(totalMaxCharge);
         }
     }
 
@@ -84,8 +85,8 @@ public class ShapedOreEnergyTransferRecipe extends ShapedOreRecipe {
                 }
             }
         }
-        if(electricItem instanceof gregtech.api.capability.impl.ElectricItem && transferMaxCharge) {
-            ((gregtech.api.capability.impl.ElectricItem) electricItem).setMaxChargeOverride(totalMaxCharge);
+        if(electricItem instanceof ElectricItemImpl && transferMaxCharge) {
+            ((ElectricItemImpl) electricItem).setMaxChargeOverride(totalMaxCharge);
         }
     }
 }

@@ -1,27 +1,17 @@
 package gregtech.api.unification.material.type;
 
+import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.liquid.ILiquidDefinition;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import gregtech.api.GTValues;
 import gregtech.api.unification.Element;
+import gregtech.api.unification.material.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
-import gregtech.api.unification.stack.MaterialStack;
 import gregtech.api.util.GTUtility;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.Optional.Method;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-@ZenClass("mods.gregtech.material.FluidMaterial")
-@ZenRegister
+//@ZenClass("mods.gregtech.material.FluidMaterial")
+//@ZenRegister
 public class FluidMaterial extends Material {
 
     public static final class MatFlags {
@@ -50,102 +40,85 @@ public class FluidMaterial extends Material {
     /**
      * Internal material fluid field
      */
-    @Nullable
-    private Fluid materialFluid;
+    //@Nullable
+    private FluidKey materialFluid;
 
     /**
      * Internal material plasma fluid field
      */
-    @Nullable
-    private Fluid materialPlasma;
+    //@Nullable
+    private FluidKey materialPlasma;
 
     private int fluidTemperature = 300;
 
-    public FluidMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, Element element) {
-        super(metaItemSubId, name, materialRGB, materialIconSet, materialComponents, materialGenerationFlags, element);
+    public FluidMaterial(int materialRGB, MaterialIconSet materialIconSet, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element) {
+        super(materialRGB, materialIconSet, materialComponents, materialGenerationFlags, element);
     }
 
-    public FluidMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags) {
-        super(metaItemSubId, name, materialRGB, materialIconSet, materialComponents, materialGenerationFlags, null);
+    public FluidMaterial(int materialRGB, MaterialIconSet materialIconSet, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags) {
+        super(materialRGB, materialIconSet, materialComponents, materialGenerationFlags, null);
     }
 
-    @ZenGetter("hasFluid")
+    //@ZenGetter("hasFluid")
     public boolean shouldGenerateFluid() {
         return true;
     }
 
-    @ZenGetter("hasPlasma")
+    //@ZenGetter("hasPlasma")
     public boolean shouldGeneratePlasma() {
         return shouldGenerateFluid() && hasFlag(MatFlags.GENERATE_PLASMA);
     }
 
-    @ZenGetter("isGaseous")
+    //@ZenGetter("isGaseous")
     public boolean isGas() {
         return hasFlag(MatFlags.STATE_GAS);
     }
 
-    /**
-     * internal usage only
-     */
-    public final void setMaterialFluid(@Nonnull Fluid materialFluid) {
+    @Deprecated
+    public final void setMaterialFluid(FluidKey materialFluid) {
         Preconditions.checkNotNull(materialFluid);
         this.materialFluid = materialFluid;
     }
 
-    /**
-     * internal usage only
-     */
-    public final void setMaterialPlasma(@Nonnull Fluid materialPlasma) {
+    @Deprecated
+    public final void setMaterialPlasma(FluidKey materialPlasma) {
         Preconditions.checkNotNull(materialPlasma);
         this.materialPlasma = materialPlasma;
     }
 
-    public final @Nullable
-    Fluid getMaterialFluid() {
+    public final FluidKey getFluid() {
         return materialFluid;
     }
 
-    public final @Nullable
-    Fluid getMaterialPlasma() {
+    public final FluidKey getPlasma() {
         return materialPlasma;
     }
 
-    public final @Nullable
-    FluidStack getFluid(int amount) {
-        return materialFluid == null ? null : new FluidStack(materialFluid, amount);
-    }
-
-    public final @Nullable
-    FluidStack getPlasma(int amount) {
-        return materialPlasma == null ? null : new FluidStack(materialPlasma, amount);
-    }
-
-    @ZenMethod("setFluidTemperature")
+    //@ZenMethod("setFluidTemperature")
     public FluidMaterial setFluidTemperature(int fluidTemperature) {
         Preconditions.checkArgument(fluidTemperature > 0, "Invalid temperature");
         this.fluidTemperature = fluidTemperature;
         return this;
     }
 
-    @ZenGetter("fluidTemperature")
+    //@ZenGetter("fluidTemperature")
     public int getFluidTemperature() {
         return fluidTemperature;
     }
 
-    @ZenGetter("fluid")
-    @Method(modid = GTValues.MODID_CT)
-    @Nullable
-    public ILiquidDefinition ctGetFluid() {
-        Fluid materialFluid = getMaterialFluid();
-        return materialFluid == null ? null : CraftTweakerMC.getILiquidDefinition(materialFluid);
-    }
+    //@ZenGetter("fluid")
+    //@Method(modid = GTValues.MODID_CT)
+    //@Nullable
+    //public ILiquidDefinition ctGetFluid() {
+    //    Fluid materialFluid = getMaterialFluid();
+    //    return materialFluid == null ? null : CraftTweakerMC.getILiquidDefinition(materialFluid);
+    //}
 
-    @ZenGetter("plasma")
-    @Method(modid = GTValues.MODID_CT)
-    @Nullable
-    public ILiquidDefinition ctGetPlasma() {
-        Fluid materialFluid = getMaterialPlasma();
-        return materialFluid == null ? null : CraftTweakerMC.getILiquidDefinition(materialFluid);
-    }
-
+    //@ZenGetter("plasma")
+    //@Method(modid = GTValues.MODID_CT)
+    //@Nullable
+    //public ILiquidDefinition ctGetPlasma() {
+    //    Fluid materialFluid = getMaterialPlasma();
+    //    return materialFluid == null ? null : CraftTweakerMC.getILiquidDefinition(materialFluid);
+    //}
 }

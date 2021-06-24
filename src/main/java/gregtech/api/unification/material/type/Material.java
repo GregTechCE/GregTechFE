@@ -1,17 +1,17 @@
 package gregtech.api.unification.material.type;
 
-import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
-import crafttweaker.annotations.ZenRegister;
+import gregtech.api.GTValues;
 import gregtech.api.unification.Element;
-import gregtech.api.unification.material.IMaterialHandler;
+import gregtech.api.unification.material.MaterialHandler;
+import gregtech.api.unification.material.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
-import gregtech.api.unification.stack.MaterialStack;
-import gregtech.api.util.GTLog;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import stanhebben.zenscript.annotations.*;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -24,25 +24,22 @@ import java.util.TreeMap;
 
 import static gregtech.api.util.GTUtility.createFlag;
 
-@ZenClass("mods.gregtech.material.Material")
-@ZenRegister
+//@ZenClass("mods.gregtech.material.Material")
+//@ZenRegister
 public abstract class Material implements Comparable<Material> {
 
-    public static final GTControlledRegistry<String, Material> MATERIAL_REGISTRY = new GTControlledRegistry<>(1000);
-    private static final List<IMaterialHandler> materialHandlers = new ArrayList<>();
+    public static final Registry<Material> REGISTRY = FabricRegistryBuilder
+            .createSimple(Material.class, new Identifier(GTValues.MODID, "materials"))
+            .buildAndRegister();
 
-    public static void registerMaterialHandler(IMaterialHandler materialHandler) {
+    private static final List<MaterialHandler> materialHandlers = new ArrayList<>();
+
+    public static void registerMaterialHandler(MaterialHandler materialHandler) {
         materialHandlers.add(materialHandler);
     }
 
-
     public static void runMaterialHandlers() {
-        materialHandlers.forEach(IMaterialHandler::onMaterialsInit);
-    }
-
-    public static void freezeRegistry() {
-        GTLog.logger.info("Freezing material registry...");
-        MATERIAL_REGISTRY.freezeRegistry();
+        materialHandlers.forEach(MaterialHandler::onMaterialsInit);
     }
 
     public static final class MatFlags {
@@ -124,11 +121,6 @@ public abstract class Material implements Comparable<Material> {
         public static final long EXPLOSIVE = createFlag(4);
 
         /**
-         * Add to material to disable it's unification fully
-         */
-        public static final long NO_UNIFICATION = createFlag(5);
-
-        /**
          * Add to material if any of it's items cannot be recycled to get scrub
          */
         public static final long NO_RECYCLING = createFlag(6);
@@ -151,26 +143,26 @@ public abstract class Material implements Comparable<Material> {
     /**
      * Color of material in RGB format
      */
-    @ZenProperty("color")
+    //@ZenProperty("color")
     public final int materialRGB;
 
     /**
      * Chemical formula of this material
      */
-    @ZenProperty
+    //@ZenProperty
     public final String chemicalFormula;
 
     /**
      * Icon set for this material meta-items generation
      */
-    @ZenProperty("iconSet")
+    //@ZenProperty("iconSet")
     public final MaterialIconSet materialIconSet;
 
     /**
      * List of this material component
      */
-    @ZenProperty("components")
-    public final ImmutableList<MaterialStack> materialComponents;
+    //@ZenProperty("components")
+    public final ImmutableList<MaterialComponent> materialComponents;
 
     /**
      * Generation flags of this material
@@ -178,29 +170,16 @@ public abstract class Material implements Comparable<Material> {
      * @see MatFlags
      * @see DustMaterial.MatFlags
      */
-    @ZenProperty("generationFlagsRaw")
+    //@ZenProperty("generationFlagsRaw")
     protected long materialGenerationFlags;
 
     /**
      * Element of this material consist of
      */
-    @ZenProperty
+    //@ZenProperty
     public final Element element;
 
-    private String calculateChemicalFormula() {
-        if (element != null) {
-            return element.name();
-        }
-        if (!materialComponents.isEmpty()) {
-            StringBuilder components = new StringBuilder();
-            for (MaterialStack component : materialComponents)
-                components.append(component.toString());
-            return components.toString();
-        }
-        return "";
-    }
-
-    public Material(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, Element element) {
+    public Material(int materialRGB, MaterialIconSet materialIconSet, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element) {
         this.materialRGB = materialRGB;
         this.materialIconSet = materialIconSet;
         this.materialComponents = materialComponents;
@@ -209,11 +188,20 @@ public abstract class Material implements Comparable<Material> {
         this.chemicalFormula = calculateChemicalFormula();
         calculateDecompositionType();
         initializeMaterial();
-        registerMaterial(metaItemSubId, name);
     }
 
-    protected void registerMaterial(int metaItemSubId, String name) {
-        MATERIAL_REGISTRY.register(metaItemSubId, name, this);
+    private String calculateChemicalFormula() {
+        if (element != null) {
+            return element.name();
+        }
+        if (!materialComponents.isEmpty()) {
+            StringBuilder components = new StringBuilder();
+            for (MaterialComponent component : materialComponents) {
+                components.append(component.toFormulaString());
+            }
+            return components.toString();
+        }
+        return "";
     }
 
     protected void initializeMaterial() {
@@ -224,9 +212,6 @@ public abstract class Material implements Comparable<Material> {
     }
 
     public void addFlag(long... materialGenerationFlags) {
-        if (MATERIAL_REGISTRY.isFrozen()) {
-            throw new IllegalStateException("Cannot add flag to material when registry is frozen!");
-        }
         long combined = 0;
         for (long materialGenerationFlag : materialGenerationFlags) {
             combined |= materialGenerationFlag;
@@ -234,12 +219,12 @@ public abstract class Material implements Comparable<Material> {
         this.materialGenerationFlags |= verifyMaterialBits(combined);
     }
 
-    @ZenMethod("hasFlagRaw")
+    //@ZenMethod("hasFlagRaw")
     public boolean hasFlag(long generationFlag) {
         return (materialGenerationFlags & generationFlag) >= generationFlag;
     }
 
-    @ZenMethod
+    //@ZenMethod
     public void addFlags(String... flagNames) {
         addFlag(convertMaterialFlags(getClass(), flagNames));
     }
@@ -253,7 +238,7 @@ public abstract class Material implements Comparable<Material> {
         return combined;
     }
 
-    @ZenMethod
+    //@ZenMethod
     public boolean hasFlag(String flagName) {
         long materialFlagId = MatFlags.resolveFlag(flagName, getClass());
         return hasFlag(materialFlagId);
@@ -265,7 +250,8 @@ public abstract class Material implements Comparable<Material> {
             !hasFlag(MatFlags.DECOMPOSITION_BY_ELECTROLYZING) &&
             !hasFlag(MatFlags.DISABLE_DECOMPOSITION)) {
             boolean onlyMetalMaterials = true;
-            for (MaterialStack materialStack : materialComponents) {
+
+            for (MaterialComponent materialStack : materialComponents) {
                 Material material = materialStack.material;
                 onlyMetalMaterials &= material instanceof IngotMaterial;
             }
@@ -279,128 +265,116 @@ public abstract class Material implements Comparable<Material> {
         }
     }
 
-    @ZenGetter("radioactive")
+    //@ZenGetter("radioactive")
     public boolean isRadioactive() {
-        if (element != null)
+        if (element != null) {
             return element.halfLifeSeconds >= 0;
-        for (MaterialStack material : materialComponents)
-            if (material.material.isRadioactive()) return true;
+        }
+
+        for (MaterialComponent material : materialComponents) {
+            if (material.material.isRadioactive()) {
+                return true;
+            }
+        }
         return false;
     }
 
-    @ZenGetter("protons")
+    //@ZenGetter("protons")
     public long getProtons() {
-        if (element != null)
+        if (element != null) {
             return element.getProtons();
-        if (materialComponents.isEmpty())
+        }
+        if (materialComponents.isEmpty()) {
             return Element.Tc.getProtons();
+        }
+
         long totalProtons = 0;
-        for (MaterialStack material : materialComponents) {
+        for (MaterialComponent material : materialComponents) {
             totalProtons += material.amount * material.material.getProtons();
         }
+
         return totalProtons;
     }
 
-    @ZenGetter("neutrons")
+    //@ZenGetter("neutrons")
     public long getNeutrons() {
-        if (element != null)
+        if (element != null) {
             return element.getNeutrons();
-        if (materialComponents.isEmpty())
+        }
+        if (materialComponents.isEmpty()) {
             return Element.Tc.getNeutrons();
+        }
+
         long totalNeutrons = 0;
-        for (MaterialStack material : materialComponents) {
+        for (MaterialComponent material : materialComponents) {
             totalNeutrons += material.amount * material.material.getNeutrons();
         }
+
         return totalNeutrons;
     }
 
-    @ZenGetter("mass")
+    //@ZenGetter("mass")
     public long getMass() {
-        if (element != null)
+        if (element != null) {
             return element.getMass();
-        if (materialComponents.isEmpty())
+        }
+        if (materialComponents.isEmpty()) {
             return Element.Tc.getMass();
+        }
+
         long totalMass = 0;
-        for (MaterialStack material : materialComponents) {
+        for (MaterialComponent material : materialComponents) {
             totalMass += material.amount * material.material.getMass();
         }
+
         return totalMass;
     }
 
-    @ZenGetter("averageProtons")
-    public long getAverageProtons() {
-        if (element != null)
-            return element.getProtons();
-        if (materialComponents.isEmpty())
-            return Element.Tc.getProtons();
-        long totalProtons = 0, totalAmount = 0;
-        for (MaterialStack material : materialComponents) {
-            totalAmount += material.amount;
-            totalProtons += material.amount * material.material.getAverageProtons();
-        }
-        return totalProtons / totalAmount;
-    }
-
-    @ZenGetter("averageNeutrons")
-    public long getAverageNeutrons() {
-        if (element != null)
-            return element.getNeutrons();
-        if (materialComponents.isEmpty())
-            return Element.Tc.getNeutrons();
-        long totalNeutrons = 0, totalAmount = 0;
-        for (MaterialStack material : materialComponents) {
-            totalAmount += material.amount;
-            totalNeutrons += material.amount * material.material.getAverageNeutrons();
-        }
-        return totalNeutrons / totalAmount;
-    }
-
-
-    @ZenGetter("averageMass")
+    //@ZenGetter("averageMass")
     public long getAverageMass() {
-        if (element != null)
+        if (element != null) {
             return element.getMass();
-        if (materialComponents.size() <= 0)
+        }
+        if (materialComponents.isEmpty()) {
             return Element.Tc.getMass();
+        }
+
         long totalMass = 0, totalAmount = 0;
-        for (MaterialStack material : materialComponents) {
+        for (MaterialComponent material : materialComponents) {
             totalAmount += material.amount;
             totalMass += material.amount * material.material.getAverageMass();
         }
+
         return totalMass / totalAmount;
     }
 
-    @ZenGetter("camelCaseName")
-    public String toCamelCaseString() {
-        return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, toString());
+    //@ZenGetter("unlocalizedName")
+    public String getTranslationKey() {
+        RegistryKey<Material> registryKey = REGISTRY.getKey(this).orElseThrow();
+        Identifier id = registryKey.getValue();
+
+        return "material." + id.getNamespace() + "." + id.getPath();
     }
 
-    @ZenGetter("unlocalizedName")
-    public String getUnlocalizedName() {
-        return "material." + toString();
-    }
-
-    @SideOnly(Side.CLIENT)
-    @ZenGetter("localizedName")
-    public String getLocalizedName() {
-        return I18n.format(getUnlocalizedName());
+    //@ZenGetter("localizedName")
+    public Text getName() {
+        return new TranslatableText(getTranslationKey());
     }
 
     @Override
-    @ZenMethod
+    //@ZenMethod
     public int compareTo(Material material) {
         return toString().compareTo(material.toString());
     }
 
     @Override
-    @ZenGetter("name")
+    //@ZenGetter("name")
     public String toString() {
-        return MATERIAL_REGISTRY.getNameForObject(this);
+        return REGISTRY.getKey(this).orElseThrow().getValue().toString();
     }
 
-    @ZenOperator(OperatorType.MUL)
-    public MaterialStack createMaterialStack(long amount) {
-        return new MaterialStack(this, amount);
-    }
-
+    //@ZenOperator(OperatorType.MUL)
+    //public MaterialComponent createMaterialComponent(int amount) {
+    //    return new MaterialComponent(this, amount);
+    //}
 }

@@ -95,18 +95,18 @@ public abstract class Widget {
     protected void onSizeUpdate() {
     }
 
-    public boolean isMouseOverElement(int mouseX, int mouseY, boolean correctPositionOnMouseWheelMoveEvent) {
+    public boolean isMouseOverElement(double mouseX, double mouseY, boolean correctPositionOnMouseWheelMoveEvent) {
         mouseX = correctPositionOnMouseWheelMoveEvent ? mouseX + getPosition().x : mouseX;
         return isMouseOverElement(mouseX, mouseY);
     }
 
-    public boolean isMouseOverElement(int mouseX, int mouseY) {
+    public boolean isMouseOverElement(double mouseX, double mouseY) {
         Position position = getPosition();
         Size size = getSize();
         return isMouseOver(position.x, position.y, size.width, size.height, mouseX, mouseY);
     }
 
-    public static boolean isMouseOver(int x, int y, int width, int height, int mouseX, int mouseY) {
+    public static boolean isMouseOver(double x, double y, double width, double height, double mouseX, double mouseY) {
         return mouseX >= x && mouseY >= y && x + width > mouseX && y + height > mouseY;
     }
 

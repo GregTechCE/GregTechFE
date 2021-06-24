@@ -1,18 +1,12 @@
 package gregtech.api.unification.material.type;
 
 import com.google.common.collect.ImmutableList;
-import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.enchantments.IEnchantment;
 import gregtech.api.GTValues;
 import gregtech.api.enchants.EnchantmentData;
 import gregtech.api.unification.Element;
+import gregtech.api.unification.material.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
-import gregtech.api.unification.stack.MaterialStack;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraftforge.fml.common.Optional.Method;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +15,8 @@ import static gregtech.api.unification.material.type.DustMaterial.MatFlags.GENER
 import static gregtech.api.unification.material.type.SolidMaterial.MatFlags.*;
 import static gregtech.api.util.GTUtility.createFlag;
 
-@ZenClass("mods.gregtech.material.SolidMaterial")
-@ZenRegister
+//@ZenClass("mods.gregtech.material.SolidMaterial")
+//@ZenRegister
 public abstract class SolidMaterial extends DustMaterial {
 
     public static final class MatFlags {
@@ -42,38 +36,38 @@ public abstract class SolidMaterial extends DustMaterial {
      * Speed of tools made from this material
      * Default value is 1.0f
      */
-    @ZenProperty
+    //@ZenProperty
     public final float toolSpeed;
 
     /**
      * Attack damage of tools made from this material
      * Usually equal to material's harvest level
      */
-    @ZenProperty
+    //@ZenProperty
     public final float toolAttackDamage;
 
     /**
      * Durability of tools made from this material
      * Equal to 0 for materials that can't be used for tools
      */
-    @ZenProperty
+    //@ZenProperty
     public final int toolDurability;
 
     /**
      * Enchantment to be applied to tools made from this material
      */
-    @ZenProperty
+    //@ZenProperty
     public final List<EnchantmentData> toolEnchantments = new ArrayList<>();
 
     /**
      * Macerating any item of this material will result material
      * specified in this field
      */
-    @ZenProperty
+    //@ZenProperty
     public DustMaterial macerateInto = this;
 
-    public SolidMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, Element element, float toolSpeed, float toolAttackDamage, int toolDurability) {
-        super(metaItemSubId, name, materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element);
+    public SolidMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element, float toolSpeed, float toolAttackDamage, int toolDurability) {
+        super(materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element);
         this.toolSpeed = toolSpeed;
         this.toolAttackDamage = toolAttackDamage;
         this.toolDurability = toolDurability;
@@ -99,11 +93,11 @@ public abstract class SolidMaterial extends DustMaterial {
         toolEnchantments.add(new EnchantmentData(enchantment, level));
     }
 
-    @ZenMethod("addToolEnchantment")
-    @Method(modid = GTValues.MODID_CT)
-    public void ctAddEnchantmentForTools(IEnchantment enchantment) {
-        Enchantment enchantmentType = (Enchantment) enchantment.getDefinition().getInternal();
-        toolEnchantments.add(new EnchantmentData(enchantmentType, enchantment.getLevel()));
-    }
+    //@ZenMethod("addToolEnchantment")
+    //@Method(modid = GTValues.MODID_CT)
+    //public void ctAddEnchantmentForTools(IEnchantment enchantment) {
+    //    Enchantment enchantmentType = (Enchantment) enchantment.getDefinition().getInternal();
+    //    toolEnchantments.add(new EnchantmentData(enchantmentType, enchantment.getLevel()));
+    //}
 
 }

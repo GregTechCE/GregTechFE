@@ -1,12 +1,9 @@
 package gregtech.api.unification.material.type;
 
 import com.google.common.collect.ImmutableList;
-import crafttweaker.annotations.ZenRegister;
 import gregtech.api.unification.Element;
+import gregtech.api.unification.material.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
-import gregtech.api.unification.stack.MaterialStack;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,8 +11,8 @@ import java.util.List;
 
 import static gregtech.api.util.GTUtility.createFlag;
 
-@ZenClass("mods.gregtech.material.DustMaterial")
-@ZenRegister
+//@ZenClass("mods.gregtech.material.DustMaterial")
+//@ZenRegister
 public class DustMaterial extends FluidMaterial {
 
     public static final class MatFlags {
@@ -76,71 +73,71 @@ public class DustMaterial extends FluidMaterial {
     /**
      * List of ore by products
      */
-    @ZenProperty
+    //@ZenProperty
     public final List<FluidMaterial> oreByProducts = new ArrayList<>();
 
     /**
      * Crushed ore output amount multiplier during maceration
      */
-    @ZenProperty
+    //@ZenProperty
     public int oreMultiplier = 1;
 
     /**
      * Byproducts output amount multiplier during pulverization
      */
-    @ZenProperty
+    //@ZenProperty
     public int byProductMultiplier = 1;
 
     /**
      * Tool level needed to harvest block of this material
      */
-    @ZenProperty
+    //@ZenProperty
     public final int harvestLevel;
 
     /**
      * Material to which smelting of this material ore will result
      */
-    @ZenProperty
+    //@ZenProperty
     public SolidMaterial directSmelting;
 
     /**
      * Disable directSmelting
      */
-    @ZenProperty
+    //@ZenProperty
     public boolean disableDirectSmelting = false;
 
     /**
      * Material in which this material's ore should be washed to give additional output
      */
-    @ZenProperty
+    //@ZenProperty
     public FluidMaterial washedIn;
 
     /**
      * During electromagnetic separation, this material ore will be separated onto this material and material specified by this field
      */
-    @ZenProperty
+    //@ZenProperty
     public DustMaterial separatedOnto;
 
     /**
      * Burn time of this material when used as fuel in furnace smelting
      * Zero or negative value indicates that this material cannot be used as fuel
      */
-    @ZenProperty
+    //@ZenProperty
     public int burnTime = 0;
 
     /**
      * During OreProcessing (Macerator, OreWasher, ThermalCentrifuge), this material will be turned into crushedInto
      */
-    @ZenProperty
+    //@ZenProperty
     public DustMaterial crushedInto = this;
 
-    public DustMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, Element element) {
-        super(metaItemSubId, name, materialRGB, materialIconSet, materialComponents, materialGenerationFlags, element);
+    public DustMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element) {
+        super(materialRGB, materialIconSet, materialComponents, materialGenerationFlags, element);
         this.harvestLevel = harvestLevel;
     }
 
-    public DustMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags) {
-        super(metaItemSubId, name, materialRGB, materialIconSet, materialComponents, materialGenerationFlags, null);
+    public DustMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags) {
+        super(materialRGB, materialIconSet, materialComponents, materialGenerationFlags, null);
         this.harvestLevel = harvestLevel;
     }
 
@@ -159,11 +156,6 @@ public class DustMaterial extends FluidMaterial {
 
     public void addOreByProducts(FluidMaterial... byProducts) {
         this.oreByProducts.addAll(Arrays.asList(byProducts));
-    }
-
-    //kept here for binary compatibility
-    public void setDirectSmelting(IngotMaterial directSmelting) {
-        this.directSmelting = directSmelting;
     }
 
     public void setDirectSmelting(SolidMaterial directSmelting) {

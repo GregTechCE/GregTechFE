@@ -1,5 +1,7 @@
 package gregtech.api.capability.impl;
 
+import alexiil.mc.lib.attributes.misc.LimitedConsumer;
+import alexiil.mc.lib.attributes.misc.Reference;
 import gregtech.api.GTValues;
 import gregtech.api.capability.GTAttributes;
 import net.minecraft.item.ItemStack;
@@ -15,9 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class ElectricItem implements gregtech.api.capability.ElectricItem, ICapabilityProvider {
+public class ElectricItemImpl implements gregtech.api.capability.ElectricItem {
 
-    protected ItemStack itemStack;
+    private final Reference<ItemStack> stack;
+    private final LimitedConsumer<ItemStack> excess;
 
     protected final long maxCharge;
     protected final int tier;
@@ -27,8 +30,9 @@ public class ElectricItem implements gregtech.api.capability.ElectricItem, ICapa
 
     protected List<BiConsumer<ItemStack, Long>> listeners = new ArrayList<>();
 
-    public ElectricItem(ItemStack itemStack, long maxCharge, int tier, boolean chargeable, boolean canProvideEnergyExternally) {
-        this.itemStack = itemStack;
+    public ElectricItemImpl(Reference<ItemStack> stack, LimitedConsumer<ItemStack> excess, long maxCharge, int tier, boolean chargeable, boolean canProvideEnergyExternally) {
+        this.stack = stack;
+        this.excess = excess;
         this.maxCharge = maxCharge;
         this.tier = tier;
         this.chargeable = chargeable;

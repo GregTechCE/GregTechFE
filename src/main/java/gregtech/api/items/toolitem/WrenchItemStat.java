@@ -2,7 +2,7 @@ package gregtech.api.items.toolitem;
 
 import gregtech.api.capability.GTAttributes;
 import gregtech.api.capability.tool.WrenchItem;
-import gregtech.api.items.metaitem.stats.IItemCapabilityProvider;
+import gregtech.api.items.stats.stats.IItemCapabilityProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;

@@ -6,6 +6,7 @@ import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import alexiil.mc.lib.attributes.misc.Reference;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
@@ -28,7 +29,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -86,9 +89,37 @@ public class GTUtility {
         return FluidVolumeUtil.EMPTY;
     }
 
+    public static long chargeElectricItem(ElectricItem source, ElectricItem target) {
+        long maxDischarged = source.discharge(Integer.MAX_VALUE, source.getTier(), false, false, true);
+        long maxReceived = target.charge(maxDischarged, source.getTier(), false, true);
 
+        if(maxReceived > 0L) {
+            long resultDischarged = source.discharge(maxReceived, source.getTier(), false, true, false);
+            target.charge(resultDischarged, source.getTier(), false, false);
+            return resultDischarged;
+        }
+        return 0L;
+    }
 
+    public static Reference<ItemStack> createInventorySlotRef(Inventory inventory, int slot) {
+        return Reference.callable(
+                () -> inventory.getStack(slot),
+                (itemStack) -> inventory.setStack(slot, itemStack),
+                (itemStack) -> inventory.isValid(slot, itemStack));
+    }
 
+    //Basically, slot argument provided in Item#inventoryTick is a LOCAL slot index inside
+    //of the multiple player inventory components (main, armor, offhand).
+    //to determine absolute index we use the fact that stack in the slot is strictly == to the stack
+    //passed in inventoryTick, and we should never get the same item stack objects in multiple slots at once
+    public static int getItemStackInventorySlot(Inventory inventory, ItemStack itemStack) {
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.getStack(i) == itemStack) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("ItemStack is not found in any of the inventory slots");
+    }
 
     //just because CCL uses a different color format
     //0xRRGGBBAA

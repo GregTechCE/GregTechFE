@@ -3,7 +3,7 @@ package gregtech.api.recipes;
 import com.google.common.base.Preconditions;
 import gregtech.api.GTValues;
 import gregtech.api.items.ToolDictNames;
-import gregtech.api.items.metaitem.MetaItem;
+import gregtech.api.items.stats.MetaItem;
 import gregtech.api.recipes.recipes.DummyRecipe;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.Materials;

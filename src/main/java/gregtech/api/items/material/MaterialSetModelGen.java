@@ -1,4 +1,4 @@
-package gregtech.api.items.materialitem;
+package gregtech.api.items.material;
 
 import java.io.File;
 import java.nio.file.Files;

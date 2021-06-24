@@ -1,6 +1,6 @@
 package gregtech.api.recipes;
 
-import gregtech.api.items.metaitem.MetaItem;
+import gregtech.api.items.stats.MetaItem;
 import gregtech.api.recipes.Recipe.ChanceEntry;
 import gregtech.api.unification.material.type.FluidMaterial;
 import gregtech.api.unification.OreDictUnifier;

@@ -2,14 +2,9 @@ package gregtech.api.unification.material.type;
 
 import com.google.common.collect.ImmutableList;
 import gregtech.api.unification.Element;
+import gregtech.api.unification.material.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
-import gregtech.api.unification.stack.MaterialStack;
-import gregtech.common.pipelike.cable.WireProperties;
-import gregtech.common.pipelike.fluidpipe.FluidPipeProperties;
-import crafttweaker.annotations.ZenRegister;
-import stanhebben.zenscript.annotations.*;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static gregtech.api.unification.material.type.DustMaterial.MatFlags.GENERATE_PLATE;
 import static gregtech.api.unification.material.type.DustMaterial.MatFlags.SMELT_INTO_FLUID;
@@ -17,8 +12,8 @@ import static gregtech.api.unification.material.type.IngotMaterial.MatFlags.*;
 import static gregtech.api.unification.material.type.SolidMaterial.MatFlags.GENERATE_ROD;
 import static gregtech.api.util.GTUtility.createFlag;
 
-@ZenClass("mods.gregtech.material.IngotMaterial")
-@ZenRegister
+//@ZenClass("mods.gregtech.material.IngotMaterial")
+//@ZenRegister
 public class IngotMaterial extends SolidMaterial {
 
     public static final class MatFlags {
@@ -56,7 +51,7 @@ public class IngotMaterial extends SolidMaterial {
     public IngotMaterial arcSmeltInto;
 
     /**
-     * Material which obtained when this material is polarized
+     * Material which obtained when this material is polarized. Can be null.
      */
     @Nullable
     public IngotMaterial magneticMaterial;
@@ -67,49 +62,35 @@ public class IngotMaterial extends SolidMaterial {
      * If below 1000K, primitive blast furnace recipes will be also added.
      * If above 1750K, a Hot Ingot and its Vacuum Freezer recipe will be also added.
      */
-    @ZenProperty
+    //@ZenProperty
     public final int blastFurnaceTemperature;
 
-    /**
-     * If set, cable will be generated for this material with base stats
-     * specified by this field
-     */
-    @Nullable
-    public WireProperties cableProperties;
-
-    /**
-     * If set, fluid pipe will be generated for this materials with stats
-     * specified by this field
-     */
-    @Nullable
-    public FluidPipeProperties fluidPipeProperties;
-
-    public IngotMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, Element element, float toolSpeed, float attackDamage, int toolDurability, int blastFurnaceTemperature) {
-        super(metaItemSubId, name, materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element, toolSpeed, attackDamage, toolDurability);
+    public IngotMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element, float toolSpeed, float attackDamage, int toolDurability, int blastFurnaceTemperature) {
+        super(materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element, toolSpeed, attackDamage, toolDurability);
         this.blastFurnaceTemperature = blastFurnaceTemperature;
         this.smeltInto = this;
         this.arcSmeltInto = this;
         addFlag(SMELT_INTO_FLUID);
     }
 
-    public IngotMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, Element element) {
-        this(metaItemSubId, name, materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element, 0, 0, 0, 0);
+    public IngotMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element) {
+        this(materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element, 0, 0, 0, 0);
     }
 
-    public IngotMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, Element element, int blastFurnaceTemperature) {
-        this(metaItemSubId, name, materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element, 0, 0, 0, blastFurnaceTemperature);
+    public IngotMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element, int blastFurnaceTemperature) {
+        this(materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element, 0, 0, 0, blastFurnaceTemperature);
     }
 
-    public IngotMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, Element element, float toolSpeed, float attackDamage, int toolDurability) {
-        this(metaItemSubId, name, materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element, toolSpeed, attackDamage, toolDurability, 0);
+    public IngotMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element, float toolSpeed, float attackDamage, int toolDurability) {
+        this(materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, element, toolSpeed, attackDamage, toolDurability, 0);
     }
 
-    public IngotMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags, float toolSpeed, float attackDamage, int toolDurability) {
-        this(metaItemSubId, name, materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, null, toolSpeed, attackDamage, toolDurability, 0);
+    public IngotMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, float toolSpeed, float attackDamage, int toolDurability) {
+        this(materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, null, toolSpeed, attackDamage, toolDurability, 0);
     }
 
-    public IngotMaterial(int metaItemSubId, String name, int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialStack> materialComponents, long materialGenerationFlags) {
-        this(metaItemSubId, name, materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, null, 0, 0, 0, 0);
+    public IngotMaterial(int materialRGB, MaterialIconSet materialIconSet, int harvestLevel, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags) {
+        this(materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, null, 0, 0, 0, 0);
     }
 
     @Override
@@ -157,15 +138,4 @@ public class IngotMaterial extends SolidMaterial {
     public void setArcSmeltingInto(IngotMaterial arcSmeltingInto) {
         this.arcSmeltInto = arcSmeltingInto;
     }
-
-    @ZenMethod
-    public void setCableProperties(long voltage, int baseAmperage, int lossPerBlock) {
-        this.cableProperties = new WireProperties((int) voltage, baseAmperage, lossPerBlock);
-    }
-
-    @ZenMethod
-    public void setFluidPipeProperties(int throughput, int maxTemperature, boolean gasProof) {
-        this.fluidPipeProperties = new FluidPipeProperties(maxTemperature, throughput, gasProof);
-    }
-
 }

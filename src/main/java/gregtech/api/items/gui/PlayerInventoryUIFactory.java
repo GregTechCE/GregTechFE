@@ -3,7 +3,7 @@ package gregtech.api.items.gui;
 import gregtech.api.GTValues;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.UIFactory;
-import gregtech.api.items.metaitem.MetaItem;
+import gregtech.api.items.stats.MetaItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
