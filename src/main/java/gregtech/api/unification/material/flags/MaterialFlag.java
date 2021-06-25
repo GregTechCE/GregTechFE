@@ -1,12 +1,15 @@
 package gregtech.api.unification.material.flags;
 
 import gregtech.api.unification.material.properties.MaterialProperty;
+import gregtech.api.util.registry.AlreadyRegisteredKeyException;
+import gregtech.api.util.registry.GTRegistry;
+import gregtech.api.util.registry.GTRegistryKey;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MaterialFlag {
+public class MaterialFlag implements GTRegistryKey {
     private final String name;
     private final List<MaterialFlag> requiredFlags = new ArrayList<>();
     private final List<MaterialFlag> conflictingFlags = new ArrayList<>();
@@ -19,8 +22,15 @@ public class MaterialFlag {
         this.requiredProperties.addAll(requiredProperties);
     }
 
+    @Override
+    public String getKey() {
+        return name;
+    }
+
 
     public static class Builder {
+        private final GTRegistry<MaterialFlag> registry = new GTRegistry<MaterialFlag>();
+
         private final String name;
         private final List<MaterialFlag> requiredFlags = new ArrayList<>();
         private final List<MaterialFlag> conflictingFlags = new ArrayList<>();
@@ -45,10 +55,24 @@ public class MaterialFlag {
             return this;
         }
 
-        public MaterialFlag build() throws MaterialFlagValidationException {
-            validate();
+        public MaterialFlag build() {
+            try {
+                validate();
+            } catch (MaterialFlagValidationException e) {
+                //TODO: Log
+                return null;
+            }
 
-            return new MaterialFlag(name, requiredFlags, conflictingFlags, requiredProperties);
+            MaterialFlag materialFlag = new MaterialFlag(name, requiredFlags, conflictingFlags, requiredProperties);
+
+            try {
+                registry.put(materialFlag);
+            } catch (AlreadyRegisteredKeyException e) {
+                //TODO: Log
+                return null;
+            }
+
+            return materialFlag;
         }
 
         private void validate() throws MaterialFlagValidationException {
