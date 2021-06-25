@@ -1,11 +1,12 @@
 package gregtech.api.unification.material.forms;
 
+import gregtech.api.GTValues;
 import gregtech.api.unification.stack.MaterialAmount;
-import gregtech.api.util.registry.AlreadyRegisteredKeyException;
-import gregtech.api.util.registry.GTRegistry;
-import gregtech.api.util.registry.GTRegistryKey;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
-public class MaterialForm implements GTRegistryKey {
+public class MaterialForm {
     private final String name;
     private final MaterialAmount materialAmount;
 
@@ -15,13 +16,11 @@ public class MaterialForm implements GTRegistryKey {
     }
 
 
-    @Override
-    public String getKey() {
-        return name;
-    }
-
     public static class Builder {
-        private static final GTRegistry<MaterialForm> registry = new GTRegistry<>();
+        public static final Registry<MaterialForm> REGISTRY =
+                FabricRegistryBuilder.createSimple(MaterialForm.class,
+                        new Identifier(GTValues.MODID, "material_form")).buildAndRegister();
+
 
         private final String name;
         private MaterialAmount materialAmount = MaterialAmount.DUST;
@@ -42,15 +41,7 @@ public class MaterialForm implements GTRegistryKey {
 
             var materialForm = new MaterialForm(name, materialAmount);
 
-            try {
-                registry.put(materialForm);
-            } catch (AlreadyRegisteredKeyException e) {
-                //TODO: Log
-                return null;
-            }
-
-
-            return materialForm;
+            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), materialForm);
         }
 
         private boolean validate() {

@@ -1,15 +1,16 @@
 package gregtech.api.unification.material.properties;
 
+import gregtech.api.GTValues;
 import gregtech.api.unification.material.flags.MaterialFlag;
-import gregtech.api.util.registry.AlreadyRegisteredKeyException;
-import gregtech.api.util.registry.GTRegistry;
-import gregtech.api.util.registry.GTRegistryKey;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MaterialProperty<T> implements GTRegistryKey {
+public class MaterialProperty<T> {
     private final String name;
     private final Class<T> propertyValueType;
     private final Set<MaterialFlag> requiredFlags = new HashSet<>();
@@ -35,14 +36,14 @@ public class MaterialProperty<T> implements GTRegistryKey {
         return Collections.unmodifiableSet(requiredProperties);
     }
 
-    @Override
-    public String getKey() {
-        return name;
-    }
-
 
     public static class Builder<T> {
-        private static final GTRegistry<MaterialProperty<?>> registry = new GTRegistry<>();
+        @SuppressWarnings("unchecked")
+        public static final Registry<MaterialProperty<?>> REGISTRY =
+                FabricRegistryBuilder.createSimple((Class<MaterialProperty<?>>) (Object) MaterialProperty.class,
+                        new Identifier(GTValues.MODID, "material_property"))
+                        .buildAndRegister();
+
 
         private final String name;
         private final Class<T> propertyValueType;
@@ -68,14 +69,7 @@ public class MaterialProperty<T> implements GTRegistryKey {
         public MaterialProperty<T> build() {
             var materialProperty = new MaterialProperty<>(name, propertyValueType, requiredProperties, requiredFlags);
 
-            try {
-                registry.put(materialProperty);
-            } catch (AlreadyRegisteredKeyException e) {
-                //TODO: Log
-                return null;
-            }
-
-            return materialProperty;
+            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), materialProperty);
         }
     }
 }

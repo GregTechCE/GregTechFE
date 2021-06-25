@@ -1,14 +1,15 @@
 package gregtech.api.unification.material;
 
+import gregtech.api.GTValues;
 import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.properties.MaterialProperty;
-import gregtech.api.util.registry.AlreadyRegisteredKeyException;
-import gregtech.api.util.registry.GTRegistry;
-import gregtech.api.util.registry.GTRegistryKey;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.*;
 
-public class GTMaterial implements GTRegistryKey {
+public class GTMaterial {
     private final String name;
     private final Set<MaterialFlag> flags = new HashSet<>();
     private final Map<MaterialProperty<?>, Object> properties = new HashMap<>();
@@ -19,14 +20,12 @@ public class GTMaterial implements GTRegistryKey {
         this.properties.putAll(properties);
     }
 
-    @Override
-    public String getKey() {
-        return name;
-    }
-
 
     public static class Settings {
-        private static final GTRegistry<GTMaterial> registry = new GTRegistry<>();
+        public static final Registry<GTMaterial> REGISTRY =
+                FabricRegistryBuilder.createSimple(GTMaterial.class, new Identifier(GTValues.MODID, "material"))
+                        .buildAndRegister();
+
 
         private final String name;
         private final Set<MaterialFlag> flags = new HashSet<>();
@@ -98,14 +97,7 @@ public class GTMaterial implements GTRegistryKey {
 
             var gtMaterial = new GTMaterial(name, flags, properties);
 
-            try {
-                registry.put(gtMaterial);
-            } catch (AlreadyRegisteredKeyException e) {
-                //TODO: Log
-                return null;
-            }
-
-            return gtMaterial;
+            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), gtMaterial);
         }
 
         private boolean validate() {
