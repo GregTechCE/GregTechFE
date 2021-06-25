@@ -16,6 +16,7 @@ import gregtech.api.capability.ElectricItem;
 import gregtech.api.capability.GTAttributes;
 import gregtech.api.items.stats.ElectricStats;
 import gregtech.api.items.stats.FluidStats;
+import gregtech.api.items.util.CustomMaxCountItem;
 import gregtech.api.util.GTUtility;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;

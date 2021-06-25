@@ -7,7 +7,7 @@ import gregtech.api.unification.material.type.GemMaterial;
 import gregtech.api.unification.material.type.IngotMaterial;
 import gregtech.api.unification.material.type.RoughSolidMaterial;
 import gregtech.api.unification.material.type.SolidMaterial;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.unification.stack.UnificationEntry;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -55,7 +55,7 @@ public class ToolMetaItemListener {
                 return;
             }
             SolidMaterial toolMaterial = ToolMetaItem.getToolMaterial(firstStack);
-            OrePrefix solidPrefix = getSolidPrefix(toolMaterial);
+            MaterialForm solidPrefix = getSolidPrefix(toolMaterial);
             UnificationEntry unificationEntry = OreDictUnifier.getUnificationEntry(secondStack);
             double toolDamage = toolMetaItem.getItemDamage(firstStack) / (toolMetaItem.getMaxItemDamage(firstStack) * 1.0);
             double materialForFullRepair = toolValueItem.getAmountOfMaterialToRepair(firstStack);
@@ -75,11 +75,11 @@ public class ToolMetaItemListener {
         }
     }
 
-    private static OrePrefix getSolidPrefix(SolidMaterial material) {
+    private static MaterialForm getSolidPrefix(SolidMaterial material) {
         if (material instanceof IngotMaterial) {
-            return OrePrefix.ingot;
+            return MaterialForm.ingot;
         } else if (material instanceof GemMaterial) {
-            return OrePrefix.gem;
+            return MaterialForm.gem;
         } else if (material instanceof RoughSolidMaterial) {
             return ((RoughSolidMaterial) material).solidFormSupplier.get();
         } else return null;

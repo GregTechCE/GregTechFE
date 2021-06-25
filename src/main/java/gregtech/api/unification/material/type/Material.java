@@ -1,5 +1,6 @@
 package gregtech.api.unification.material.type;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import gregtech.api.GTValues;
 import gregtech.api.unification.Element;
@@ -221,7 +222,7 @@ public abstract class Material implements Comparable<Material> {
 
     //@ZenMethod("hasFlagRaw")
     public boolean hasFlag(long generationFlag) {
-        return (materialGenerationFlags & generationFlag) >= generationFlag;
+        return (materialGenerationFlags & generationFlag) == generationFlag;
     }
 
     //@ZenMethod
@@ -350,14 +351,14 @@ public abstract class Material implements Comparable<Material> {
 
     //@ZenGetter("unlocalizedName")
     public String getTranslationKey() {
-        RegistryKey<Material> registryKey = REGISTRY.getKey(this).orElseThrow();
-        Identifier id = registryKey.getValue();
+        Identifier id = REGISTRY.getId(this);
+        Preconditions.checkNotNull(id);
 
         return "material." + id.getNamespace() + "." + id.getPath();
     }
 
     //@ZenGetter("localizedName")
-    public Text getName() {
+    public Text getDisplayName() {
         return new TranslatableText(getTranslationKey());
     }
 
@@ -370,7 +371,8 @@ public abstract class Material implements Comparable<Material> {
     @Override
     //@ZenGetter("name")
     public String toString() {
-        return REGISTRY.getKey(this).orElseThrow().getValue().toString();
+        Identifier identifier = REGISTRY.getId(this);
+        return identifier != null ? identifier.toString() : "";
     }
 
     //@ZenOperator(OperatorType.MUL)

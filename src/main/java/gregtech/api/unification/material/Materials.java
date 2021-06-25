@@ -3,7 +3,7 @@ package gregtech.api.unification.material;
 import gregtech.api.GTValues;
 import gregtech.api.unification.Element;
 import gregtech.api.unification.material.type.*;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.unification.stack.MaterialComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -315,7 +315,7 @@ public class Materials {
      * Not possible to determine exact Components
      */
     public static FluidMaterial SaltWater = new FluidMaterial(428, "salt_water", 255, FLUID, of(new MaterialComponent(Salt, 1), new MaterialComponent(Water, 1)), DISABLE_DECOMPOSITION);
-    public static RoughSolidMaterial Wood = new RoughSolidMaterial(196, "wood", 0x896727, WOOD, 0, of(), STD_SOLID | FLAMMABLE | NO_SMELTING | GENERATE_GEAR | GENERATE_LONG_ROD | GENERATE_FRAME, () -> OrePrefix.plank);
+    public static RoughSolidMaterial Wood = new RoughSolidMaterial(196, "wood", 0x896727, WOOD, 0, of(), STD_SOLID | FLAMMABLE | NO_SMELTING | GENERATE_GEAR | GENERATE_LONG_ROD | GENERATE_FRAME, () -> MaterialForm.plank);
     public static FluidMaterial WoodGas = new FluidMaterial(370, "wood_gas", 0xB1A571, GAS, of(), STATE_GAS | DISABLE_DECOMPOSITION);
     public static FluidMaterial WoodVinegar = new FluidMaterial(371, "wood_vinegar", 0xA54B0F, FLUID, of(), 0);
     public static FluidMaterial WoodTar = new FluidMaterial(372, "wood_tar", 0x2D2118, FLUID, of(), 0);
@@ -335,7 +335,7 @@ public class Materials {
     public static FluidMaterial McGuffium239 = new FluidMaterial(322, "mc_guffium239", 0xC83296, FLUID, of(), 0);
     public static FluidMaterial Oil = new FluidMaterial(323, "oil", 0x666666, FLUID, of(), 0);
     public static DustMaterial Oilsands = new DustMaterial(324, "oilsands", 0x0A0A0A, SAND, 1, of(new MaterialComponent(Oil, 1L)), GENERATE_ORE);
-    public static RoughSolidMaterial Paper = new RoughSolidMaterial(325, "paper", 0xFFFFFF, PAPER, 0, of(), GENERATE_PLATE | FLAMMABLE | NO_SMELTING | NO_SMASHING | MORTAR_GRINDABLE | GENERATE_RING | EXCLUDE_PLATE_COMPRESSOR_RECIPE, () -> OrePrefix.plate);
+    public static RoughSolidMaterial Paper = new RoughSolidMaterial(325, "paper", 0xFFFFFF, PAPER, 0, of(), GENERATE_PLATE | FLAMMABLE | NO_SMELTING | NO_SMASHING | MORTAR_GRINDABLE | GENERATE_RING | EXCLUDE_PLATE_COMPRESSOR_RECIPE, () -> MaterialForm.plate);
     public static DustMaterial RareEarth = new DustMaterial(326, "rare_earth", 0x808064, ROUGH, 0, of(), 0);
     public static DustMaterial PlatinumGroupSludge = new DustMaterial(422, "platinum_group_sludge", 4864, ROUGH, 1, of(), DISABLE_DECOMPOSITION);
     public static FluidMaterial IndiumConcentrate = new FluidMaterial(425, "indium_concentrate", 205130, FLUID, of(), 0);
@@ -405,7 +405,7 @@ public class Materials {
     public static DustMaterial Blaze = new DustMaterial(217, "blaze", 0xFFC800, DULL, 1, of(new MaterialComponent(DarkAsh, 1), new MaterialComponent(Sulfur, 1)), NO_SMELTING | SMELT_INTO_FLUID | MORTAR_GRINDABLE | BURNING);
     public static GemMaterial EnderPearl = new GemMaterial(218, "ender_pearl", 0x6CDCC8, GEM_VERTICAL, 1, of(new MaterialComponent(Beryllium, 1), new MaterialComponent(Potassium, 4), new MaterialComponent(Nitrogen, 5)), GENERATE_PLATE | GENERATE_LENSE | NO_SMASHING | NO_SMELTING);
     public static GemMaterial EnderEye = new GemMaterial(219, "ender_eye", 0x66FF66, GEM_VERTICAL, 1, of(new MaterialComponent(EnderPearl, 1), new MaterialComponent(Blaze, 1)), GENERATE_PLATE | GENERATE_LENSE | NO_SMASHING | NO_SMELTING);
-    public static RoughSolidMaterial Flint = new RoughSolidMaterial(220, "flint", 0x002040, FLINT, 1, of(new MaterialComponent(SiliconDioxide, 1)), NO_SMASHING | MORTAR_GRINDABLE, () -> OrePrefix.gem);
+    public static RoughSolidMaterial Flint = new RoughSolidMaterial(220, "flint", 0x002040, FLINT, 1, of(new MaterialComponent(SiliconDioxide, 1)), NO_SMASHING | MORTAR_GRINDABLE, () -> MaterialForm.gem);
     public static DustMaterial Diatomite = new DustMaterial(221, "diatomite", 0xE1E1E1, DULL, 1, of(new MaterialComponent(Flint, 8), new MaterialComponent(BandedIron, 1), new MaterialComponent(Sapphire, 1)), 0);
     public static DustMaterial Niter = new DustMaterial(223, "niter", 0xFFC8C8, FLINT, 1, of(new MaterialComponent(Saltpeter, 1)), NO_SMASHING | NO_SMELTING);
     public static DustMaterial Tantalite = new DustMaterial(224, "tantalite", 0x915028, METALLIC, 3, of(new MaterialComponent(Manganese, 1), new MaterialComponent(Tantalum, 2), new MaterialComponent(Oxygen, 6)), GENERATE_ORE);

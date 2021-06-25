@@ -8,6 +8,8 @@ import gregtech.api.unification.material.type.*;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.api.util.GTUtility;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.Item;
+import net.minecraft.tag.Tag;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.Validate;
@@ -22,10 +24,10 @@ import static gregtech.api.unification.material.type.DustMaterial.MatFlags.*;
 import static gregtech.api.unification.material.type.GemMaterial.MatFlags.GENERATE_LENSE;
 import static gregtech.api.unification.material.type.IngotMaterial.MatFlags.*;
 import static gregtech.api.unification.material.type.SolidMaterial.MatFlags.*;
-import static gregtech.api.unification.ore.OrePrefix.Conditions.isToolMaterial;
-import static gregtech.api.unification.ore.OrePrefix.Flags.*;
+import static gregtech.api.unification.ore.MaterialForm.Conditions.isToolMaterial;
+import static gregtech.api.unification.ore.MaterialForm.Flags.*;
 
-public enum OrePrefix {
+public enum MaterialForm {
 
     ore("Ores", -1, null, MaterialIconType.ore, ENABLE_UNIFICATION | DISALLOW_RECYCLING, (mat) -> mat instanceof DustMaterial && mat.hasFlag(GENERATE_ORE)), // Regular Ore Prefix. Ore -> Material is a Oneway Operation! Introduced by Eloraam
 
@@ -325,7 +327,7 @@ public enum OrePrefix {
     public final List<MaterialStack> secondaryMaterials = new ArrayList<>();
     public float heatDamage = 0.0F; // Negative for Frost Damage
 
-    OrePrefix(String categoryName, long materialAmount, Material material, MaterialIconType materialIconType, long flags, Predicate<Material> condition) {
+    MaterialForm(String categoryName, long materialAmount, Material material, MaterialIconType materialIconType, long flags, Predicate<Material> condition) {
         this.categoryName = categoryName;
         this.materialAmount = materialAmount;
         this.isSelfReferencing = (flags & SELF_REFERENCING) != 0;
@@ -338,6 +340,10 @@ public enum OrePrefix {
             Preconditions.checkNotNull(material, "Material is null for self-referencing OrePrefix");
             this.materialType = material;
         }
+    }
+
+    public Tag.Identified<Item> getItemTagForMaterial(Material material) {
+        throw new UnsupportedOperationException();
     }
 
     public void addSecondaryMaterial(MaterialStack secondaryMaterial) {
@@ -371,13 +377,13 @@ public enum OrePrefix {
         return materialAmount;
     }
 
-    public static OrePrefix getPrefix(String prefixName) {
+    public static MaterialForm getPrefix(String prefixName) {
         return getPrefix(prefixName, null);
     }
 
-    public static OrePrefix getPrefix(String prefixName, @Nullable OrePrefix replacement) {
+    public static MaterialForm getPrefix(String prefixName, @Nullable MaterialForm replacement) {
         try {
-            return Enum.valueOf(OrePrefix.class, prefixName);
+            return Enum.valueOf(MaterialForm.class, prefixName);
         } catch (IllegalArgumentException invalidPrefixName) {
             return replacement;
         }
@@ -393,7 +399,7 @@ public enum OrePrefix {
         return oreProcessingHandlers.addAll(Arrays.asList(processingHandler));
     }
 
-    public <T extends Material> void addProcessingHandler(Class<T> materialFilter, BiConsumer<OrePrefix, T> handler) {
+    public <T extends Material> void addProcessingHandler(Class<T> materialFilter, BiConsumer<MaterialForm, T> handler) {
         addProcessingHandler((orePrefix, material) -> {
             if (materialFilter.isAssignableFrom(material.getClass())) {
                 //noinspection unchecked
@@ -412,15 +418,15 @@ public enum OrePrefix {
     }
 
     public static void runMaterialHandlers() {
-        for (OrePrefix orePrefix : values()) {
+        for (MaterialForm orePrefix : values()) {
             orePrefix.runGeneratedMaterialHandlers();
         }
     }
 
-    private static final ThreadLocal<OrePrefix> currentProcessingPrefix = new ThreadLocal<>();
+    private static final ThreadLocal<MaterialForm> currentProcessingPrefix = new ThreadLocal<>();
     private static final ThreadLocal<Material> currentMaterial = new ThreadLocal<>();
 
-    public static OrePrefix getCurrentProcessingPrefix() {
+    public static MaterialForm getCurrentProcessingPrefix() {
         return currentProcessingPrefix.get();
     }
 

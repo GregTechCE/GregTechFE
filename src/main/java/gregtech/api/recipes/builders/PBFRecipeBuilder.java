@@ -10,7 +10,7 @@ import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.crafttweaker.CTRecipeBuilder.CraftTweakerIngredientWrapper;
 import gregtech.api.recipes.recipes.PrimitiveBlastFurnaceRecipe;
 import gregtech.api.unification.material.type.Material;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.util.EnumValidationResult;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.ValidationResult;
@@ -48,12 +48,12 @@ public class PBFRecipeBuilder {
         return this;
     }
 
-    public PBFRecipeBuilder input(OrePrefix orePrefix, Material material) {
+    public PBFRecipeBuilder input(MaterialForm orePrefix, Material material) {
         this.input = CountableIngredient.from(orePrefix, material);
         return this;
     }
 
-    public PBFRecipeBuilder input(OrePrefix orePrefix, Material material, int amount) {
+    public PBFRecipeBuilder input(MaterialForm orePrefix, Material material, int amount) {
         this.input = CountableIngredient.from(orePrefix, material, amount);
         return this;
     }

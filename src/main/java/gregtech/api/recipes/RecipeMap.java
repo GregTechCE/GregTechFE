@@ -20,7 +20,7 @@ import gregtech.api.recipes.builders.IntCircuitRecipeBuilder;
 import gregtech.api.recipes.crafttweaker.CTRecipe;
 import gregtech.api.recipes.crafttweaker.CTRecipeBuilder;
 import gregtech.api.unification.material.type.Material;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.util.EnumValidationResult;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.GTUtility;
@@ -109,9 +109,9 @@ public class RecipeMap<R extends RecipeBuilder<R>> {
 
     public static void setFoundInvalidRecipe(boolean foundInvalidRecipe) {
         RecipeMap.foundInvalidRecipe |= foundInvalidRecipe;
-        OrePrefix currentOrePrefix = OrePrefix.getCurrentProcessingPrefix();
+        MaterialForm currentOrePrefix = MaterialForm.getCurrentProcessingPrefix();
         if (currentOrePrefix != null) {
-            Material currentMaterial = OrePrefix.getCurrentMaterial();
+            Material currentMaterial = MaterialForm.getCurrentMaterial();
             GTLog.logger.error("Error happened during processing ore registration of prefix {} and material {}. " +
                     "Seems like cross-mod compatibility issue. Report to GTCE github.",
                 currentOrePrefix, currentMaterial);

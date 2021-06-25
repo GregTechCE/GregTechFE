@@ -5,7 +5,7 @@ import gregtech.api.recipes.Recipe.ChanceEntry;
 import gregtech.api.unification.material.type.FluidMaterial;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.type.Material;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.util.EnumValidationResult;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.GTUtility;
@@ -112,11 +112,11 @@ public abstract class RecipeBuilder<R extends RecipeBuilder<R>> {
         return inputs(CountableIngredient.from(oredict, count));
     }
 
-    public R input(OrePrefix orePrefix, Material material) {
+    public R input(MaterialForm orePrefix, Material material) {
         return inputs(CountableIngredient.from(orePrefix, material, 1));
     }
 
-    public R input(OrePrefix orePrefix, Material material, int count) {
+    public R input(MaterialForm orePrefix, Material material, int count) {
         return inputs(CountableIngredient.from(orePrefix, material, count));
     }
 
@@ -171,7 +171,7 @@ public abstract class RecipeBuilder<R extends RecipeBuilder<R>> {
         return inputs(CountableIngredient.from(itemStack, 0));
     }
 
-    public R notConsumable(OrePrefix prefix, Material material) {
+    public R notConsumable(MaterialForm prefix, Material material) {
         return input(prefix, material, 0);
     }
 
@@ -191,11 +191,11 @@ public abstract class RecipeBuilder<R extends RecipeBuilder<R>> {
         return fluidInputs(new FluidStack(fluidStack, 0));
     }
 
-    public R output(OrePrefix orePrefix, Material material) {
+    public R output(MaterialForm orePrefix, Material material) {
         return outputs(OreDictUnifier.get(orePrefix, material, 1));
     }
 
-    public R output(OrePrefix orePrefix, Material material, int count) {
+    public R output(MaterialForm orePrefix, Material material, int count) {
         return outputs(OreDictUnifier.get(orePrefix, material, count));
     }
 

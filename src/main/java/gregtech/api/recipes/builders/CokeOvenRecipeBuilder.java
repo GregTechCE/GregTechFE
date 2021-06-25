@@ -11,7 +11,7 @@ import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.crafttweaker.CTRecipeBuilder.CraftTweakerIngredientWrapper;
 import gregtech.api.recipes.recipes.CokeOvenRecipe;
 import gregtech.api.unification.material.type.Material;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.util.EnumValidationResult;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.ValidationResult;
@@ -49,12 +49,12 @@ public class CokeOvenRecipeBuilder {
         return this;
     }
 
-    public CokeOvenRecipeBuilder input(OrePrefix orePrefix, Material material) {
+    public CokeOvenRecipeBuilder input(MaterialForm orePrefix, Material material) {
         this.input = CountableIngredient.from(orePrefix, material);
         return this;
     }
 
-    public CokeOvenRecipeBuilder input(OrePrefix orePrefix, Material material, int amount) {
+    public CokeOvenRecipeBuilder input(MaterialForm orePrefix, Material material, int amount) {
         this.input = CountableIngredient.from(orePrefix, material, amount);
         return this;
     }

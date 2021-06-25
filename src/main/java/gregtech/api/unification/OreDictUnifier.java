@@ -6,7 +6,7 @@ import gregtech.api.unification.material.type.DustMaterial;
 import gregtech.api.unification.material.type.IngotMaterial;
 import gregtech.api.unification.material.type.MarkerMaterial;
 import gregtech.api.unification.material.type.Material;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.unification.stack.*;
 import gregtech.api.util.CustomModPriorityComparator;
 import gregtech.common.ConfigHolder;
@@ -73,7 +73,7 @@ public class OreDictUnifier {
         materialUnificationInfo.put(new ItemAndMetadata(itemStack), materialInfo);
     }
 
-    public static void registerOre(ItemStack itemStack, OrePrefix orePrefix, @Nullable Material material) {
+    public static void registerOre(ItemStack itemStack, MaterialForm orePrefix, @Nullable Material material) {
         registerOre(itemStack, orePrefix.name(), material);
     }
 
@@ -107,7 +107,7 @@ public class OreDictUnifier {
         addAndSort(itemStackListForOreDictName, event.getOre().copy(), getItemStackComparator());
 
         //and try to transform registration name into OrePrefix + Material pair
-        OrePrefix orePrefix = OrePrefix.getPrefix(oreName);
+        MaterialForm orePrefix = MaterialForm.getPrefix(oreName);
         Material material = null;
         if (orePrefix == null) {
             //split ore dict name to parts
@@ -130,7 +130,7 @@ public class OreDictUnifier {
             StringBuilder buffer = new StringBuilder();
             for (int i = 0; i < splits.size(); i++) {
                 buffer.append(splits.get(i));
-                OrePrefix maybePrefix = OrePrefix.getPrefix(buffer.toString()); //ore -> OrePrefix.ore
+                MaterialForm maybePrefix = MaterialForm.getPrefix(buffer.toString()); //ore -> OrePrefix.ore
                 String possibleMaterialName = Joiner.on("").join(splits.subList(i + 1, splits.size())); //BasalticMineralSand
                 String underscoreName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, possibleMaterialName); //basaltic_mineral_sand
                 Material possibleMaterial = Material.MATERIAL_REGISTRY.getObject(underscoreName); //Materials.BasalticSand
@@ -192,7 +192,7 @@ public class OreDictUnifier {
     }
 
     @Nullable
-    public static OrePrefix getPrefix(ItemStack itemStack) {
+    public static MaterialForm getPrefix(ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
         ItemAndMetadata simpleItemStack = new ItemAndMetadata(itemStack);
         UnificationEntry entry = stackUnificationInfo.get(simpleItemStack);
@@ -219,11 +219,11 @@ public class OreDictUnifier {
         return get(unificationEntry.orePrefix, unificationEntry.material);
     }
 
-    public static ItemStack get(OrePrefix orePrefix, Material material) {
+    public static ItemStack get(MaterialForm orePrefix, Material material) {
         return get(orePrefix, material, 1);
     }
 
-    public static ItemStack get(OrePrefix orePrefix, Material material, int stackSize) {
+    public static ItemStack get(MaterialForm orePrefix, Material material, int stackSize) {
         UnificationEntry unificationEntry = new UnificationEntry(orePrefix, material);
         if (!stackUnificationItems.containsKey(unificationEntry))
             return ItemStack.EMPTY;
@@ -253,11 +253,11 @@ public class OreDictUnifier {
         if (materialAmount <= 0)
             return ItemStack.EMPTY;
         if (materialAmount % M == 0 || materialAmount >= M * 16)
-            return get(OrePrefix.dust, material, (int) (materialAmount / M));
+            return get(MaterialForm.dust, material, (int) (materialAmount / M));
         else if ((materialAmount * 4) % M == 0 || materialAmount >= M * 8)
-            return get(OrePrefix.dustSmall, material, (int) ((materialAmount * 4) / M));
+            return get(MaterialForm.dustSmall, material, (int) ((materialAmount * 4) / M));
         else if ((materialAmount * 9) >= M)
-            return get(OrePrefix.dustTiny, material, (int) ((materialAmount * 9) / M));
+            return get(MaterialForm.dustTiny, material, (int) ((materialAmount * 9) / M));
         return ItemStack.EMPTY;
     }
 
@@ -269,9 +269,9 @@ public class OreDictUnifier {
         if (materialAmount <= 0)
             return ItemStack.EMPTY;
         if (materialAmount % M == 0 || materialAmount >= M * 16)
-            return get(OrePrefix.ingot, material, (int) (materialAmount / M));
+            return get(MaterialForm.ingot, material, (int) (materialAmount / M));
         else if ((materialAmount * 9) >= M)
-            return get(OrePrefix.nugget, material, (int) ((materialAmount * 9) / M));
+            return get(MaterialForm.nugget, material, (int) ((materialAmount * 9) / M));
         return ItemStack.EMPTY;
     }
 

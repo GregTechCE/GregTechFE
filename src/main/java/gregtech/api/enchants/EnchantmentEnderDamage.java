@@ -44,9 +44,7 @@ public class EnchantmentEnderDamage extends Enchantment {
             return true;
         }
 
-        String entityName = Registry.ENTITY_TYPE.getKey(target.getType())
-                .map(key -> key.getValue().getPath())
-                .orElseThrow();
+        String entityName = Registry.ENTITY_TYPE.getId(target.getType()).getPath();
         return entityName.contains("ender");
     }
 

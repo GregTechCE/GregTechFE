@@ -1,43 +1,20 @@
 package gregtech.api.unification.material;
 
-//@ZenClass("mods.gregtech.material.MaterialIconSet")
-//@ZenRegister
-public enum MaterialIconSet {
+import net.minecraft.util.Identifier;
 
-    NONE,
-    METALLIC,
-    DULL,
-    MAGNETIC,
-    QUARTZ,
-    DIAMOND,
-    EMERALD,
-    SHINY,
-    SHARDS,
-    ROUGH,
-    FINE,
-    SAND,
-    FLINT,
-    RUBY,
-    LAPIS,
-    FLUID,
-    GAS,
-    LIGNITE,
-    OPAL,
-    GLASS,
-    WOOD,
-    LEAF,
-    GEM_HORIZONTAL,
-    GEM_VERTICAL,
-    PAPER,
-    NETHERSTAR;
+public class MaterialIconSet {
 
-    //@ZenGetter("name")
-    public String getName() {
-        return name().toLowerCase();
+    private final Identifier modelSetPath;
+
+    /**
+     * @param modelSetPath path to the folder with item models, relative to
+     *                  assets/[namespace]/models/items and without a trailing slash
+     */
+    public MaterialIconSet(Identifier modelSetPath) {
+        this.modelSetPath = modelSetPath;
     }
 
-    //@ZenMethod("get")
-    public static MaterialIconSet getByName(String name) {
-        return valueOf(name.toUpperCase());
+    public Identifier getModelLocation(String modelType) {
+        return new Identifier(modelSetPath.getNamespace(), modelSetPath.getPath() + "/" + modelType);
     }
 }

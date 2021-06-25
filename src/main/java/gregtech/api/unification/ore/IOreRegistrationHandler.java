@@ -5,6 +5,6 @@ import gregtech.api.unification.material.type.Material;
 @FunctionalInterface
 public interface IOreRegistrationHandler {
 
-    void processMaterial(OrePrefix orePrefix, Material material);
+    void processMaterial(MaterialForm orePrefix, Material material);
 
 }

@@ -23,7 +23,7 @@ public class StoneType implements Comparable<StoneType> {
     public final ResourceLocation backgroundSideTexture;
     public final ResourceLocation backgroundTopTexture;
 
-    public final OrePrefix processingPrefix;
+    public final MaterialForm processingPrefix;
     public final DustMaterial stoneMaterial;
     public final Supplier<IBlockState> stone;
     public final SoundType soundType;
@@ -35,7 +35,7 @@ public class StoneType implements Comparable<StoneType> {
 
     public static final GTControlledRegistry<String, StoneType> STONE_TYPE_REGISTRY = new GTControlledRegistry<>(128);
 
-    public StoneType(int id, String name, ResourceLocation backgroundSideTexture, ResourceLocation backgroundTopTexture, SoundType soundType, OrePrefix processingPrefix, DustMaterial stoneMaterial, String harvestTool, int flags, Supplier<IBlockState> stone, Predicate<IBlockState> predicate) {
+    public StoneType(int id, String name, ResourceLocation backgroundSideTexture, ResourceLocation backgroundTopTexture, SoundType soundType, MaterialForm processingPrefix, DustMaterial stoneMaterial, String harvestTool, int flags, Supplier<IBlockState> stone, Predicate<IBlockState> predicate) {
         this.name = name;
         this.backgroundSideTexture = backgroundSideTexture;
         this.backgroundTopTexture = backgroundTopTexture;
@@ -50,7 +50,7 @@ public class StoneType implements Comparable<StoneType> {
         STONE_TYPE_REGISTRY.register(id, name, this);
     }
 
-    public StoneType(int id, String name, ResourceLocation backgroundTexture, SoundType soundType, OrePrefix processingPrefix, DustMaterial stoneMaterial, String harvestTool, int flags, Supplier<IBlockState> stone, Predicate<IBlockState> predicate) {
+    public StoneType(int id, String name, ResourceLocation backgroundTexture, SoundType soundType, MaterialForm processingPrefix, DustMaterial stoneMaterial, String harvestTool, int flags, Supplier<IBlockState> stone, Predicate<IBlockState> predicate) {
         this(id, name, backgroundTexture, backgroundTexture, soundType, processingPrefix, stoneMaterial, harvestTool, flags, stone, predicate);
     }
 

@@ -8,7 +8,7 @@ import gregtech.api.recipes.recipes.DummyRecipe;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.material.type.Material;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.api.util.EmptyScreenHandler;
@@ -102,23 +102,23 @@ public class ModHandler {
         float remainderChance;
         ItemStack remainder;
         if (OreDictUnifier.getOreDictionaryNames(fuelStack).contains("fuelCoke")) {
-            remainder = OreDictUnifier.get(OrePrefix.dust, Materials.Ash);
+            remainder = OreDictUnifier.get(MaterialForm.dust, Materials.Ash);
             remainderChance = 0.5f;
         } else {
             MaterialStack materialStack = OreDictUnifier.getMaterial(fuelStack);
             if (materialStack == null)
                 return ItemStack.EMPTY;
             else if (materialStack.material == Materials.Charcoal) {
-                remainder = OreDictUnifier.get(OrePrefix.dust, Materials.Ash);
+                remainder = OreDictUnifier.get(MaterialForm.dust, Materials.Ash);
                 remainderChance = 0.3f;
             } else if (materialStack.material == Materials.Coal) {
-                remainder = OreDictUnifier.get(OrePrefix.dust, Materials.DarkAsh);
+                remainder = OreDictUnifier.get(MaterialForm.dust, Materials.DarkAsh);
                 remainderChance = 0.35f;
             } else if (materialStack.material == Materials.Lignite) {
-                remainder = OreDictUnifier.get(OrePrefix.dust, Materials.DarkAsh);
+                remainder = OreDictUnifier.get(MaterialForm.dust, Materials.DarkAsh);
                 remainderChance = 0.35f;
             } else if (materialStack.material == Materials.Coke) {
-                remainder = OreDictUnifier.get(OrePrefix.dust, Materials.Ash);
+                remainder = OreDictUnifier.get(MaterialForm.dust, Materials.Ash);
                 remainderChance = 0.5f;
             } else return ItemStack.EMPTY;
         }

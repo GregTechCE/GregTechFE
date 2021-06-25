@@ -1,7 +1,7 @@
 package gregtech.api.pipenet.block.material;
 
 import gregtech.api.pipenet.block.IPipeType;
-import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.ore.MaterialForm;
 
 public interface IMaterialPipeType<NodeDataType> extends IPipeType<NodeDataType> {
 
@@ -10,5 +10,5 @@ public interface IMaterialPipeType<NodeDataType> extends IPipeType<NodeDataType>
      * when combined with pipe's material
      * @return ore prefix used for this pipe type
      */
-    OrePrefix getOrePrefix();
+    MaterialForm getOrePrefix();
 }

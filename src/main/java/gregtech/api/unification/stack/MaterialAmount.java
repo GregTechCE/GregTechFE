@@ -40,6 +40,10 @@ public class MaterialAmount {
         return this.amount / (other.amount * 1.0);
     }
 
+    public int divFloor(MaterialAmount other) {
+        return (int) (this.amount / other.amount);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
