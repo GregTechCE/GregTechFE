@@ -15,7 +15,7 @@ public class MaterialFlag implements GTRegistryKey {
     private final List<MaterialFlag> conflictingFlags = new ArrayList<>();
     private final List<MaterialProperty<?>> requiredProperties = new ArrayList<>();
 
-    public MaterialFlag(String name, List<MaterialFlag> requiredFlags, List<MaterialFlag> conflictingFlags, List<MaterialProperty<?>> requiredProperties) {
+    private MaterialFlag(String name, List<MaterialFlag> requiredFlags, List<MaterialFlag> conflictingFlags, List<MaterialProperty<?>> requiredProperties) {
         this.name = name;
         this.requiredFlags.addAll(requiredFlags);
         this.conflictingFlags.addAll(conflictingFlags);
@@ -29,7 +29,7 @@ public class MaterialFlag implements GTRegistryKey {
 
 
     public static class Builder {
-        private final GTRegistry<MaterialFlag> registry = new GTRegistry<MaterialFlag>();
+        private static final GTRegistry<MaterialFlag> registry = new GTRegistry<>();
 
         private final String name;
         private final List<MaterialFlag> requiredFlags = new ArrayList<>();
@@ -56,14 +56,11 @@ public class MaterialFlag implements GTRegistryKey {
         }
 
         public MaterialFlag build() {
-            try {
-                validate();
-            } catch (MaterialFlagValidationException e) {
-                //TODO: Log
+            if (!validate()) {
                 return null;
             }
 
-            MaterialFlag materialFlag = new MaterialFlag(name, requiredFlags, conflictingFlags, requiredProperties);
+            var materialFlag = new MaterialFlag(name, requiredFlags, conflictingFlags, requiredProperties);
 
             try {
                 registry.put(materialFlag);
@@ -75,9 +72,13 @@ public class MaterialFlag implements GTRegistryKey {
             return materialFlag;
         }
 
-        private void validate() throws MaterialFlagValidationException {
-            if (!Collections.disjoint(requiredFlags, conflictingFlags))
-                throw new MaterialFlagValidationException("Required flags and conflicts flags has same element");
+        private boolean validate() {
+            if (!Collections.disjoint(requiredFlags, conflictingFlags)) {
+                //TODO: log error
+                return false;
+            }
+
+            return true;
         }
     }
 }
