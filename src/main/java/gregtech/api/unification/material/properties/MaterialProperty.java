@@ -1,11 +1,14 @@
 package gregtech.api.unification.material.properties;
 
 import gregtech.api.unification.material.flags.MaterialFlag;
+import gregtech.api.util.registry.AlreadyRegisteredKeyException;
+import gregtech.api.util.registry.GTRegistry;
+import gregtech.api.util.registry.GTRegistryKey;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class MaterialProperty<T> {
+public class MaterialProperty<T> implements GTRegistryKey {
     private final String name;
     private final Class<T> propertyValueType;
     private final Set<MaterialFlag> requiredFlags = new HashSet<>();
@@ -22,7 +25,15 @@ public class MaterialProperty<T> {
         return propertyValueType.cast(data);
     }
 
+    @Override
+    public String getKey() {
+        return name;
+    }
+
+
     public static class Builder<T> {
+        private static final GTRegistry<MaterialProperty<?>> registry = new GTRegistry<>();
+
         private final String name;
         private final Class<T> propertyValueType;
 
@@ -45,7 +56,16 @@ public class MaterialProperty<T> {
         }
 
         public MaterialProperty<T> build() {
-            return new MaterialProperty<>(name, propertyValueType, requiredProperties, requiredFlags);
+            var materialProperty = new MaterialProperty<>(name, propertyValueType, requiredProperties, requiredFlags);
+
+            try {
+                registry.put(materialProperty);
+            } catch (AlreadyRegisteredKeyException e) {
+                //TODO: Log
+                return null;
+            }
+
+            return materialProperty;
         }
     }
 }
