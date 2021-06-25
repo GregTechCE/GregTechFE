@@ -16,6 +16,22 @@ public class GTMaterial {
     private GTMaterial() {
     }
 
+    public boolean hasFlag(MaterialFlag flag) {
+        return flags.contains(flag);
+    }
+
+    public Set<MaterialFlag> getFlags(){
+        return Collections.unmodifiableSet(flags);
+    }
+
+    public boolean hasProperty(MaterialProperty<?> property){
+        return properties.containsKey(property);
+    }
+
+    public <T> T getPropertyValue(MaterialProperty<T> property){
+        return property.cast(properties.get(property));
+    }
+
     public static class Settings {
         public static final Registry<GTMaterial> REGISTRY =
                 FabricRegistryBuilder.createSimple(GTMaterial.class, new Identifier(GTValues.MODID, "material"))
@@ -83,7 +99,7 @@ public class GTMaterial {
                 addFlagsAndRequiredFlags(materialProperty.getRequiredFlags());
             }
         }
-        
+
         public GTMaterial build() {
             if (!validate()) {
                 return null;
