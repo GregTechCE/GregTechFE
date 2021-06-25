@@ -22,6 +22,19 @@ public class MaterialFlag implements GTRegistryKey {
         this.requiredProperties.addAll(requiredProperties);
     }
 
+    public Set<MaterialFlag> getRequiredFlags() {
+        return Collections.unmodifiableSet(requiredFlags);
+    }
+
+    public Set<MaterialFlag> getConflictingFlags() {
+        return Collections.unmodifiableSet(conflictingFlags);
+    }
+
+    @SuppressWarnings("java:S1452")
+    public Set<MaterialProperty<?>> getRequiredProperties() {
+        return Collections.unmodifiableSet(requiredProperties);
+    }
+
     @Override
     public String getKey() {
         return name;

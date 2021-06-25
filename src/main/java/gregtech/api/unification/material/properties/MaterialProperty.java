@@ -5,6 +5,7 @@ import gregtech.api.util.registry.AlreadyRegisteredKeyException;
 import gregtech.api.util.registry.GTRegistry;
 import gregtech.api.util.registry.GTRegistryKey;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +24,15 @@ public class MaterialProperty<T> implements GTRegistryKey {
 
     public T cast(Object data) {
         return propertyValueType.cast(data);
+    }
+
+    public Set<MaterialFlag> getRequiredFlags() {
+        return Collections.unmodifiableSet(requiredFlags);
+    }
+
+    @SuppressWarnings("java:S1452")
+    public Set<MaterialProperty<?>> getRequiredProperties() {
+        return Collections.unmodifiableSet(requiredProperties);
     }
 
     @Override
