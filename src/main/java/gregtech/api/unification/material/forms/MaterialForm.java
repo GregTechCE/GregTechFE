@@ -1,16 +1,15 @@
 package gregtech.api.unification.material.forms;
 
+import gregtech.api.unification.stack.MaterialAmount;
 import gregtech.api.util.registry.AlreadyRegisteredKeyException;
 import gregtech.api.util.registry.GTRegistry;
 import gregtech.api.util.registry.GTRegistryKey;
 
-import static gregtech.api.GTValues.M;
-
 public class MaterialForm implements GTRegistryKey {
     private final String name;
-    private final long materialAmount;
+    private final MaterialAmount materialAmount;
 
-    private MaterialForm(String name, long materialAmount) {
+    private MaterialForm(String name, MaterialAmount materialAmount) {
         this.name = name;
         this.materialAmount = materialAmount;
     }
@@ -25,13 +24,13 @@ public class MaterialForm implements GTRegistryKey {
         private static final GTRegistry<MaterialForm> registry = new GTRegistry<>();
 
         private final String name;
-        private long materialAmount = M;
+        private MaterialAmount materialAmount = MaterialAmount.DUST;
 
         public Builder(String name) {
             this.name = name;
         }
 
-        public MaterialForm.Builder materialAmount(long materialAmount) {
+        public MaterialForm.Builder materialAmount(MaterialAmount materialAmount) {
             this.materialAmount = materialAmount;
             return this;
         }
@@ -55,7 +54,7 @@ public class MaterialForm implements GTRegistryKey {
         }
 
         private boolean validate() {
-            if (materialAmount <= 0) {
+            if (materialAmount.equals(MaterialAmount.ZERO)) {
                 //TODO: log error
                 return false;
             }
