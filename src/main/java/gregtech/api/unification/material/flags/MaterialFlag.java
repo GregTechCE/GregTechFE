@@ -11,13 +11,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MaterialFlag {
-    private final String name;
     private final Set<MaterialFlag> requiredFlags = new HashSet<>();
     private final Set<MaterialFlag> conflictingFlags = new HashSet<>();
     private final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
-    private MaterialFlag(String name, Set<MaterialFlag> requiredFlags, Set<MaterialFlag> conflictingFlags, Set<MaterialProperty<?>> requiredProperties) {
-        this.name = name;
+    private MaterialFlag(Set<MaterialFlag> requiredFlags, Set<MaterialFlag> conflictingFlags, Set<MaterialProperty<?>> requiredProperties) {
         this.requiredFlags.addAll(requiredFlags);
         this.conflictingFlags.addAll(conflictingFlags);
         this.requiredProperties.addAll(requiredProperties);
@@ -71,7 +69,7 @@ public class MaterialFlag {
                 return null;
             }
 
-            var materialFlag = new MaterialFlag(name, requiredFlags, conflictingFlags, requiredProperties);
+            var materialFlag = new MaterialFlag(requiredFlags, conflictingFlags, requiredProperties);
 
             return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), materialFlag);
         }

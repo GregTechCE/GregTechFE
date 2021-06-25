@@ -10,12 +10,10 @@ import net.minecraft.util.registry.Registry;
 import java.util.*;
 
 public class GTMaterial {
-    private final String name;
     private final Set<MaterialFlag> flags = new HashSet<>();
     private final Map<MaterialProperty<?>, Object> properties = new HashMap<>();
 
-    private GTMaterial(String name, Set<MaterialFlag> flags, Map<MaterialProperty<?>, Object> properties) {
-        this.name = name;
+    private GTMaterial(Set<MaterialFlag> flags, Map<MaterialProperty<?>, Object> properties) {
         this.flags.addAll(flags);
         this.properties.putAll(properties);
     }
@@ -95,7 +93,7 @@ public class GTMaterial {
                 return null;
             }
 
-            var gtMaterial = new GTMaterial(name, flags, properties);
+            var gtMaterial = new GTMaterial(flags, properties);
 
             return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), gtMaterial);
         }

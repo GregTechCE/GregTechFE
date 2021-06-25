@@ -7,11 +7,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class MaterialForm {
-    private final String name;
     private final MaterialAmount materialAmount;
 
-    private MaterialForm(String name, MaterialAmount materialAmount) {
-        this.name = name;
+    private MaterialForm(MaterialAmount materialAmount) {
         this.materialAmount = materialAmount;
     }
 
@@ -39,7 +37,7 @@ public class MaterialForm {
                 return null;
             }
 
-            var materialForm = new MaterialForm(name, materialAmount);
+            var materialForm = new MaterialForm(materialAmount);
 
             return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), materialForm);
         }
