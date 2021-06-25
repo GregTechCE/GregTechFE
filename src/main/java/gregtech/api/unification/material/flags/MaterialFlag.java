@@ -45,13 +45,13 @@ public class MaterialFlag implements GTRegistryKey {
             return this;
         }
 
-        public MaterialFlag.Builder conflictsWith(MaterialFlag materialFlag) {
-            this.conflictingFlags.add(materialFlag);
+        public MaterialFlag.Builder requires(MaterialProperty<?> property) {
+            this.requiredProperties.add(property);
             return this;
         }
 
-        public MaterialFlag.Builder requiresProperty(MaterialProperty<?> property) {
-            this.requiredProperties.add(property);
+        public MaterialFlag.Builder conflictsWith(MaterialFlag materialFlag) {
+            this.conflictingFlags.add(materialFlag);
             return this;
         }
 
