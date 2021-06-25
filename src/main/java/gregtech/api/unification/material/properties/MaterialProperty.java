@@ -2,16 +2,16 @@ package gregtech.api.unification.material.properties;
 
 import gregtech.api.unification.material.flags.MaterialFlag;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MaterialProperty<T> {
     private final String name;
     private final Class<T> propertyValueType;
-    private final List<MaterialFlag> requiredFlags = new ArrayList<>();
-    private final List<MaterialProperty<?>> requiredProperties = new ArrayList<>();
+    private final Set<MaterialFlag> requiredFlags = new HashSet<>();
+    private final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
-    private MaterialProperty(String name, Class<T> propertyValueType, List<MaterialProperty<?>> requiredProperties, List<MaterialFlag> requiredFlags) {
+    private MaterialProperty(String name, Class<T> propertyValueType, Set<MaterialProperty<?>> requiredProperties, Set<MaterialFlag> requiredFlags) {
         this.name = name;
         this.propertyValueType = propertyValueType;
         this.requiredFlags.addAll(requiredFlags);
@@ -26,8 +26,8 @@ public class MaterialProperty<T> {
         private final String name;
         private final Class<T> propertyValueType;
 
-        private final List<MaterialFlag> requiredFlags = new ArrayList<>();
-        private final List<MaterialProperty<?>> requiredProperties = new ArrayList<>();
+        private final Set<MaterialFlag> requiredFlags = new HashSet<>();
+        private final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
         public Builder(String name, Class<T> propertyValueType) {
             this.name = name;

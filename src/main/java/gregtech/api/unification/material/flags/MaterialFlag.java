@@ -5,17 +5,17 @@ import gregtech.api.util.registry.AlreadyRegisteredKeyException;
 import gregtech.api.util.registry.GTRegistry;
 import gregtech.api.util.registry.GTRegistryKey;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MaterialFlag implements GTRegistryKey {
     private final String name;
-    private final List<MaterialFlag> requiredFlags = new ArrayList<>();
-    private final List<MaterialFlag> conflictingFlags = new ArrayList<>();
-    private final List<MaterialProperty<?>> requiredProperties = new ArrayList<>();
+    private final Set<MaterialFlag> requiredFlags = new HashSet<>();
+    private final Set<MaterialFlag> conflictingFlags = new HashSet<>();
+    private final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
-    private MaterialFlag(String name, List<MaterialFlag> requiredFlags, List<MaterialFlag> conflictingFlags, List<MaterialProperty<?>> requiredProperties) {
+    private MaterialFlag(String name, Set<MaterialFlag> requiredFlags, Set<MaterialFlag> conflictingFlags, Set<MaterialProperty<?>> requiredProperties) {
         this.name = name;
         this.requiredFlags.addAll(requiredFlags);
         this.conflictingFlags.addAll(conflictingFlags);
@@ -32,9 +32,9 @@ public class MaterialFlag implements GTRegistryKey {
         private static final GTRegistry<MaterialFlag> registry = new GTRegistry<>();
 
         private final String name;
-        private final List<MaterialFlag> requiredFlags = new ArrayList<>();
-        private final List<MaterialFlag> conflictingFlags = new ArrayList<>();
-        private final List<MaterialProperty<?>> requiredProperties = new ArrayList<>();
+        private final Set<MaterialFlag> requiredFlags = new HashSet<>();
+        private final Set<MaterialFlag> conflictingFlags = new HashSet<>();
+        private final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
         public Builder(String name) {
             this.name = name;
