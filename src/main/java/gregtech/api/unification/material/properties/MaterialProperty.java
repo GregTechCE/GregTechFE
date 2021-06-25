@@ -11,14 +11,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MaterialProperty<T> {
-    private final Class<T> propertyValueType;
-    private final Set<MaterialFlag> requiredFlags = new HashSet<>();
-    private final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
+    private Class<T> propertyValueType;
+    private Set<MaterialFlag> requiredFlags = new HashSet<>();
+    private Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
-    private MaterialProperty(Class<T> propertyValueType, Set<MaterialProperty<?>> requiredProperties, Set<MaterialFlag> requiredFlags) {
-        this.propertyValueType = propertyValueType;
-        this.requiredFlags.addAll(requiredFlags);
-        this.requiredProperties.addAll(requiredProperties);
+    private MaterialProperty() {
     }
 
     public T cast(Object data) {
@@ -65,7 +62,10 @@ public class MaterialProperty<T> {
         }
 
         public MaterialProperty<T> build() {
-            var materialProperty = new MaterialProperty<>(propertyValueType, requiredProperties, requiredFlags);
+            var materialProperty = new MaterialProperty<T>();
+            materialProperty.propertyValueType = this.propertyValueType;
+            materialProperty.requiredFlags = this.requiredFlags;
+            materialProperty.requiredProperties = this.requiredProperties;
 
             return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), materialProperty);
         }

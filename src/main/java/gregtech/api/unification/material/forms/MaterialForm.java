@@ -7,12 +7,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class MaterialForm {
-    private final MaterialAmount materialAmount;
+    private MaterialAmount materialAmount;
 
-    private MaterialForm(MaterialAmount materialAmount) {
-        this.materialAmount = materialAmount;
+    private MaterialForm() {
     }
 
+    public MaterialAmount getMaterialAmount() {
+        return materialAmount;
+    }
 
     public static class Builder {
         public static final Registry<MaterialForm> REGISTRY =
@@ -37,9 +39,10 @@ public class MaterialForm {
                 return null;
             }
 
-            var materialForm = new MaterialForm(materialAmount);
+            var materialForm = new MaterialForm();
+            materialForm.materialAmount = this.materialAmount;
 
-            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), materialForm);
+            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, this.name), materialForm);
         }
 
         private boolean validate() {
