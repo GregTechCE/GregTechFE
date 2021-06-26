@@ -46,18 +46,18 @@ public class MaterialFlag {
             this.name = name;
         }
 
-        public MaterialFlag.Builder requires(MaterialFlag materialFlag) {
+        public MaterialFlag.Builder requiresFlag(MaterialFlag materialFlag) {
             this.requiredFlags.add(materialFlag);
             return this;
         }
 
-        public MaterialFlag.Builder requires(MaterialProperty<?> property) {
-            this.requiredProperties.add(property);
+        public MaterialFlag.Builder conflictsWithFlag(MaterialFlag materialFlag) {
+            this.conflictingFlags.add(materialFlag);
             return this;
         }
 
-        public MaterialFlag.Builder conflictsWith(MaterialFlag materialFlag) {
-            this.conflictingFlags.add(materialFlag);
+        public MaterialFlag.Builder requiresProperty(MaterialProperty<?> property) {
+            this.requiredProperties.add(property);
             return this;
         }
 

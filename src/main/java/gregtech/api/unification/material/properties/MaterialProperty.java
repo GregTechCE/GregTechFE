@@ -51,12 +51,12 @@ public class MaterialProperty<T> {
             this.propertyValueType = propertyValueType;
         }
 
-        public MaterialProperty.Builder<T> requires(MaterialProperty<?> property) {
+        public MaterialProperty.Builder<T> requiresProperty(MaterialProperty<?> property) {
             this.requiredProperties.add(property);
             return this;
         }
 
-        public MaterialProperty.Builder<T> requires(MaterialFlag materialFlag) {
+        public MaterialProperty.Builder<T> requiresFlag(MaterialFlag materialFlag) {
             this.requiredFlags.add(materialFlag);
             return this;
         }

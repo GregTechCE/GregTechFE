@@ -48,7 +48,7 @@ public class GTMaterial {
             this.name = name;
         }
 
-        public GTMaterial.Settings add(MaterialFlag materialFlag) {
+        public GTMaterial.Settings addFlag(MaterialFlag materialFlag) {
             addFlagAndRequiredFlags(materialFlag);
             addConflictingFlags(materialFlag.getConflictingFlags());
             addRequiredProperties(materialFlag.getRequiredProperties());
@@ -56,7 +56,7 @@ public class GTMaterial {
             return this;
         }
 
-        public <T> GTMaterial.Settings add(MaterialProperty<T> materialProperty, T value) {
+        public <T> GTMaterial.Settings addProperty(MaterialProperty<T> materialProperty, T value) {
             this.properties.put(materialProperty, value);
 
             addRequiredProperties(materialProperty.getRequiredProperties());
