@@ -17,7 +17,7 @@ public class DustMaterial extends FluidMaterial {
 
     public static final class MatFlags {
 
-        public static final long GENERATE_ORE = createFlag(11);
+//        public static final long GENERATE_ORE = createFlag(11);
 
         /**
          * Generate a plate for this material
@@ -25,44 +25,45 @@ public class DustMaterial extends FluidMaterial {
          * If it's metal material, bending machine recipes will be generated
          * If block is found, cutting machine recipe will be also generated
          */
-        public static final long GENERATE_PLATE = createFlag(12);
+//        public static final long GENERATE_PLATE = createFlag(12);
 
         /**
          * Add to material if it cannot be worked by any other means, than smashing or smelting. This is used for coated Materials.
          */
-        public static final long NO_WORKING = createFlag(13);
+//        public static final long NO_WORKING = createFlag(13);
+
         /**
          * Add to material if it cannot be used for regular Metal working techniques since it is not possible to bend it.
          */
-        public static final long NO_SMASHING = createFlag(14);
+//        public static final long NO_SMASHING = createFlag(14);
 
         /**
          * Add to material if it's impossible to smelt it
          */
-        public static final long NO_SMELTING = createFlag(15);
+//        public static final long NO_SMELTING = createFlag(15);
 
         /**
          * Add to material if it is outputting less in an Induction Smelter.
          */
-        public static final long INDUCTION_SMELTING_LOW_OUTPUT = createFlag(16);
+//        public static final long INDUCTION_SMELTING_LOW_OUTPUT = createFlag(16);
 
         /**
          * Add to material if it melts into fluid (and it will also generate fluid for this material)
          */
-        public static final long SMELT_INTO_FLUID = createFlag(17);
+//        public static final long SMELT_INTO_FLUID = createFlag(17);
 
         /**
          * This will prevent material from creating Shapeless recipes for dust to block and vice versa
          * Also preventing extruding and alloy smelting recipes via SHAPE_EXTRUDING/MOLD_BLOCK
          */
-        public static final long EXCLUDE_BLOCK_CRAFTING_RECIPES = createFlag(18);
+//        public static final long EXCLUDE_BLOCK_CRAFTING_RECIPES = createFlag(18);
 
         /**
          * This will prevent material from creating Shapeless recipes for dust to block and vice versa
          */
-        public static final long EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES = createFlag(46);
+//        public static final long EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES = createFlag(46);
 
-        public static final long EXCLUDE_PLATE_COMPRESSOR_RECIPE = createFlag(19);
+//        public static final long EXCLUDE_PLATE_COMPRESSOR_RECIPE = createFlag(19);
 
         static {
             Material.MatFlags.registerMaterialFlagsHolder(MatFlags.class, DustMaterial.class);

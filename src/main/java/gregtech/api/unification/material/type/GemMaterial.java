@@ -17,11 +17,11 @@ public class GemMaterial extends SolidMaterial {
         /**
          * If this material is crystallisable
          */
-        public static final long CRYSTALLISABLE = createFlag(34);
+//        public static final long CRYSTALLISABLE = createFlag(34);
 
-        public static final long GENERATE_LENSE = createFlag(37);
+//        public static final long GENERATE_LENSE = createFlag(37);
 
-        public static final long HIGH_SIFTER_OUTPUT = createFlag(38);
+//        public static final long HIGH_SIFTER_OUTPUT = createFlag(38);
 
         static {
             Material.MatFlags.registerMaterialFlagsHolder(MatFlags.class, GemMaterial.class);
