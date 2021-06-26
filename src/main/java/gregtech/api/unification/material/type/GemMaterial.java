@@ -19,7 +19,7 @@ public class GemMaterial extends SolidMaterial {
          */
 //        public static final long CRYSTALLISABLE = createFlag(34);
 
-//        public static final long GENERATE_LENSE = createFlag(37);
+//        public static final long GENERATE_LENS = createFlag(37);
 
 //        public static final long HIGH_SIFTER_OUTPUT = createFlag(38);
 
@@ -40,12 +40,12 @@ public class GemMaterial extends SolidMaterial {
         super(materialRGB, materialIconSet, harvestLevel, materialComponents, materialGenerationFlags, null, 0, 0, 0);
     }
 
-    @Override
-    protected long verifyMaterialBits(long generationBits) {
-        if ((generationBits & MatFlags.GENERATE_LENSE) > 0) {
-            generationBits |= GENERATE_PLATE;
-        }
-        return super.verifyMaterialBits(generationBits);
-    }
+//    @Override
+//    protected long verifyMaterialBits(long generationBits) {
+//        if ((generationBits & MatFlags.GENERATE_LENS) > 0) {
+//            generationBits |= GENERATE_PLATE;
+//        }
+//        return super.verifyMaterialBits(generationBits);
+//    }
 }
 

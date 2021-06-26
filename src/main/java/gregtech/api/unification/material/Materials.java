@@ -21,7 +21,7 @@ import static gregtech.api.unification.material.MaterialIconSet.*;
 public class Materials {
 
     private static final long STD_SOLID = GENERATE_PLATE | GENERATE_ROD | GENERATE_BOLT_SCREW | GENERATE_LONG_ROD;
-    private static final long STD_GEM = GENERATE_ORE | STD_SOLID | GENERATE_LENSE;
+    private static final long STD_GEM = GENERATE_ORE | STD_SOLID | GENERATE_LENS;
     private static final long STD_METAL = GENERATE_PLATE;
     private static final long EXT_METAL = STD_METAL | GENERATE_ROD | GENERATE_BOLT_SCREW | GENERATE_LONG_ROD;
     private static final long EXT2_METAL = EXT_METAL | GENERATE_GEAR | GENERATE_FOIL | GENERATE_FINE_WIRE;
@@ -144,13 +144,13 @@ public class Materials {
     public static DustMaterial Cooperite = new DustMaterial(108, "cooperite", 0xFFFFC8, METALLIC, 1, of(new MaterialComponent(Platinum, 3), new MaterialComponent(Nickel, 1), new MaterialComponent(Sulfur, 1), new MaterialComponent(Palladium, 1)), GENERATE_ORE);
     public static IngotMaterial Cupronickel = new IngotMaterial(109, "cupronickel", 0xE39680, METALLIC, 1, of(new MaterialComponent(Copper, 1), new MaterialComponent(Nickel, 1)), EXT_METAL);
     public static DustMaterial DarkAsh = new DustMaterial(110, "dark_ash", 0x323232, SAND, 1, of(new MaterialComponent(Carbon, 1)), DISABLE_DECOMPOSITION);
-    public static GemMaterial Diamond = new GemMaterial(111, "diamond", 0xC8FFFF, DIAMOND, 3, of(new MaterialComponent(Carbon, 1)), GENERATE_ROD | GENERATE_BOLT_SCREW | GENERATE_LENSE | GENERATE_GEAR | NO_SMASHING | NO_SMELTING | FLAMMABLE | HIGH_SIFTER_OUTPUT | GENERATE_ORE | DISABLE_DECOMPOSITION | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, 8.0F, 3.0f, 1280);
+    public static GemMaterial Diamond = new GemMaterial(111, "diamond", 0xC8FFFF, DIAMOND, 3, of(new MaterialComponent(Carbon, 1)), GENERATE_ROD | GENERATE_BOLT_SCREW | GENERATE_LENS | GENERATE_GEAR | NO_SMASHING | NO_SMELTING | FLAMMABLE | HIGH_SIFTER_OUTPUT | GENERATE_ORE | DISABLE_DECOMPOSITION | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, 8.0F, 3.0f, 1280);
     public static IngotMaterial Electrum = new IngotMaterial(112, "electrum", 0xFFFF64, SHINY, 2, of(new MaterialComponent(Silver, 1), new MaterialComponent(Gold, 1)), EXT2_METAL | MORTAR_GRINDABLE);
     public static GemMaterial Emerald = new GemMaterial(113, "emerald", 0x50FF50, EMERALD, 2, of(new MaterialComponent(Beryllium, 3), new MaterialComponent(Aluminium, 2), new MaterialComponent(Silicon, 6), new MaterialComponent(Oxygen, 18)), STD_GEM | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, 10.0F, 2.0f, 368);
     public static DustMaterial Galena = new DustMaterial(114, "galena", 0x643C64, ROUGH, 3, of(new MaterialComponent(Lead, 3), new MaterialComponent(Silver, 3), new MaterialComponent(Sulfur, 2)), GENERATE_ORE | NO_SMELTING);
     public static DustMaterial Garnierite = new DustMaterial(115, "garnierite", 0x32C846, ROUGH, 3, of(new MaterialComponent(Nickel, 1), new MaterialComponent(Oxygen, 1)), GENERATE_ORE);
     public static FluidMaterial Glyceryl = new FluidMaterial(116, "glyceryl", 0x009696, FLUID, of(new MaterialComponent(Carbon, 3), new MaterialComponent(Hydrogen, 5), new MaterialComponent(Nitrogen, 3), new MaterialComponent(Oxygen, 9)), FLAMMABLE | EXPLOSIVE | NO_SMELTING | NO_SMASHING);
-    public static GemMaterial GreenSapphire = new GemMaterial(117, "green_sapphire", 0x64C882, GEM_HORIZONTAL, 2, of(new MaterialComponent(Aluminium, 2), new MaterialComponent(Oxygen, 3)), GENERATE_ORE | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT | GENERATE_LENSE, 8.0F, 3.0f, 368);
+    public static GemMaterial GreenSapphire = new GemMaterial(117, "green_sapphire", 0x64C882, GEM_HORIZONTAL, 2, of(new MaterialComponent(Aluminium, 2), new MaterialComponent(Oxygen, 3)), GENERATE_ORE | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT | GENERATE_LENS, 8.0F, 3.0f, 368);
     public static DustMaterial Grossular = new DustMaterial(118, "grossular", 0xC86400, GEM_VERTICAL, 1, of(new MaterialComponent(Calcium, 3), new MaterialComponent(Aluminium, 2), new MaterialComponent(Silicon, 3), new MaterialComponent(Oxygen, 12)), GENERATE_ORE);
     public static FluidMaterial DistilledWater = new FluidMaterial(119, "distilled_water", 0x0000FF, FLUID, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 1)), NO_RECYCLING | DISABLE_DECOMPOSITION);
     public static DustMaterial Ice = new DustMaterial(120, "ice", 0xC8C8FF, ROUGH, 0, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 1)), NO_SMASHING | NO_RECYCLING | SMELT_INTO_FLUID | EXCLUDE_BLOCK_CRAFTING_RECIPES | DISABLE_DECOMPOSITION);
@@ -343,7 +343,7 @@ public class Materials {
     public static DustMaterial Stone = new DustMaterial(328, "stone", 0xCDCDCD, ROUGH, 1, of(), MORTAR_GRINDABLE | GENERATE_GEAR | GENERATE_PLATE | NO_SMASHING | NO_RECYCLING);
     public static FluidMaterial Lava = new FluidMaterial(329, "lava", 0xFF4000, FLUID, of(), 0);
     public static DustMaterial Glowstone = new DustMaterial(330, "glowstone", 0xFFFF00, SHINY, 1, of(), NO_SMASHING | SMELT_INTO_FLUID | GENERATE_PLATE | EXCLUDE_PLATE_COMPRESSOR_RECIPE);
-    public static GemMaterial NetherStar = new GemMaterial(331, "nether_star", 0xFFFFFF, NETHERSTAR, 4, of(), STD_SOLID | GENERATE_LENSE | NO_SMASHING | NO_SMELTING);
+    public static GemMaterial NetherStar = new GemMaterial(331, "nether_star", 0xFFFFFF, NETHERSTAR, 4, of(), STD_SOLID | GENERATE_LENS | NO_SMASHING | NO_SMELTING);
     public static DustMaterial Endstone = new DustMaterial(332, "endstone", 0xFFFFFF, DULL, 1, of(), NO_SMASHING);
     public static DustMaterial Netherrack = new DustMaterial(333, "netherrack", 0xC80000, ROUGH, 1, of(), NO_SMASHING | FLAMMABLE);
     public static FluidMaterial DrillingFluid = new FluidMaterial(348, "drilling_fluid", 0xFFFFAA, FLUID, of(), 0);
@@ -393,7 +393,7 @@ public class Materials {
     /**
      * Second Degree Compounds
      */
-    public static GemMaterial Glass = new GemMaterial(209, "glass", 0xFFFFFF, GLASS, 0, of(new MaterialComponent(SiliconDioxide, 1)), GENERATE_PLATE | GENERATE_LENSE | NO_SMASHING | NO_RECYCLING | SMELT_INTO_FLUID | EXCLUDE_BLOCK_CRAFTING_RECIPES);
+    public static GemMaterial Glass = new GemMaterial(209, "glass", 0xFFFFFF, GLASS, 0, of(new MaterialComponent(SiliconDioxide, 1)), GENERATE_PLATE | GENERATE_LENS | NO_SMASHING | NO_RECYCLING | SMELT_INTO_FLUID | EXCLUDE_BLOCK_CRAFTING_RECIPES);
     public static DustMaterial Perlite = new DustMaterial(210, "perlite", 0x1E141E, DULL, 1, of(new MaterialComponent(Obsidian, 2), new MaterialComponent(Water, 1)), 0);
     public static DustMaterial Borax = new DustMaterial(313, "borax", 0xFFFFFF, SAND, 1, of(new MaterialComponent(Sodium, 2), new MaterialComponent(Boron, 4), new MaterialComponent(Water, 10), new MaterialComponent(Oxygen, 7)), 0);
     public static GemMaterial Lignite = new GemMaterial(211, "lignite", 0x644646, LIGNITE, 0, of(new MaterialComponent(Carbon, 2), new MaterialComponent(Water, 4), new MaterialComponent(DarkAsh, 1)), GENERATE_ORE | FLAMMABLE | NO_SMELTING | NO_SMASHING | MORTAR_GRINDABLE);
@@ -403,8 +403,8 @@ public class Materials {
     public static DustMaterial Redstone = new DustMaterial(215, "redstone", 0xC80000, ROUGH, 2, of(new MaterialComponent(Silicon, 1), new MaterialComponent(Pyrite, 5), new MaterialComponent(Ruby, 1), new MaterialComponent(Mercury, 3)), GENERATE_PLATE | GENERATE_ORE | NO_SMASHING | SMELT_INTO_FLUID | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES);
     public static GemMaterial Lapis = new GemMaterial(216, "lapis", 0x4646DC, LAPIS, 1, of(new MaterialComponent(Lazurite, 12), new MaterialComponent(Sodalite, 2), new MaterialComponent(Pyrite, 1), new MaterialComponent(Calcite, 1)), STD_GEM | NO_SMASHING | NO_SMELTING | CRYSTALLISABLE | NO_WORKING | DECOMPOSITION_BY_ELECTROLYZING | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES);
     public static DustMaterial Blaze = new DustMaterial(217, "blaze", 0xFFC800, DULL, 1, of(new MaterialComponent(DarkAsh, 1), new MaterialComponent(Sulfur, 1)), NO_SMELTING | SMELT_INTO_FLUID | MORTAR_GRINDABLE | BURNING);
-    public static GemMaterial EnderPearl = new GemMaterial(218, "ender_pearl", 0x6CDCC8, GEM_VERTICAL, 1, of(new MaterialComponent(Beryllium, 1), new MaterialComponent(Potassium, 4), new MaterialComponent(Nitrogen, 5)), GENERATE_PLATE | GENERATE_LENSE | NO_SMASHING | NO_SMELTING);
-    public static GemMaterial EnderEye = new GemMaterial(219, "ender_eye", 0x66FF66, GEM_VERTICAL, 1, of(new MaterialComponent(EnderPearl, 1), new MaterialComponent(Blaze, 1)), GENERATE_PLATE | GENERATE_LENSE | NO_SMASHING | NO_SMELTING);
+    public static GemMaterial EnderPearl = new GemMaterial(218, "ender_pearl", 0x6CDCC8, GEM_VERTICAL, 1, of(new MaterialComponent(Beryllium, 1), new MaterialComponent(Potassium, 4), new MaterialComponent(Nitrogen, 5)), GENERATE_PLATE | GENERATE_LENS | NO_SMASHING | NO_SMELTING);
+    public static GemMaterial EnderEye = new GemMaterial(219, "ender_eye", 0x66FF66, GEM_VERTICAL, 1, of(new MaterialComponent(EnderPearl, 1), new MaterialComponent(Blaze, 1)), GENERATE_PLATE | GENERATE_LENS | NO_SMASHING | NO_SMELTING);
     public static RoughSolidMaterial Flint = new RoughSolidMaterial(220, "flint", 0x002040, FLINT, 1, of(new MaterialComponent(SiliconDioxide, 1)), NO_SMASHING | MORTAR_GRINDABLE, () -> MaterialForm.gem);
     public static DustMaterial Diatomite = new DustMaterial(221, "diatomite", 0xE1E1E1, DULL, 1, of(new MaterialComponent(Flint, 8), new MaterialComponent(BandedIron, 1), new MaterialComponent(Sapphire, 1)), 0);
     public static DustMaterial Niter = new DustMaterial(223, "niter", 0xFFC8C8, FLINT, 1, of(new MaterialComponent(Saltpeter, 1)), NO_SMASHING | NO_SMELTING);
@@ -428,8 +428,8 @@ public class Materials {
     public static DustMaterial Andesite = new DustMaterial(241, "andesite", 0xBEBEBE, ROUGH, 2, of(), NO_SMASHING);
     public static DustMaterial Diorite = new DustMaterial(242, "diorite", 0xFFFFFF, ROUGH, 2, of(), NO_SMASHING);
     public static DustMaterial Granite = new DustMaterial(449, "granite", 0xCFA18C, ROUGH, 2, of(), NO_SMASHING);
-    public static GemMaterial GarnetRed = new GemMaterial(243, "garnet_red", 0xC85050, RUBY, 2, of(new MaterialComponent(Pyrope, 3), new MaterialComponent(Almandine, 5), new MaterialComponent(Spessartine, 8)), STD_SOLID | GENERATE_LENSE | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT | GENERATE_ORE, null, 7.5F, 3.0f, 156);
-    public static GemMaterial GarnetYellow = new GemMaterial(244, "garnet_yellow", 0xC8C850, RUBY, 2, of(new MaterialComponent(Andradite, 5), new MaterialComponent(Grossular, 8), new MaterialComponent(Uvarovite, 3)), STD_SOLID | GENERATE_LENSE | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT | GENERATE_ORE, null, 7.5F, 3.0f, 156);
+    public static GemMaterial GarnetRed = new GemMaterial(243, "garnet_red", 0xC85050, RUBY, 2, of(new MaterialComponent(Pyrope, 3), new MaterialComponent(Almandine, 5), new MaterialComponent(Spessartine, 8)), STD_SOLID | GENERATE_LENS | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT | GENERATE_ORE, null, 7.5F, 3.0f, 156);
+    public static GemMaterial GarnetYellow = new GemMaterial(244, "garnet_yellow", 0xC8C850, RUBY, 2, of(new MaterialComponent(Andradite, 5), new MaterialComponent(Grossular, 8), new MaterialComponent(Uvarovite, 3)), STD_SOLID | GENERATE_LENS | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT | GENERATE_ORE, null, 7.5F, 3.0f, 156);
     public static DustMaterial Marble = new DustMaterial(245, "marble", 0xC8C8C8, FINE, 1, of(new MaterialComponent(Magnesium, 1), new MaterialComponent(Calcite, 7)), NO_SMASHING);
     public static DustMaterial Sugar = new DustMaterial(246, "sugar", 0xFAFAFA, SAND, 1, of(new MaterialComponent(Carbon, 2), new MaterialComponent(Water, 5), new MaterialComponent(Oxygen, 25)), 0);
     public static GemMaterial Vinteum = new GemMaterial(247, "vinteum", 0x64C8FF, EMERALD, 3, of(), STD_GEM | NO_SMASHING | NO_SMELTING, 12.0F, 3.0f, 128);

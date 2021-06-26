@@ -73,17 +73,17 @@ public abstract class SolidMaterial extends DustMaterial {
         this.toolDurability = toolDurability;
     }
 
-    @Override
-    protected long verifyMaterialBits(long generationBits) {
-        if ((generationBits & GENERATE_GEAR) > 0) {
-            generationBits |= GENERATE_PLATE;
-            generationBits |= GENERATE_ROD;
-        }
-        if ((generationBits & GENERATE_LONG_ROD) > 0) {
-            generationBits |= GENERATE_ROD;
-        }
-        return super.verifyMaterialBits(generationBits);
-    }
+//    @Override
+//    protected long verifyMaterialBits(long generationBits) {
+//        if ((generationBits & GENERATE_GEAR) > 0) {
+//            generationBits |= GENERATE_PLATE;
+//            generationBits |= GENERATE_ROD;
+//        }
+//        if ((generationBits & GENERATE_LONG_ROD) > 0) {
+//            generationBits |= GENERATE_ROD;
+//        }
+//        return super.verifyMaterialBits(generationBits);
+//    }
 
     public void setMaceratingInto(DustMaterial macerateInto) {
         this.macerateInto = macerateInto;

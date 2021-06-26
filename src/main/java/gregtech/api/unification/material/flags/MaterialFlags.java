@@ -88,27 +88,27 @@ public class MaterialFlags {
 
     public static final MaterialFlag GENERATE_ROD = new MaterialFlag.Builder("GENERATE_ROD").build();
 
-    public static final MaterialFlag GENERATE_GEAR = new MaterialFlag.Builder("GENERATE_GEAR").build();
+    public static final MaterialFlag GENERATE_GEAR = new MaterialFlag.Builder("GENERATE_GEAR").requires(GENERATE_PLATE).requires(GENERATE_ROD).build();
 
-    public static final MaterialFlag GENERATE_LONG_ROD = new MaterialFlag.Builder("GENERATE_LONG_ROD").build();
+    public static final MaterialFlag GENERATE_LONG_ROD = new MaterialFlag.Builder("GENERATE_LONG_ROD").requires(GENERATE_ROD).build();
 
     public static final MaterialFlag MORTAR_GRINDABLE = new MaterialFlag.Builder("MORTAR_GRINDABLE").build();
 
-    public static final MaterialFlag GENERATE_FOIL = new MaterialFlag.Builder("GENERATE_FOIL").build();
+    public static final MaterialFlag GENERATE_FOIL = new MaterialFlag.Builder("GENERATE_FOIL").requires(GENERATE_PLATE).build();
 
-    public static final MaterialFlag GENERATE_BOLT_SCREW = new MaterialFlag.Builder("GENERATE_BOLT_SCREW").build();
+    public static final MaterialFlag GENERATE_BOLT_SCREW = new MaterialFlag.Builder("GENERATE_BOLT_SCREW").requires(GENERATE_ROD).build();
 
-    public static final MaterialFlag GENERATE_RING = new MaterialFlag.Builder("GENERATE_RING").build();
+    public static final MaterialFlag GENERATE_RING = new MaterialFlag.Builder("GENERATE_RING").requires(GENERATE_ROD).build();
 
     public static final MaterialFlag GENERATE_SPRING = new MaterialFlag.Builder("GENERATE_SPRING").build();
 
-    public static final MaterialFlag GENERATE_FINE_WIRE = new MaterialFlag.Builder("GENERATE_FINE_WIRE").build();
+    public static final MaterialFlag GENERATE_FINE_WIRE = new MaterialFlag.Builder("GENERATE_FINE_WIRE").requires(GENERATE_FOIL).build();
 
-    public static final MaterialFlag GENERATE_ROTOR = new MaterialFlag.Builder("GENERATE_ROTOR").build();
+    public static final MaterialFlag GENERATE_ROTOR = new MaterialFlag.Builder("GENERATE_ROTOR").requires(GENERATE_BOLT_SCREW).requires(GENERATE_RING).requires(GENERATE_PLATE).build();
 
-    public static final MaterialFlag GENERATE_SMALL_GEAR = new MaterialFlag.Builder("GENERATE_SMALL_GEAR").build();
+    public static final MaterialFlag GENERATE_SMALL_GEAR = new MaterialFlag.Builder("GENERATE_SMALL_GEAR").requires(GENERATE_PLATE).build();
 
-    public static final MaterialFlag GENERATE_DENSE = new MaterialFlag.Builder("GENERATE_DENSE").build();
+    public static final MaterialFlag GENERATE_DENSE = new MaterialFlag.Builder("GENERATE_DENSE").requires(GENERATE_PLATE).build();
 
     /**
      * Not used - Small spring as type exists but is not generated or used
@@ -129,7 +129,7 @@ public class MaterialFlags {
     public static final MaterialFlag BLAST_FURNACE_CALCITE_DOUBLE = new MaterialFlag.Builder("BLAST_FURNACE_CALCITE_DOUBLE").build();
     public static final MaterialFlag BLAST_FURNACE_CALCITE_TRIPLE = new MaterialFlag.Builder("BLAST_FURNACE_CALCITE_TRIPLE").build();
 
-    public static final MaterialFlag GENERATE_LENSE = new MaterialFlag.Builder("GENERATE_LENSE").build();
+    public static final MaterialFlag GENERATE_LENS = new MaterialFlag.Builder("GENERATE_LENS").requires(GENERATE_PLATE).build();
 
     public static final MaterialFlag HIGH_SIFTER_OUTPUT = new MaterialFlag.Builder("HIGH_SIFTER_OUTPUT").build();
 
