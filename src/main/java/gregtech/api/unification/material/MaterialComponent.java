@@ -5,6 +5,7 @@ import gregtech.api.util.SmallDigits;
 
 //@ZenClass("mods.gregtech.material.MaterialStack")
 //@ZenRegister
+//TODO: Remove this
 public class MaterialComponent {
 
     //@ZenProperty

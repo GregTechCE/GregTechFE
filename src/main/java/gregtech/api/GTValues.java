@@ -1,11 +1,5 @@
 package gregtech.api;
 
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 /**
  * Made for static imports, this Class is just a Helper.
  */

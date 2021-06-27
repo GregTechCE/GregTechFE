@@ -13,6 +13,7 @@ public class MaterialAmount {
 
     public static final MaterialAmount SMALL_DUST = DUST.div(4);
     public static final MaterialAmount TINY_DUST = DUST.div(9);
+    public static final MaterialAmount NUGGET = DUST.div(9);
 
     private final long amount;
 

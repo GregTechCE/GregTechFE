@@ -21,11 +21,11 @@ public abstract class SolidMaterial extends DustMaterial {
 
     public static final class MatFlags {
 
-        public static final long GENERATE_ROD = createFlag(20);
-        public static final long GENERATE_GEAR = createFlag(21);
-        public static final long GENERATE_LONG_ROD = createFlag(22);
-        public static final long MORTAR_GRINDABLE = createFlag(24);
-        public static final long GENERATE_FRAME = createFlag(45);
+//        public static final long GENERATE_ROD = createFlag(20);
+//        public static final long GENERATE_GEAR = createFlag(21);
+//        public static final long GENERATE_LONG_ROD = createFlag(22);
+//        public static final long MORTAR_GRINDABLE = createFlag(24);
+//        public static final long GENERATE_FRAME = createFlag(45);
 
         static {
             Material.MatFlags.registerMaterialFlagsHolder(MatFlags.class, SolidMaterial.class);
@@ -73,17 +73,17 @@ public abstract class SolidMaterial extends DustMaterial {
         this.toolDurability = toolDurability;
     }
 
-    @Override
-    protected long verifyMaterialBits(long generationBits) {
-        if ((generationBits & GENERATE_GEAR) > 0) {
-            generationBits |= GENERATE_PLATE;
-            generationBits |= GENERATE_ROD;
-        }
-        if ((generationBits & GENERATE_LONG_ROD) > 0) {
-            generationBits |= GENERATE_ROD;
-        }
-        return super.verifyMaterialBits(generationBits);
-    }
+//    @Override
+//    protected long verifyMaterialBits(long generationBits) {
+//        if ((generationBits & GENERATE_GEAR) > 0) {
+//            generationBits |= GENERATE_PLATE;
+//            generationBits |= GENERATE_ROD;
+//        }
+//        if ((generationBits & GENERATE_LONG_ROD) > 0) {
+//            generationBits |= GENERATE_ROD;
+//        }
+//        return super.verifyMaterialBits(generationBits);
+//    }
 
     public void setMaceratingInto(DustMaterial macerateInto) {
         this.macerateInto = macerateInto;
