@@ -2,23 +2,33 @@ package gregtech.api.unification.material;
 
 import gregtech.api.GTValues;
 import gregtech.api.unification.Element;
+import gregtech.api.unification.Elements;
 import gregtech.api.unification.material.type.*;
 import gregtech.api.unification.ore.MaterialForm;
-import gregtech.api.unification.stack.MaterialComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import static com.google.common.collect.ImmutableList.of;
-import static gregtech.api.unification.material.type.DustMaterial.MatFlags.*;
-import static gregtech.api.unification.material.type.FluidMaterial.MatFlags.*;
-import static gregtech.api.unification.material.type.GemMaterial.MatFlags.*;
-import static gregtech.api.unification.material.type.IngotMaterial.MatFlags.*;
-import static gregtech.api.unification.material.type.Material.MatFlags.*;
-import static gregtech.api.unification.material.type.SolidMaterial.MatFlags.*;
-import static gregtech.api.unification.material.MaterialIconSet.*;
+import static com.google.common.collect.ImmutableList.of; //TODO: switch to java.util.list.of();
+import static gregtech.api.unification.material.MaterialIconSets.*;
+import static gregtech.api.unification.material.flags.MaterialFlags.*;
+import static gregtech.api.unification.material.properties.MaterialProperties.*;
+
+import static gregtech.api.unification.Elements.*;
+
 
 @SuppressWarnings("WeakerAccess")
 public class Materials {
+    public static final GTMaterial Aluminium_NEW = new GTMaterial.Settings("aluminium")
+            .addProperty(COLOR, 0x80C8F0)
+            .addProperty(ICON_SET, DULL)
+            .addProperty(CHEMICAL_PROPERTY, Elements.Al.getChemicalProperty())
+            .build();
+
+
+
+    private Materials(){
+
+    }
 
     private static final long STD_SOLID = GENERATE_PLATE | GENERATE_ROD | GENERATE_BOLT_SCREW | GENERATE_LONG_ROD;
     private static final long STD_GEM = GENERATE_ORE | STD_SOLID | GENERATE_LENS;

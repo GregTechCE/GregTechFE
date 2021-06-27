@@ -124,7 +124,7 @@ public class DustMaterial extends FluidMaterial {
      * Zero or negative value indicates that this material cannot be used as fuel
      */
     //@ZenProperty
-    public int burnTime = 0;
+//    public int burnTime = 0;
 
     /**
      * During OreProcessing (Macerator, OreWasher, ThermalCentrifuge), this material will be turned into crushedInto
@@ -171,7 +171,7 @@ public class DustMaterial extends FluidMaterial {
         this.byProductMultiplier = byProductMultiplier;
     }
 
-    public void setBurnTime(int burnTime) {
-        this.burnTime = burnTime;
-    }
+//    public void setBurnTime(int burnTime) {
+//        this.burnTime = burnTime;
+//    }
 }
