@@ -9,11 +9,11 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.*;
 
-public class GTMaterial {
+public class Material {
     private Set<MaterialFlag> flags = new HashSet<>();
     private Map<MaterialProperty<?>, Object> properties = new HashMap<>();
 
-    private GTMaterial() {
+    private Material() {
     }
 
     public boolean hasFlag(MaterialFlag flag) {
@@ -33,8 +33,8 @@ public class GTMaterial {
     }
 
     public static class Settings {
-        public static final Registry<GTMaterial> REGISTRY =
-                FabricRegistryBuilder.createSimple(GTMaterial.class, new Identifier(GTValues.MODID, "material"))
+        public static final Registry<Material> REGISTRY =
+                FabricRegistryBuilder.createSimple(Material.class, new Identifier(GTValues.MODID, "material"))
                         .buildAndRegister();
 
 
@@ -48,7 +48,7 @@ public class GTMaterial {
             this.name = name;
         }
 
-        public GTMaterial.Settings addFlag(MaterialFlag materialFlag) {
+        public Material.Settings addFlag(MaterialFlag materialFlag) {
             addFlagAndRequiredFlags(materialFlag);
             addConflictingFlags(materialFlag.getConflictingFlags());
             addRequiredProperties(materialFlag.getRequiredProperties());
@@ -56,7 +56,7 @@ public class GTMaterial {
             return this;
         }
 
-        public <T> GTMaterial.Settings addProperty(MaterialProperty<T> materialProperty, T value) {
+        public <T> Material.Settings addProperty(MaterialProperty<T> materialProperty, T value) {
             this.properties.put(materialProperty, value);
 
             addRequiredProperties(materialProperty.getRequiredProperties());
@@ -100,16 +100,16 @@ public class GTMaterial {
             }
         }
 
-        public GTMaterial build() {
+        public Material build() {
             if (!validate()) {
                 return null;
             }
 
-            var gtMaterial = new GTMaterial();
-            gtMaterial.properties = this.properties;
-            gtMaterial.flags = this.flags;
+            var material = new Material();
+            material.properties = this.properties;
+            material.flags = this.flags;
 
-            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), gtMaterial);
+            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), material);
         }
 
         private boolean validate() {

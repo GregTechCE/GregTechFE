@@ -13,12 +13,9 @@ import static gregtech.api.unification.material.MaterialIconSets.*;
 import static gregtech.api.unification.material.flags.MaterialFlags.*;
 import static gregtech.api.unification.material.properties.MaterialProperties.*;
 
-import static gregtech.api.unification.Elements.*;
-
-
 @SuppressWarnings("WeakerAccess")
 public class Materials {
-    public static final GTMaterial Aluminium_NEW = new GTMaterial.Settings("aluminium")
+    public static final Material Aluminium_NEW = new Material.Settings("aluminium")
             .addProperty(COLOR, 0x80C8F0)
             .addProperty(ICON_SET, DULL)
             .addProperty(CHEMICAL_PROPERTY, Elements.Al.getChemicalProperty())
@@ -840,9 +837,5 @@ public class Materials {
 
         Plastic.setFluidPipeProperties(200, 350, true);
         Polytetrafluoroethylene.setFluidPipeProperties(200, 600, true);
-    }
-
-    private static <T extends Material> T register(String name, T material) {
-        return Registry.register(Material.REGISTRY, new Identifier(GTValues.MODID, name), material);
     }
 }
