@@ -1,11 +1,12 @@
 package gregtech.api.items.material;
 
-import gregtech.api.GTValues;
 import gregtech.api.damagesources.GTDamageSource;
+import gregtech.api.items.util.AutoTaggedItem;
 import gregtech.api.items.util.ItemEntityAwareItem;
+import gregtech.api.unification.material.properties.MaterialProperties;
 import gregtech.api.unification.material.type.DustMaterial;
 import gregtech.api.unification.material.type.Material;
-import gregtech.api.unification.stack.MaterialAmount;
+import gregtech.api.unification.MaterialAmount;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class MaterialItem extends Item implements ItemEntityAwareItem {
+public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTaggedItem {
 
     private static final float RADIATION_DAMAGE_PER_SECOND = 1.5f;
     private static final float HEAT_DAMAGE_PER_SECOND = 2.0f;
@@ -84,13 +85,13 @@ public class MaterialItem extends Item implements ItemEntityAwareItem {
         super.appendTooltip(stack, world, tooltip, context);
 
         if (this.material.isRadioactive()) {
-            tooltip.add(new TranslatableText("material_item.tooltip.radioactive"));
+            tooltip.add(new TranslatableText("item.gregtech.material.tooltip.radioactive"));
         }
         if (this.itemForm.hasHeatDamage()) {
-            tooltip.add(new TranslatableText("material_item.tooltip.hot"));
+            tooltip.add(new TranslatableText("item.gregtech.material.tooltip.hot"));
         }
         if (this.itemForm.canBePurified()) {
-            tooltip.add(new TranslatableText("material_item.tooltip.purify"));
+            tooltip.add(new TranslatableText("item.gregtech.material.tooltip.purify"));
         }
     }
 
@@ -105,7 +106,8 @@ public class MaterialItem extends Item implements ItemEntityAwareItem {
         }
     }
 
-    void addTags(Set<Tag.Identified<Item>> outTags) {
+    @Override
+    public void addItemTags(Set<Tag.Identified<Item>> outTags) {
         this.itemForm.addTagsForMaterial(material, outTags);
 
         if (this.material instanceof DustMaterial dustMaterial) {
@@ -133,12 +135,9 @@ public class MaterialItem extends Item implements ItemEntityAwareItem {
     }
 
     int getItemBurnTime() {
-        if (material instanceof DustMaterial dustMaterial) {
-            MaterialAmount formAmount = this.itemForm.getMaterialAmount();
-            int oneDustBurnTime = dustMaterial.burnTime;
-            return formAmount.mul(oneDustBurnTime).divFloor(MaterialAmount.DUST);
-        }
-        return 0;
+        MaterialAmount formAmount = this.itemForm.getMaterialAmount();
+        int oneDustBurnTime = material.queryProperty(MaterialProperties.BURN_TIME).orElse(0);
+        return formAmount.mul(oneDustBurnTime).divFloor(MaterialAmount.DUST);
     }
 
     TypedActionResult<ItemStack> tryPurifyItem(ItemStack stack, World world, BlockPos blockPos) {

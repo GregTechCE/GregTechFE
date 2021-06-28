@@ -2,15 +2,13 @@ package gregtech.api.unification.material.type;
 
 import com.google.common.collect.ImmutableList;
 import gregtech.api.unification.Element;
-import gregtech.api.unification.material.MaterialComponent;
+import gregtech.api.unification.material.properties.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
 import org.jetbrains.annotations.Nullable;
 
 import static gregtech.api.unification.material.type.DustMaterial.MatFlags.GENERATE_PLATE;
 import static gregtech.api.unification.material.type.DustMaterial.MatFlags.SMELT_INTO_FLUID;
-import static gregtech.api.unification.material.type.IngotMaterial.MatFlags.*;
 import static gregtech.api.unification.material.type.SolidMaterial.MatFlags.GENERATE_ROD;
-import static gregtech.api.util.GTUtility.createFlag;
 
 //@ZenClass("mods.gregtech.material.IngotMaterial")
 //@ZenRegister

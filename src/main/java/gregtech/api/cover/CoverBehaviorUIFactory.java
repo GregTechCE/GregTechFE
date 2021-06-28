@@ -1,31 +1,16 @@
 package gregtech.api.cover;
 
-import gregtech.api.GTValues;
 import gregtech.api.capability.internal.GTInternalAttributes;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.UIFactory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class CoverBehaviorUIFactory extends UIFactory<CoverBehavior> {
-
-    private static UIFactory<CoverBehavior> COVER_BEHAVIOR_UI_FACTORY;
-
-    private CoverBehaviorUIFactory() {
-    }
-
-    public static UIFactory<CoverBehavior> getInstance() {
-        return COVER_BEHAVIOR_UI_FACTORY;
-    }
-
-    public static void init() {
-        COVER_BEHAVIOR_UI_FACTORY = UIFactory.register(new Identifier(GTValues.MODID, "cover_behavior"), new CoverBehaviorUIFactory());
-    }
 
     @Override
     protected ModularUI createUITemplate(CoverBehavior holder, PlayerEntity entityPlayer) {

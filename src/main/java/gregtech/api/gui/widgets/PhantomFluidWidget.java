@@ -9,7 +9,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.collect.Lists;
 import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.GuiUtils;
+import gregtech.api.gui.util.GuiUtils;
 import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
 import gregtech.api.gui.igredient.FluidIngredientTarget;
@@ -85,7 +85,7 @@ public class PhantomFluidWidget extends Widget implements IIngredientSlot, IGhos
 
     @Override
     public List<Target> getPhantomTargets(Object ingredient) {
-        FluidVolume ingredientFluidVolume = GTUtility.retrieveFluidFromIngredient(ingredient);
+        FluidVolume ingredientFluidVolume = FluidIngredientTarget.retrieveFluidFromIngredient(ingredient);
         if (!ingredientFluidVolume.isEmpty()) {
             Rectangle rect = toRectangleBox();
             Consumer<FluidVolume> consumer = fluidVolume -> writeClientAction(2, fluidVolume::toMcBuffer);

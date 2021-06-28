@@ -8,7 +8,7 @@ import gregtech.api.net.NetworkPacket;
 import gregtech.api.net.PacketUIOpen;
 import gregtech.api.net.PacketUIWidgetUpdate;
 import gregtech.api.util.GTUtility;
-import gregtech.mixin.ServerPlayerEntityMixin;
+import gregtech.mixin.accessor.ServerPlayerEntityAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -19,11 +19,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.registry.Registry;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Implement and register to {@link #REGISTRY} to be able to create and open ModularUI's
@@ -40,10 +38,6 @@ public abstract class UIFactory<E extends UIHolder> {
             .attribute(RegistryAttribute.SYNCED)
             .buildAndRegister();
 
-    public static <T extends UIFactory<?>> T register(Identifier id, T factory) {
-        return Registry.register(REGISTRY, id, factory);
-    }
-
     public final void openUI(E holder, ServerPlayerEntity player) {
         if (GTUtility.isFakePlayer(player)) {
             return;
@@ -56,9 +50,9 @@ public abstract class UIFactory<E extends UIHolder> {
             player.closeHandledScreen();
         }
 
-        ((ServerPlayerEntityMixin) player).incrementScreenHandlerSyncId();
+        ((ServerPlayerEntityAccessor) player).incrementScreenHandlerSyncId();
 
-        int screenHandlerSyncId = ((ServerPlayerEntityMixin) player).getScreenHandlerSyncId();
+        int screenHandlerSyncId = ((ServerPlayerEntityAccessor) player).getScreenHandlerSyncId();
         ModularUIScreenHandler screenHandler = new ModularUIScreenHandler(uiTemplate, screenHandlerSyncId);
 
         //accumulate all initial updates of widgets in open packet
@@ -66,7 +60,7 @@ public abstract class UIFactory<E extends UIHolder> {
         NetworkPacket packet = new PacketUIOpen<>(this, holder, screenHandler.syncId, widgetUpdates);
         packet.sendTo(player);
 
-        ((ServerPlayerEntityMixin) player).onSpawn(screenHandler);
+        ((ServerPlayerEntityAccessor) player).onSpawn(screenHandler);
         player.currentScreenHandler = screenHandler;
     }
 

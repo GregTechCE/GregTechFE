@@ -5,25 +5,21 @@ import com.google.common.collect.ImmutableList;
 import gregtech.api.GTValues;
 import gregtech.api.unification.Element;
 import gregtech.api.unification.material.MaterialHandler;
-import gregtech.api.unification.material.MaterialComponent;
+import gregtech.api.unification.material.flags.MaterialFlag;
+import gregtech.api.unification.material.properties.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
+import gregtech.api.unification.material.properties.MaterialProperty;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
-
-import static gregtech.api.util.GTUtility.createFlag;
 
 //@ZenClass("mods.gregtech.material.Material")
 //@ZenRegister
@@ -190,6 +186,21 @@ public abstract class Material implements Comparable<Material> {
         calculateDecompositionType();
         initializeMaterial();
     }
+
+    //NEW METHODS
+
+    public <T> Optional<T> queryProperty(MaterialProperty<T> property) {
+
+    }
+
+    public <T> T queryPropertyChecked(MaterialProperty<T> property) {
+        return queryProperty(property).orElseThrow();
+    }
+
+    public boolean hasFlag(MaterialFlag flag) {
+    }
+
+    //END NEW METHODS
 
     private String calculateChemicalFormula() {
         if (element != null) {

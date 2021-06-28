@@ -1,7 +1,7 @@
 package gregtech.api.unification.material.type;
 
 import com.google.common.collect.ImmutableList;
-import gregtech.api.unification.material.MaterialComponent;
+import gregtech.api.unification.material.properties.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
 import gregtech.api.unification.ore.MaterialForm;
 

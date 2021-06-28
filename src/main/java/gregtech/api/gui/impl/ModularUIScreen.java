@@ -2,9 +2,9 @@ package gregtech.api.gui.impl;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import gregtech.api.gui.*;
-import gregtech.api.net.PacketUIWidgetUpdate;
-import gregtech.api.util.RenderUtil;
-import gregtech.mixin.HandledScreenMixin;
+import gregtech.api.gui.util.GuiUtils;
+import gregtech.api.gui.util.ScissorStack;
+import gregtech.mixin.accessor.HandledScreenAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Drawable;
@@ -39,7 +39,7 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.disableDepthTest();
 
-        for (Drawable drawable : ((HandledScreenMixin) this).getDrawables()) {
+        for (Drawable drawable : ((HandledScreenAccessor) this).getDrawables()) {
             drawable.render(matrices, mouseX, mouseY, delta);
         }
 
@@ -64,11 +64,11 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
         }
 
         if (scissor != null) {
-            RenderUtil.pushScissorFrame(scissor.x, scissor.y, scissor.width, scissor.height);
+            ScissorStack.pushScissorFrame(scissor.x, scissor.y, scissor.width, scissor.height);
         }
         action.run();
         if (scissor != null) {
-            RenderUtil.popScissorFrame();
+            ScissorStack.popScissorFrame();
         }
     }
 
@@ -103,7 +103,7 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         matrixStack.push();
         matrixStack.translate(this.x, this.y, 0.0);
-        ((HandledScreenMixin) this).drawSlot(matrices, slot);
+        ((HandledScreenAccessor) this).drawSlot(matrices, slot);
         matrixStack.pop();
     }
 
@@ -116,7 +116,7 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
     }
 
     private void drawDraggedItemStack(int mouseX, int mouseY) {
-        HandledScreenMixin mixin = (HandledScreenMixin) this;
+        HandledScreenAccessor mixin = (HandledScreenAccessor) this;
 
         ItemStack draggedStack = mixin.getTouchDragStack();
         boolean isTouchDragged = true;
@@ -150,7 +150,7 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
     }
 
     private void drawTouchDropReturningStack() {
-        HandledScreenMixin mixin = (HandledScreenMixin) this;
+        HandledScreenAccessor mixin = (HandledScreenAccessor) this;
 
         ItemStack touchDropReturningStack = mixin.getTouchDropReturningStack();
         float touchDropTime = mixin.getTouchDropTime();
@@ -164,7 +164,7 @@ public class ModularUIScreen extends HandledScreen<ModularUIScreenHandler> imple
 
             if (animationProgress >= 1.0F) {
                 animationProgress = 1.0F;
-                ((HandledScreenMixin) this).setTouchDropReturningStack(ItemStack.EMPTY);
+                ((HandledScreenAccessor) this).setTouchDropReturningStack(ItemStack.EMPTY);
             }
 
             int touchDropDeltaX = touchDropOriginSlot.x - touchDropX;

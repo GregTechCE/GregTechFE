@@ -6,12 +6,14 @@ import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import alexiil.mc.lib.attributes.misc.LimitedConsumer;
+import alexiil.mc.lib.attributes.misc.PlayerInvUtil;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
 import gregtech.api.capability.GTAttributes;
-import gregtech.api.capability.ElectricItem;
+import gregtech.api.capability.item.ElectricItem;
 import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.impl.ModularUIContainer;
@@ -29,7 +31,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.Slot;
@@ -59,6 +60,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -76,36 +78,6 @@ public class GTUtility {
 
     public static boolean isFakePlayer(PlayerEntity playerEntity) {
         return playerEntity.getGameProfile().getName().startsWith("[");
-    }
-
-    public static FluidVolume retrieveFluidFromIngredient(Object ingredient) {
-        if (ingredient instanceof ItemStack itemStack) {
-            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(itemStack);
-            return extractable.attemptAnyExtraction(FluidAmount.A_MILLION, Simulation.SIMULATE);
-        }
-        if (ingredient instanceof FluidVolume fluidVolume) {
-            return fluidVolume;
-        }
-        return FluidVolumeUtil.EMPTY;
-    }
-
-    public static long chargeElectricItem(ElectricItem source, ElectricItem target) {
-        long maxDischarged = source.discharge(Integer.MAX_VALUE, source.getTier(), false, false, true);
-        long maxReceived = target.charge(maxDischarged, source.getTier(), false, true);
-
-        if(maxReceived > 0L) {
-            long resultDischarged = source.discharge(maxReceived, source.getTier(), false, true, false);
-            target.charge(resultDischarged, source.getTier(), false, false);
-            return resultDischarged;
-        }
-        return 0L;
-    }
-
-    public static Reference<ItemStack> createInventorySlotRef(Inventory inventory, int slot) {
-        return Reference.callable(
-                () -> inventory.getStack(slot),
-                (itemStack) -> inventory.setStack(slot, itemStack),
-                (itemStack) -> inventory.isValid(slot, itemStack));
     }
 
     //Basically, slot argument provided in Item#inventoryTick is a LOCAL slot index inside

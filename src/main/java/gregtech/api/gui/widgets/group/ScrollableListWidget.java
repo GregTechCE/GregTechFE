@@ -1,10 +1,10 @@
 package gregtech.api.gui.widgets.group;
 
-import gregtech.api.gui.GuiUtils;
+import gregtech.api.gui.util.GuiUtils;
 import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
 import gregtech.api.util.Position;
-import gregtech.api.util.RenderUtil;
+import gregtech.api.gui.util.ScissorStack;
 import gregtech.api.util.Size;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
@@ -107,7 +107,7 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
 
         GuiUtils.drawGradientRect(matrices, scrollX + 1, scrollSliderY, paneSize - 2, scrollSliderHeight, 0xFF555555, 0xFF454545, 0);
 
-        RenderUtil.useScissor(position.x, position.y, size.width - paneSize, size.height, () ->
+        ScissorStack.useScissor(position.x, position.y, size.width - paneSize, size.height, () ->
             super.drawInBackground(matrices, finalMouseX, finalMouseY, deltaTicks, renderContext));
     }
 

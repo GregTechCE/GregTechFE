@@ -1,21 +1,37 @@
 package gregtech.api.unification.material.properties;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import gregtech.api.GTValues;
 import gregtech.api.unification.material.flags.MaterialFlag;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MaterialProperty<T> {
-    private Class<T> propertyValueType;
-    private Set<MaterialFlag> requiredFlags = new HashSet<>();
-    private Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
-    private MaterialProperty() {
+    @SuppressWarnings("unchecked")
+    public static final Registry<MaterialProperty<?>> REGISTRY = FabricRegistryBuilder
+            .createSimple((Class<MaterialProperty<?>>) (Object) MaterialProperty.class,
+                    new Identifier(GTValues.MODID, "material_property"))
+            .buildAndRegister();
+
+    private final Class<T> propertyValueType;
+    private final Set<MaterialFlag> requiredFlags;
+    private final Set<MaterialProperty<?>> requiredProperties;
+    private final T defaultValue;
+
+    public MaterialProperty(Settings<T> settings) {
+        Preconditions.checkNotNull(settings.propertyValueType);
+
+        this.propertyValueType = settings.propertyValueType;
+        this.defaultValue = settings.defaultValue;
+        this.requiredFlags = ImmutableSet.copyOf(settings.requiredFlags);
+        this.requiredProperties = ImmutableSet.copyOf(settings.requiredProperties);
     }
 
     public T cast(Object data) {
@@ -23,51 +39,46 @@ public class MaterialProperty<T> {
     }
 
     public Set<MaterialFlag> getRequiredFlags() {
-        return Collections.unmodifiableSet(requiredFlags);
+        return requiredFlags;
     }
 
-    @SuppressWarnings("java:S1452")
     public Set<MaterialProperty<?>> getRequiredProperties() {
-        return Collections.unmodifiableSet(requiredProperties);
+        return requiredProperties;
     }
 
+    @Nullable
+    public T getDefaultValue() {
+        return defaultValue;
+    }
 
-    public static class Builder<T> {
-        @SuppressWarnings("unchecked")
-        public static final Registry<MaterialProperty<?>> REGISTRY =
-                FabricRegistryBuilder.createSimple((Class<MaterialProperty<?>>) (Object) MaterialProperty.class,
-                        new Identifier(GTValues.MODID, "material_property"))
-                        .buildAndRegister();
+    public static class Settings<T> {
 
+        Class<T> propertyValueType;
+        T defaultValue;
+        final Set<MaterialFlag> requiredFlags = new HashSet<>();
+        final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
-        private final String name;
-        private final Class<T> propertyValueType;
-
-        private final Set<MaterialFlag> requiredFlags = new HashSet<>();
-        private final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
-
-        public Builder(String name, Class<T> propertyValueType) {
-            this.name = name;
-            this.propertyValueType = propertyValueType;
+        public Settings() {
         }
 
-        public MaterialProperty.Builder<T> requiresProperty(MaterialProperty<?> property) {
+        public Settings<T> valueType(Class<T> propertyValueType) {
+            this.propertyValueType = propertyValueType;
+            return this;
+        }
+
+        public Settings<T> defaultValue(T defaultValue) {
+            this.defaultValue = defaultValue;
+            return this;
+        }
+
+        public Settings<T> requires(MaterialProperty<?> property) {
             this.requiredProperties.add(property);
             return this;
         }
 
-        public MaterialProperty.Builder<T> requiresFlag(MaterialFlag materialFlag) {
+        public Settings<T> requires(MaterialFlag materialFlag) {
             this.requiredFlags.add(materialFlag);
             return this;
-        }
-
-        public MaterialProperty<T> build() {
-            var materialProperty = new MaterialProperty<T>();
-            materialProperty.propertyValueType = this.propertyValueType;
-            materialProperty.requiredFlags = this.requiredFlags;
-            materialProperty.requiredProperties = this.requiredProperties;
-
-            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), materialProperty);
         }
     }
 }

@@ -1,6 +1,6 @@
 package gregtech.api.gui.widgets;
 
-import gregtech.api.gui.ClickData;
+import gregtech.api.gui.util.ClickData;
 
 import java.util.function.Consumer;
 

@@ -3,6 +3,8 @@ package gregtech.api.gui.widgets;
 import gregtech.api.gui.*;
 import gregtech.api.gui.resources.SizedTextureArea;
 import gregtech.api.gui.resources.TextureArea;
+import gregtech.api.gui.util.GuiUtils;
+import gregtech.api.gui.util.InputHelper;
 import gregtech.api.util.Position;
 import gregtech.api.util.Size;
 import gregtech.api.util.function.BooleanConsumer;

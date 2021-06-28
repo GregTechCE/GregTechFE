@@ -1,7 +1,8 @@
 package gregtech.api.unification;
 
 
-public class Element{
+public class Element {
+
     private String name;
     private ChemicalProperty chemicalProperty;
     private Boolean isIsotope;
@@ -9,18 +10,29 @@ public class Element{
     private Element(){
     }
 
-    public String getName() {
-        return name;
+    public String getElementSymbol() {
+
     }
 
-    public ChemicalProperty getChemicalProperty() {
-        return chemicalProperty;
+    public long getProtons() {
+
     }
 
-    public Boolean getIsotope() {
-        return isIsotope;
+    public long getNeutrons() {
+
     }
 
+    public long getMass() {
+
+    }
+
+    public boolean isRadioactive() {
+
+    }
+
+    public boolean isIsotope() {
+
+    }
 
     public static class Builder{
         private final String name;

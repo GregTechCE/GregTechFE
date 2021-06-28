@@ -97,10 +97,6 @@ public class MaterialItemRegistry {
         }
     }
 
-    public void addTagsForMaterialItem(MaterialItem materialItem, Set<Tag.Identified<Item>> outTags) {
-        materialItem.addTags(outTags);
-    }
-
     private Identifier createItemId(Identifier formId, Identifier materialId) {
         //Prefer non-GT namespaces first so materials or prefixes registered by addons will
         //always have them as their registrars and not GTCE itself

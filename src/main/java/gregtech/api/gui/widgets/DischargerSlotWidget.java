@@ -2,7 +2,7 @@ package gregtech.api.gui.widgets;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import gregtech.api.capability.GTAttributes;
-import gregtech.api.capability.ElectricItem;
+import gregtech.api.capability.item.ElectricItem;
 import gregtech.api.gui.widgets.slot.SlotWidget;
 import net.minecraft.item.ItemStack;
 

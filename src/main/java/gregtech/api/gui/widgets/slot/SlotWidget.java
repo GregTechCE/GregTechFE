@@ -7,7 +7,7 @@ import gregtech.api.gui.Widget;
 import gregtech.api.gui.resources.TextureArea;
 import gregtech.api.util.Position;
 import gregtech.api.util.Size;
-import gregtech.mixin.SlotMixin;
+import gregtech.mixin.accessor.SlotAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -80,8 +80,8 @@ public class SlotWidget extends Widget implements NativeWidget {
             int newX = position.x + 1 - sizes.getGuiLeft();
             int newY = position.y + 1 - sizes.getGuiTop();
 
-            ((SlotMixin) this.slotReference).setX(newX);
-            ((SlotMixin) this.slotReference).setY(newY);
+            ((SlotAccessor) this.slotReference).setX(newX);
+            ((SlotAccessor) this.slotReference).setY(newY);
         }
     }
 

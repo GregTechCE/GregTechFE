@@ -1,7 +1,7 @@
 package gregtech.api.render;
 
 import codechicken.lib.raytracer.RayTracer;
-import gregtech.api.items.toolitem.IAOEItem;
+import gregtech.api.items.util.AOEBreakItem;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -48,7 +48,7 @@ public class ToolRenderHandler implements IResourceManagerReloadListener {
             }
             EntityPlayer entityPlayer = (EntityPlayer) breakerEntity;
             ItemStack itemStack = entityPlayer.getHeldItem(EnumHand.MAIN_HAND);
-            if (!(itemStack.getItem() instanceof IAOEItem)) {
+            if (!(itemStack.getItem() instanceof AOEBreakItem)) {
                 continue;
             }
             DestroyBlockProgress progress = event.getContext().damagedBlocks.get(breakerEntityId);
@@ -56,7 +56,7 @@ public class ToolRenderHandler implements IResourceManagerReloadListener {
             if (rayTraceResult == null || rayTraceResult.typeOfHit != Type.BLOCK) {
                 continue;
             }
-            List<BlockPos> aoeBlocksToRender = ((IAOEItem) itemStack.getItem()).getAOEBlocks(itemStack, entityPlayer, rayTraceResult);
+            List<BlockPos> aoeBlocksToRender = ((AOEBreakItem) itemStack.getItem()).getAOEBlocks(itemStack, entityPlayer, rayTraceResult);
             int breakProgress = progress.getPartialBlockDamage();
             preRenderDamagedBlocks();
             drawBlockDamageTexture(mc, Tessellator.getInstance(), mc.getRenderViewEntity(), event.getPartialTicks(), aoeBlocksToRender, breakProgress);
@@ -67,10 +67,10 @@ public class ToolRenderHandler implements IResourceManagerReloadListener {
         PlayerControllerMP playerController = mc.playerController;
         if(!playerController.getIsHittingBlock()) {
             ItemStack itemStack = mc.player.getHeldItem(EnumHand.MAIN_HAND);
-            if (itemStack.getItem() instanceof IAOEItem) {
+            if (itemStack.getItem() instanceof AOEBreakItem) {
                 RayTraceResult rayTraceResult = RayTracer.retrace(mc.player);
                 if (rayTraceResult != null && rayTraceResult.typeOfHit == Type.BLOCK) {
-                    List<BlockPos> aoeBlocksToRender = ((IAOEItem) itemStack.getItem()).getAOEBlocks(itemStack, mc.player, rayTraceResult);
+                    List<BlockPos> aoeBlocksToRender = ((AOEBreakItem) itemStack.getItem()).getAOEBlocks(itemStack, mc.player, rayTraceResult);
                     preRenderSelectionOutline();
                     drawSelectionOutlines(mc, aoeBlocksToRender, mc.getRenderViewEntity(), event.getPartialTicks());
                     postRenderSelectionOutline();

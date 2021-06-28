@@ -1,33 +1,17 @@
 package gregtech.api.unification.material.flags;
 
+import gregtech.api.GTValues;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+
 public class MaterialFlags {
 
     /**
-     * Add to material if it is some kind of explosive
+     * Decomposition recipe requires hydrogen as additional input.
+     * Amount of hydrogen is equal to the amount of input material
      */
-    public static final MaterialFlag EXPLOSIVE = new MaterialFlag.Builder("EXPLOSIVE").build();
-
-    /**
-     * Not used
-     */
-    public static final MaterialFlag NO_UNIFICATION = new MaterialFlag.Builder("NO_UNIFICATION").build();
-
-    /**
-     * Add to material if any of it's items cannot be recycled to get scrub
-     * Not used
-     */
-    public static final MaterialFlag NO_RECYCLING = new MaterialFlag.Builder("NO_RECYCLING").build();
-
-    /**
-     * Material with constantly burning aura
-     * Not used
-     */
-    public static final MaterialFlag BURNING = new MaterialFlag.Builder("BURNING").build();
-
-    /**
-     * Decomposition recipe requires hydrogen as additional input. Amount is equal to input amount
-     */
-    public static final MaterialFlag DECOMPOSITION_REQUIRES_HYDROGEN = new MaterialFlag.Builder("DECOMPOSITION_REQUIRES_HYDROGEN").build();
+    //TODO move to DecompositionProperty
+    public static final MaterialFlag DECOMPOSITION_REQUIRES_HYDROGEN;
 
     /**
      * Add this flag to enable plasma generation for this material
@@ -136,11 +120,13 @@ public class MaterialFlags {
     /**
      * Enables electrolyzer decomposition recipe generation
      */
+    //TODO move to DecompositionProperty
     public static final MaterialFlag DECOMPOSITION_BY_ELECTROLYZING = new MaterialFlag.Builder("DECOMPOSITION_BY_ELECTROLYZING").build();
 
     /**
      * Enables centrifuge decomposition recipe generation
      */
+    //TODO move to DecompositionProperty
     public static final MaterialFlag DECOMPOSITION_BY_CENTRIFUGING = new MaterialFlag.Builder("DECOMPOSITION_BY_CENTRIFUGING").build();
 
     /**
@@ -151,6 +137,7 @@ public class MaterialFlags {
     /**
      * Disables decomposition recipe generation for this material and all materials that has it as component
      */
+    //TODO move to DecompositionProperty
     public static final MaterialFlag DISABLE_DECOMPOSITION = new MaterialFlag.Builder("DISABLE_DECOMPOSITION").build();
 
     /**
@@ -165,8 +152,7 @@ public class MaterialFlags {
      */
     public static final MaterialFlag EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES = new MaterialFlag.Builder("EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES").build();
 
-
-    private MaterialFlags() {
-
+    private static MaterialFlag register(String name, MaterialFlag flag) {
+        return Registry.register(MaterialFlag.REGISTRY, new Identifier(GTValues.MODID, name), flag);
     }
 }

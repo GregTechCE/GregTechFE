@@ -12,18 +12,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 
 @Mixin(ItemEntity.class)
-public abstract class ItemEntityMixin extends Entity {
+public abstract class ItemEntityMixin {
 
     @Shadow
     public abstract ItemStack getStack();
 
-    private ItemEntityMixin(EntityType<?> type, World world) {
-        super(type, world);
-    }
-
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "tick()V", at = @At("HEAD"))
-    public void tick() {
+    private void tick() {
         ItemStack itemStack = getStack();
 
         if (itemStack.getItem() instanceof ItemEntityAwareItem item) {

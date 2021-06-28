@@ -1,5 +1,6 @@
 package gregtech.api.items.material;
 
+import com.google.common.base.MoreObjects;
 import gregtech.api.unification.material.type.Material;
 
 import java.util.Objects;
@@ -20,6 +21,14 @@ public class MaterialItemId {
 
     public Material getMaterial() {
         return material;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("form", form)
+                .add("material", material)
+                .toString();
     }
 
     @Override

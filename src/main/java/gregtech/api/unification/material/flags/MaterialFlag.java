@@ -1,86 +1,85 @@
 package gregtech.api.unification.material.flags;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import gregtech.api.GTValues;
 import gregtech.api.unification.material.properties.MaterialProperty;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MaterialFlag {
-    private Set<MaterialFlag> requiredFlags = new HashSet<>();
-    private Set<MaterialFlag> conflictingFlags = new HashSet<>();
-    private Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
 
-    private MaterialFlag() {
+    public static final Registry<MaterialFlag> REGISTRY = FabricRegistryBuilder
+            .createSimple(MaterialFlag.class, new Identifier(GTValues.MODID, "material_flags"))
+            .buildAndRegister();
+
+    private final Set<MaterialFlag> requiredFlags;
+    private final Set<MaterialFlag> conflictingFlags;
+    private final Set<MaterialProperty<?>> requiredProperties;
+
+    public MaterialFlag(Settings settings) {
+        this.conflictingFlags = ImmutableSet.copyOf(settings.conflictingFlags);
+        this.requiredFlags = ImmutableSet.copyOf(settings.requiredFlags);
+        this.requiredProperties = ImmutableSet.copyOf(settings.requiredProperties);
+
+        verifyConflictingFlags();
     }
 
     public Set<MaterialFlag> getRequiredFlags() {
-        return Collections.unmodifiableSet(requiredFlags);
+        return requiredFlags;
     }
 
     public Set<MaterialFlag> getConflictingFlags() {
-        return Collections.unmodifiableSet(conflictingFlags);
+        return conflictingFlags;
     }
 
     @SuppressWarnings("java:S1452")
     public Set<MaterialProperty<?>> getRequiredProperties() {
-        return Collections.unmodifiableSet(requiredProperties);
+        return requiredProperties;
     }
 
+    public Identifier getName() {
+        return Preconditions.checkNotNull(REGISTRY.getId(this));
+    }
 
-    public static class Builder {
-        public static final Registry<MaterialFlag> REGISTRY =
-                FabricRegistryBuilder.createSimple(MaterialFlag.class,
-                        new Identifier(GTValues.MODID, "material_flag")).buildAndRegister();
+    @Override
+    public String toString() {
+        return String.valueOf(REGISTRY.getId(this));
+    }
 
-        private final String name;
-        private final Set<MaterialFlag> requiredFlags = new HashSet<>();
-        private final Set<MaterialFlag> conflictingFlags = new HashSet<>();
-        private final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
-
-        public Builder(String name) {
-            this.name = name;
+    private void verifyConflictingFlags() {
+        List<MaterialFlag> conflictingFlags = requiredFlags.stream()
+                .filter(this.conflictingFlags::contains)
+                .collect(Collectors.toList());
+        if (!conflictingFlags.isEmpty()) {
+            throw new IllegalArgumentException("Some flags are both required and conflicted with: " + conflictingFlags);
         }
+    }
 
-        public MaterialFlag.Builder requiresFlag(MaterialFlag materialFlag) {
+    public static class Settings {
+        final Set<MaterialFlag> requiredFlags = new HashSet<>();
+        final Set<MaterialFlag> conflictingFlags = new HashSet<>();
+        final Set<MaterialProperty<?>> requiredProperties = new HashSet<>();
+        Items
+
+        public Settings requires(MaterialFlag materialFlag) {
             this.requiredFlags.add(materialFlag);
             return this;
         }
 
-        public MaterialFlag.Builder conflictsWithFlag(MaterialFlag materialFlag) {
+        public Settings conflictsWith(MaterialFlag materialFlag) {
             this.conflictingFlags.add(materialFlag);
             return this;
         }
 
-        public MaterialFlag.Builder requiresProperty(MaterialProperty<?> property) {
+        public Settings requires(MaterialProperty<?> property) {
             this.requiredProperties.add(property);
             return this;
-        }
-
-        public MaterialFlag build() {
-            if (!validate()) {
-                return null;
-            }
-
-            var materialFlag = new MaterialFlag();
-            materialFlag.conflictingFlags = this.conflictingFlags;
-            materialFlag.requiredFlags = this.requiredFlags;
-            materialFlag.requiredProperties = this.requiredProperties;
-
-            return Registry.register(REGISTRY, new Identifier(GTValues.MODID, name), materialFlag);
-        }
-
-        private boolean validate() {
-            if (!Collections.disjoint(requiredFlags, conflictingFlags)) {
-                //TODO: log error
-                return false;
-            }
-
-            return true;
         }
     }
 }

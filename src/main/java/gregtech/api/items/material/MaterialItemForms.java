@@ -1,5 +1,6 @@
 package gregtech.api.items.material;
 
+import com.google.common.base.Preconditions;
 import gregtech.api.GTValues;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -57,6 +58,10 @@ public class MaterialItemForms {
 
     private static MaterialItemForm register(String name, MaterialItemForm.Settings settings) {
         return Registry.register(MaterialItemForm.REGISTRY, new Identifier(GTValues.MODID, name), new MaterialItemForm(settings));
+    }
+
+    public static void init() {
+        Preconditions.checkNotNull(LENSE);
     }
 
     static {

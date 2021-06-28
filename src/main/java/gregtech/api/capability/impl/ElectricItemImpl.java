@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
 import gregtech.api.GTValues;
 import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.item.ElectricItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class ElectricItemImpl implements gregtech.api.capability.ElectricItem {
+public class ElectricItemImpl implements ElectricItem {
 
     private final Reference<ItemStack> stack;
     private final LimitedConsumer<ItemStack> excess;

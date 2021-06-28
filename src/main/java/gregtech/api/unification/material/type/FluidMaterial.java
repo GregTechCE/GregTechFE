@@ -1,14 +1,11 @@
 package gregtech.api.unification.material.type;
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import gregtech.api.GTValues;
 import gregtech.api.unification.Element;
-import gregtech.api.unification.material.MaterialComponent;
+import gregtech.api.unification.material.properties.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
-import gregtech.api.util.GTUtility;
 
 //@ZenClass("mods.gregtech.material.FluidMaterial")
 //@ZenRegister

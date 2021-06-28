@@ -4,7 +4,7 @@ import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
 import gregtech.api.util.Position;
 import gregtech.api.util.Size;
-import gregtech.mixin.ClickableWidgetMixin;
+import gregtech.mixin.accessor.ClickableWidgetAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -58,7 +58,7 @@ public class TextFieldWidget extends Widget {
     protected void onPositionUpdate() {
         Position position = getPosition();
         this.textField.setX(position.x);
-        ((ClickableWidgetMixin) this.textField).setY(position.y);
+        ((ClickableWidgetAccessor) this.textField).setY(position.y);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class TextFieldWidget extends Widget {
     protected void onSizeUpdate() {
         Size size = getSize();
         this.textField.setWidth(size.width);
-        ((ClickableWidgetMixin) this.textField).setHeight(size.height);
+        ((ClickableWidgetAccessor) this.textField).setHeight(size.height);
     }
 
     @Override

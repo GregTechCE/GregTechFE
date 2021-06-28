@@ -1,6 +1,6 @@
 package gregtech.api.metatileentity.multiblock;
 
-import gregtech.api.capability.EnergyContainer;
+import gregtech.api.capability.block.EnergyContainer;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 

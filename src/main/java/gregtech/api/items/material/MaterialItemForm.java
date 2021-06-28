@@ -3,9 +3,10 @@ package gregtech.api.items.material;
 import com.google.common.base.Preconditions;
 import gregtech.api.GTCreativeTabs;
 import gregtech.api.GTValues;
+import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.type.Material;
 import gregtech.api.unification.ore.MaterialForm;
-import gregtech.api.unification.stack.MaterialAmount;
+import gregtech.api.unification.MaterialAmount;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.inventory.Inventory;
@@ -17,7 +18,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class MaterialItemForm {
@@ -26,7 +29,7 @@ public class MaterialItemForm {
             .createSimple(MaterialItemForm.class, new Identifier(GTValues.MODID, "material_forms"))
             .buildAndRegister();
 
-    private final long requiredMaterialFlags;
+    private final List<MaterialFlag> requiredMaterialFlags;
     private final MaterialAmount materialAmount;
     private final int maxStackSize;
     private final Set<MaterialForm> tags;
@@ -84,8 +87,12 @@ public class MaterialItemForm {
     }
 
     public boolean shouldGenerateFor(Material material) {
-        return material.hasFlag(requiredMaterialFlags) &&
-                !ignoredMaterials.contains(material);
+        for (MaterialFlag flag : this.requiredMaterialFlags) {
+            if (!material.hasFlag(flag)) {
+                return false;
+            }
+        }
+        return !ignoredMaterials.contains(material);
     }
 
     private String getTranslationKey() {
@@ -103,7 +110,7 @@ public class MaterialItemForm {
     }
 
     public static class Settings {
-        long requiredMaterialFlags;
+        List<MaterialFlag> requiredMaterialFlags;
         MaterialAmount materialAmount = MaterialAmount.ZERO;
         int maxCount = Inventory.MAX_COUNT_PER_STACK;
         Set<Material> ignoredMaterials = new HashSet<>();
@@ -113,8 +120,8 @@ public class MaterialItemForm {
         boolean dealsHeatDamage;
         boolean canBeUsedAsBeaconPayment;
 
-        public Settings requiredMaterialFlags(long requiredMaterialFlags) {
-            this.requiredMaterialFlags = requiredMaterialFlags;
+        public Settings requiredMaterialFlags(MaterialFlag... materialFlags) {
+            this.requiredMaterialFlags = Arrays.asList(materialFlags);
             return this;
         }
 

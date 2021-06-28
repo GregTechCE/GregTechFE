@@ -1,6 +1,6 @@
 package gregtech.api.capability.impl;
 
-import gregtech.api.capability.EnergyContainer;
+import gregtech.api.capability.block.EnergyContainer;
 import gregtech.api.capability.internal.IMultipleTankHandler;
 import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.recipes.Recipe;

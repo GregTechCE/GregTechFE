@@ -2,11 +2,11 @@ package gregtech.api.gui.widgets;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.google.common.collect.Lists;
-import gregtech.api.gui.InputHelper;
+import gregtech.api.gui.util.InputHelper;
 import gregtech.api.gui.igredient.IGhostIngredientTarget;
 import gregtech.api.gui.igredient.ItemIngredientTarget;
 import gregtech.api.gui.widgets.slot.SlotWidget;
-import gregtech.api.util.SlotUtil;
+import gregtech.api.gui.util.SlotUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;

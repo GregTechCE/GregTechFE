@@ -1,12 +1,18 @@
 package gregtech.api.enchants;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.util.math.MathHelper;
 
-//@ZenClass("mods.gregtech.EnchantmentData")
+import java.util.List;
+import java.util.Map;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 public class EnchantmentData {
 
-    public final Enchantment enchantment;
-    public final int level;
+    private final Enchantment enchantment;
+    private final int level;
 
     public EnchantmentData(Enchantment enchantment, int level) {
         this.enchantment = enchantment;
@@ -17,13 +23,6 @@ public class EnchantmentData {
         return enchantment;
     }
 
-    //@ZenGetter("enchantment")
-    //@Method(modid = GTValues.MODID_CT)
-    //public IEnchantmentDefinition ctGetEnchantment() {
-    //    return new MCEnchantmentDefinition(enchantment);
-    //}
-
-    //@ZenGetter("level")
     public int getLevel() {
         return level;
     }
@@ -46,4 +45,23 @@ public class EnchantmentData {
         return result;
     }
 
+    public static Map<Enchantment, Integer> reduceEnchantmentList(List<EnchantmentData> enchantments) {
+        BinaryOperator<EnchantmentData> enchantmentCombiner = (data1, data2) -> {
+            Enchantment enchantment = data1.getEnchantment();
+            int level = data1.getLevel() + data2.getLevel();
+
+            int maxLevel = enchantment.getMaxLevel();
+            int minLevel = enchantment.getMinLevel();
+            int clampedLevel = MathHelper.clamp(level, minLevel, maxLevel);
+
+            return new EnchantmentData(enchantment, clampedLevel);
+        };
+
+        Collector<EnchantmentData, EnchantmentData, Integer> resultCollector = Collectors.collectingAndThen(
+                Collectors.reducing(enchantmentCombiner),
+                optional -> optional.orElseThrow().getLevel());
+
+        return enchantments.stream()
+                .collect(Collectors.groupingBy(EnchantmentData::getEnchantment, resultCollector));
+    }
 }

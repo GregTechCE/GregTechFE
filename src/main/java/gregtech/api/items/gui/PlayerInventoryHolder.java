@@ -1,65 +1,85 @@
 package gregtech.api.items.gui;
 
 import com.google.common.base.Preconditions;
+import gregtech.api.gui.UIFactories;
 import gregtech.api.gui.UIHolder;
 import gregtech.api.gui.ModularUI;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Hand;
 
 public class PlayerInventoryHolder implements UIHolder {
 
-    public final EntityPlayer player;
-    /*package-local*/ final EnumHand hand;
-    /*package-local*/ ItemStack sampleItem;
+    private final PlayerEntity player;
+    private final Hand hand;
+    private ItemStack originalItem;
 
-    @SideOnly(Side.CLIENT)
-        /*package-local*/ PlayerInventoryHolder(EntityPlayer player, EnumHand hand, ItemStack sampleItem) {
+    PlayerInventoryHolder(PlayerEntity player, Hand hand, ItemStack originalItem) {
         this.player = player;
         this.hand = hand;
-        this.sampleItem = sampleItem;
+        this.originalItem = originalItem;
     }
 
-    public PlayerInventoryHolder(EntityPlayer entityPlayer, EnumHand hand) {
-        this.player = entityPlayer;
+    private PlayerInventoryHolder(PlayerEntity player, Hand hand) {
+        this.player = player;
         this.hand = hand;
-        this.sampleItem = player.getHeldItem(hand);
-        Preconditions.checkArgument(sampleItem.getItem() instanceof ItemUIFactory,
-            "Current Item should implement ItemUIFactory");
+        this.originalItem = player.getStackInHand(hand);
+        Preconditions.checkArgument(originalItem.getItem() instanceof ItemUIFactory,
+                "Item %s should implement ItemUIFactory", originalItem.getItem());
     }
 
-    public static void openHandItemUI(EntityPlayer player, EnumHand hand) {
+    public PlayerEntity getPlayer() {
+        return player;
+    }
+
+    public Hand getHand() {
+        return hand;
+    }
+
+    public ItemStack getOriginalItem() {
+        return originalItem;
+    }
+
+    public static void openItemUI(ServerPlayerEntity player, Hand hand) {
         PlayerInventoryHolder holder = new PlayerInventoryHolder(player, hand);
-        holder.openUI();
+        UIFactories.PLAYER_INVENTORY.openUI(holder, player);
     }
 
-    /*package-local*/ ModularUI createUI(EntityPlayer entityPlayer) {
-        ItemUIFactory uiFactory = (ItemUIFactory) sampleItem.getItem();
+    ModularUI createUI(PlayerEntity entityPlayer) {
+        ItemUIFactory uiFactory = (ItemUIFactory) originalItem.getItem();
         return uiFactory.createUI(this, entityPlayer);
-    }
-
-    public void openUI() {
-        PlayerInventoryUIFactory.INSTANCE.openUI(this, (EntityPlayerMP) player);
     }
 
     @Override
     public boolean isValid() {
-        ItemStack itemStack = player.getHeldItem(hand);
-        return ItemStack.areItemsEqual(sampleItem, itemStack);
+        ItemStack itemStack = player.getStackInHand(hand);
+        return this.originalItem.isItemEqual(itemStack);
     }
 
     @Override
-    public boolean isRemote() {
-        return player.getEntityWorld().isRemote;
+    public boolean isClient() {
+        return this.player.world.isClient();
     }
 
-    public ItemStack getCurrentItem() {
-        ItemStack itemStack = player.getHeldItem(hand);
-        if (!ItemStack.areItemsEqual(sampleItem, itemStack))
-            return null;
+    @Override
+    public void markDirty() {
+        this.player.getInventory().markDirty();
+        ScreenHandler screenHandler = this.player.currentScreenHandler;
+
+        if (screenHandler != null) {
+            screenHandler.sendContentUpdates();
+            screenHandler.syncState();
+        }
+    }
+
+    public ItemStack getActiveItem() {
+        ItemStack itemStack = this.player.getStackInHand(hand);
+
+        if (!this.originalItem.isItemEqual(itemStack)) {
+            return ItemStack.EMPTY;
+        }
         return itemStack;
     }
 
@@ -67,19 +87,15 @@ public class PlayerInventoryHolder implements UIHolder {
      * Will replace current item in hand with the given one
      * will also update sample item to this item
      */
-    public void setCurrentItem(ItemStack item) {
-        ItemStack itemStack = player.getHeldItem(hand);
-        if (!ItemStack.areItemsEqual(sampleItem, itemStack))
+    public void setActiveItem(ItemStack itemStack) {
+        ItemStack currentStack = this.player.getStackInHand(hand);
+        if (!this.originalItem.isItemEqual(currentStack)) {
             return;
-        Preconditions.checkArgument(item.getItem() instanceof ItemUIFactory,
-            "Current Item should implement ItemUIFactory");
-        this.sampleItem = item;
-        player.setHeldItem(hand, item);
-    }
+        }
 
-    @Override
-    public void markAsDirty() {
-        player.inventory.markDirty();
-        player.inventoryContainer.detectAndSendChanges();
+        Preconditions.checkArgument(itemStack.getItem() instanceof ItemUIFactory,
+            "Item %s should implement ItemUIFactory", itemStack.getItem());
+        this.originalItem = itemStack;
+        player.setStackInHand(hand, itemStack);
     }
 }

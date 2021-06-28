@@ -1,8 +1,11 @@
 package gregtech.api.unification.material.forms;
 
 import gregtech.api.GTValues;
-import gregtech.api.unification.stack.MaterialAmount;
+import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.MaterialAmount;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.item.Item;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -14,6 +17,10 @@ public class MaterialForm {
 
     public MaterialAmount getMaterialAmount() {
         return materialAmount;
+    }
+
+    public Tag.Identified<Item> getItemTag(Material material) {
+
     }
 
     public static class Builder {

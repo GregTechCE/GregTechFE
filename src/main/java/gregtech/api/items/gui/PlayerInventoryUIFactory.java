@@ -1,57 +1,43 @@
 package gregtech.api.items.gui;
 
-import gregtech.api.GTValues;
+import com.google.common.base.Preconditions;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.UIFactory;
-import gregtech.api.items.stats.MetaItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 
-import java.io.IOException;
+import java.util.UUID;
 
-/**
- * {@link UIFactory} implementation for {@link MetaItem}s
- */
 public class PlayerInventoryUIFactory extends UIFactory<PlayerInventoryHolder> {
 
-    public static final PlayerInventoryUIFactory INSTANCE = new PlayerInventoryUIFactory();
-
-    private PlayerInventoryUIFactory() {
-    }
-
-    public void init() {
-        UIFactory.FACTORY_REGISTRY.register(1, new ResourceLocation(GTValues.MODID, "player_inventory_factory"), this);
-    }
-
     @Override
-    protected ModularUI createUITemplate(PlayerInventoryHolder holder, EntityPlayer entityPlayer) {
+    protected ModularUI createUITemplate(PlayerInventoryHolder holder, PlayerEntity entityPlayer) {
         return holder.createUI(entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    protected PlayerInventoryHolder readHolderFromSyncData(PacketBuffer syncData) {
-        EntityPlayer entityPlayer = Minecraft.getMinecraft().player;
-        EnumHand enumHand = EnumHand.values()[syncData.readByte()];
-        ItemStack itemStack;
-        try {
-            itemStack = syncData.readItemStack();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
-        return new PlayerInventoryHolder(entityPlayer, enumHand, itemStack);
+    public PlayerInventoryHolder readHolderFromSyncData(PacketByteBuf syncData) {
+        UUID playerId = syncData.readUuid();
+        Hand hand = syncData.readEnumConstant(Hand.class);
+        ItemStack originalItem = syncData.readItemStack();
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        World world = Preconditions.checkNotNull(client.world);
+
+        PlayerEntity playerEntity = world.getPlayerByUuid(playerId);
+        Preconditions.checkNotNull(playerEntity, "Cannot find player to open Item UI with id " + playerId);
+
+        return new PlayerInventoryHolder(playerEntity, hand, originalItem);
     }
 
     @Override
-    protected void writeHolderToSyncData(PacketBuffer syncData, PlayerInventoryHolder holder) {
-        syncData.writeByte(holder.hand.ordinal());
-        syncData.writeItemStack(holder.getCurrentItem());
+    public void writeHolderToSyncData(PacketByteBuf syncData, PlayerInventoryHolder holder) {
+        syncData.writeUuid(holder.getPlayer().getGameProfile().getId());
+        syncData.writeEnumConstant(holder.getHand());
+        syncData.writeItemStack(holder.getOriginalItem());
     }
-
 }

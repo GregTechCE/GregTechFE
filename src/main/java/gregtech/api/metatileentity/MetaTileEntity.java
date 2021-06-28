@@ -11,7 +11,7 @@ import codechicken.lib.vec.Matrix4;
 import com.google.common.base.Preconditions;
 import gregtech.api.GregTechAPI;
 import gregtech.api.capability.internal.GTInternalAttributes;
-import gregtech.api.capability.EnergyContainer;
+import gregtech.api.capability.block.EnergyContainer;
 import gregtech.api.capability.impl.FluidHandlerProxy;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.ItemHandlerProxy;

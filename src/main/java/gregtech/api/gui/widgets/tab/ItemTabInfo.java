@@ -1,7 +1,7 @@
 package gregtech.api.gui.widgets.tab;
 
 import com.google.common.collect.Lists;
-import gregtech.api.gui.GuiUtils;
+import gregtech.api.gui.util.GuiUtils;
 import gregtech.api.gui.resources.TextureArea;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;

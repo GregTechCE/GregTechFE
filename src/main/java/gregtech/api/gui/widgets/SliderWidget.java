@@ -2,7 +2,7 @@ package gregtech.api.gui.widgets;
 
 import com.google.common.base.Preconditions;
 import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.GuiUtils;
+import gregtech.api.gui.util.GuiUtils;
 import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
 import gregtech.api.gui.resources.TextureArea;

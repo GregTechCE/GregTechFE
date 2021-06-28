@@ -3,10 +3,9 @@ package gregtech.api.unification.material;
 import gregtech.api.GTValues;
 import gregtech.api.unification.Element;
 import gregtech.api.unification.Elements;
+import gregtech.api.unification.material.properties.MaterialComponent;
 import gregtech.api.unification.material.type.*;
 import gregtech.api.unification.ore.MaterialForm;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import static com.google.common.collect.ImmutableList.of; //TODO: switch to java.util.list.of();
 import static gregtech.api.unification.material.MaterialIconSets.*;

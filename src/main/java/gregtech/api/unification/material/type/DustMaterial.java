@@ -2,14 +2,12 @@ package gregtech.api.unification.material.type;
 
 import com.google.common.collect.ImmutableList;
 import gregtech.api.unification.Element;
-import gregtech.api.unification.material.MaterialComponent;
+import gregtech.api.unification.material.properties.MaterialComponent;
 import gregtech.api.unification.material.MaterialIconSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static gregtech.api.util.GTUtility.createFlag;
 
 //@ZenClass("mods.gregtech.material.DustMaterial")
 //@ZenRegister

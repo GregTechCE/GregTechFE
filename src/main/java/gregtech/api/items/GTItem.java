@@ -12,12 +12,14 @@ import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.NullVariant;
 import alexiil.mc.lib.attributes.misc.PlayerInvUtil;
 import alexiil.mc.lib.attributes.misc.Reference;
-import gregtech.api.capability.ElectricItem;
+import gregtech.api.capability.item.ElectricItem;
 import gregtech.api.capability.GTAttributes;
 import gregtech.api.items.stats.ElectricStats;
 import gregtech.api.items.stats.FluidStats;
 import gregtech.api.items.util.CustomMaxCountItem;
+import gregtech.api.util.ElectricItemUtil;
 import gregtech.api.util.GTUtility;
+import gregtech.api.util.InventorySlotReference;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -87,12 +89,10 @@ public class GTItem extends Item implements AttributeProviderItem, CustomMaxCoun
         super.appendTooltip(stack, world, tooltip, context);
 
         if (isElectricItem()) {
-            if (electricStats.canProvideChargeExternally) {
-                tooltip.add(new TranslatableText("metaitem.electric.discharge_mode.tooltip"));
+            ElectricItem electricItem = GTAttributes.ELECTRIC_ITEM.getFirstOrNull(stack);
 
-                if (isInDishargeMode(stack)) {
-                    tooltip.add(new TranslatableText("metaitem.electric.discharge_mode.active"));
-                }
+            if (electricItem != null) {
+                electricItem.addItemTooltip(tooltip, context);
             }
         }
 
@@ -100,6 +100,16 @@ public class GTItem extends Item implements AttributeProviderItem, CustomMaxCoun
             GroupedFluidInvView fluidInv = FluidAttributes.GROUPED_INV_VIEW.get(stack);
             if (!(fluidInv instanceof NullVariant)) {
                 addFluidContainerTooltip(fluidInv, tooltip);
+            }
+        }
+
+        if (isElectricItem()) {
+            if (electricStats.canProvideChargeExternally) {
+                tooltip.add(new TranslatableText("item.gregtech.electric.discharge_mode.tooltip"));
+
+                if (isInDishargeMode(stack)) {
+                    tooltip.add(new TranslatableText("item.gregtech.electric.discharge_mode.active"));
+                }
             }
         }
     }
@@ -172,7 +182,7 @@ public class GTItem extends Item implements AttributeProviderItem, CustomMaxCoun
     }
 
     private ElectricItem getItemFromSlot(PlayerEntity player, Inventory inventory, int slot) {
-        Reference<ItemStack> stackRef = GTUtility.createInventorySlotRef(inventory, slot);
+        Reference<ItemStack> stackRef = new InventorySlotReference(inventory, slot);
         Consumer<ItemStack> excess = PlayerInvUtil.createPlayerInsertable(player);
 
         return GTAttributes.ELECTRIC_ITEM.getFirstOrNull(stackRef, LimitedConsumer.fromConsumer(excess));
@@ -183,7 +193,7 @@ public class GTItem extends Item implements AttributeProviderItem, CustomMaxCoun
             ElectricItem targetItem = getItemFromSlot(player, inventory, i);
 
             if (targetItem != null && !targetItem.canProvideChargeExternally()) {
-                if (GTUtility.chargeElectricItem(source, targetItem) == 0L) {
+                if (ElectricItemUtil.chargeElectricItem(source, targetItem, true, false) == 0L) {
                     return;
                 }
             }
@@ -195,9 +205,9 @@ public class GTItem extends Item implements AttributeProviderItem, CustomMaxCoun
 
         Text resultMessage;
         if (newDischargeMode) {
-            resultMessage = new TranslatableText("metaitem.electric.discharge_mode.enabled");
+            resultMessage = new TranslatableText("item.gregtech.electric.discharge_mode.enabled");
         } else {
-            resultMessage = new TranslatableText("metaitem.electric.discharge_mode.disabled");
+            resultMessage = new TranslatableText("item.gregtech.electric.discharge_mode.disabled");
         }
         user.sendMessage(resultMessage, true);
         setInDischargeMode(itemStack, newDischargeMode);

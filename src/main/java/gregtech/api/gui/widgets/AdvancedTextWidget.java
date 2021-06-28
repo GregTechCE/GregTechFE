@@ -1,6 +1,9 @@
 package gregtech.api.gui.widgets;
 
 import gregtech.api.gui.*;
+import gregtech.api.gui.util.ClickData;
+import gregtech.api.gui.util.GuiUtils;
+import gregtech.api.gui.util.InputHelper;
 import gregtech.api.util.Position;
 import gregtech.api.util.Size;
 import net.fabricmc.api.EnvType;

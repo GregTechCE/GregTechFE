@@ -2,7 +2,7 @@ package gregtech.api.metatileentity.multiblock;
 
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
-import gregtech.api.gui.ClickData;
+import gregtech.api.gui.util.ClickData;
 import gregtech.api.gui.widgets.AdvancedTextWidget;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

@@ -2,7 +2,7 @@ package gregtech.api.items.stats;
 
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
-import gregtech.api.capability.ElectricItem;
+import gregtech.api.capability.item.ElectricItem;
 import gregtech.api.capability.impl.ElectricItemImpl;
 import net.minecraft.item.ItemStack;
 

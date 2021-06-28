@@ -2,6 +2,7 @@ package gregtech.api.capability.impl;
 
 import gregtech.api.GTValues;
 import gregtech.api.capability.*;
+import gregtech.api.capability.block.EnergyContainer;
 import gregtech.api.capability.internal.GTInternalAttributes;
 import gregtech.api.capability.internal.Controllable;
 import gregtech.api.capability.internal.IMultipleTankHandler;

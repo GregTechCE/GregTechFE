@@ -1,6 +1,6 @@
 package gregtech.api.gui.widgets.group;
 
-import gregtech.api.gui.InputHelper;
+import gregtech.api.gui.util.InputHelper;
 import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
 import gregtech.api.gui.widgets.tab.HorizontalTabListRenderer;
