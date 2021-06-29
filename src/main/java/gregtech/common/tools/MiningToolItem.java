@@ -3,7 +3,7 @@ package gregtech.common.tools;
 import gregtech.api.items.toolitem.ToolItem;
 import gregtech.api.items.toolitem.ToolItemSettings;
 import gregtech.api.items.toolitem.ToolItemType;
-import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 

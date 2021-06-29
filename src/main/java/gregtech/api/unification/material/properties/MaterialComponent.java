@@ -1,6 +1,7 @@
 package gregtech.api.unification.material.properties;
 
-import gregtech.api.unification.material.type.Material;
+import com.google.common.base.Preconditions;
+import gregtech.api.unification.material.Material;
 import gregtech.api.util.SmallDigits;
 
 public class MaterialComponent {
@@ -9,6 +10,7 @@ public class MaterialComponent {
     private final int amount;
 
     public MaterialComponent(Material material, int amount) {
+        Preconditions.checkNotNull(material);
         this.material = material;
         this.amount = amount;
     }

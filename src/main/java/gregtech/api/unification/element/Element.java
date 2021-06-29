@@ -1,4 +1,4 @@
-package gregtech.api.unification;
+package gregtech.api.unification.element;
 
 
 public class Element {

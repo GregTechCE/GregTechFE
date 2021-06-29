@@ -1,7 +1,7 @@
 package gregtech.api.unification.ore;
 
 import gregtech.api.GTValues;
-import gregtech.api.unification.material.Materials;
+import gregtech.api.unification.Materials;
 import gregtech.common.blocks.BlockGranite;
 import gregtech.common.blocks.BlockGranite.GraniteVariant;
 import gregtech.common.blocks.BlockMineral;

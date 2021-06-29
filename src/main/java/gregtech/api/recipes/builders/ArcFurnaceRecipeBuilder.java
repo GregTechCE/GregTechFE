@@ -4,7 +4,7 @@ import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeBuilder;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMaps;
-import gregtech.api.unification.material.Materials;
+import gregtech.api.unification.Materials;
 import gregtech.api.unification.material.type.FluidMaterial;
 import gregtech.api.util.ValidationResult;
 

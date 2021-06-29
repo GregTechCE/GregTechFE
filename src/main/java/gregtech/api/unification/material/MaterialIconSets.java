@@ -4,6 +4,7 @@ import gregtech.api.GTValues;
 import net.minecraft.util.Identifier;
 
 public class MaterialIconSets {
+
     public static final MaterialIconSet METALLIC = create("metallic");
     public static final MaterialIconSet DULL = create("dull");
     public static final MaterialIconSet MAGNETIC = create("magnetic");

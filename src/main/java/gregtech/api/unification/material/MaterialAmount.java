@@ -1,4 +1,4 @@
-package gregtech.api.unification;
+package gregtech.api.unification.material;
 
 import java.util.Objects;
 

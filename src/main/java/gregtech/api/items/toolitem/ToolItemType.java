@@ -3,7 +3,7 @@ package gregtech.api.items.toolitem;
 import com.google.common.base.Preconditions;
 import gregtech.api.GTValues;
 import gregtech.api.unification.material.properties.MaterialProperties;
-import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.material.Material;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.item.Item;

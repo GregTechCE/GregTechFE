@@ -1,7 +1,7 @@
 package gregtech.api.items.toolitem;
 
 import com.google.common.base.MoreObjects;
-import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.material.Material;
 
 import java.util.Objects;
 

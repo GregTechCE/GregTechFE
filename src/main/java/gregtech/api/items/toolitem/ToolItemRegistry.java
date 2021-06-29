@@ -2,7 +2,7 @@ package gregtech.api.items.toolitem;
 
 import gregtech.api.GTValues;
 import gregtech.api.render.RemappingModelResourceProvider;
-import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.material.Material;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;

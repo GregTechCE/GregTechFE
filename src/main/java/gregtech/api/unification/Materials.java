@@ -1,8 +1,7 @@
-package gregtech.api.unification.material;
+package gregtech.api.unification;
 
 import gregtech.api.GTValues;
-import gregtech.api.unification.Element;
-import gregtech.api.unification.Elements;
+import gregtech.api.unification.element.Element;
 import gregtech.api.unification.material.properties.MaterialComponent;
 import gregtech.api.unification.material.type.*;
 import gregtech.api.unification.ore.MaterialForm;
@@ -14,11 +13,6 @@ import static gregtech.api.unification.material.properties.MaterialProperties.*;
 
 @SuppressWarnings("WeakerAccess")
 public class Materials {
-    public static final Material Aluminium_NEW = new Material.Settings("aluminium")
-            .addProperty(COLOR, 0x80C8F0)
-            .addProperty(ICON_SET, DULL)
-            .addProperty(CHEMICAL_PROPERTY, Elements.Al.getChemicalProperty())
-            .build();
 
 
 

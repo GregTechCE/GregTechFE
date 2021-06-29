@@ -4,7 +4,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import gregtech.api.capability.item.CustomDamageItem;
 import gregtech.api.items.toolitem.ToolItemSettings;
 import gregtech.api.items.toolitem.ToolItemType;
-import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.material.Material;
 import gregtech.mixin.accessor.AxeItemAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

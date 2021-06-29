@@ -2,8 +2,9 @@ package gregtech.api.unification.material.properties;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import gregtech.api.unification.Element;
-import gregtech.api.unification.Elements;
+import gregtech.api.unification.element.Element;
+import gregtech.api.unification.element.Elements;
+import gregtech.api.unification.material.flags.MaterialFlags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -80,7 +81,7 @@ public class ChemicalComposition {
         for (MaterialComponent component : components) {
             int componentAmount = component.getAmount();
             ChemicalProperties other = component.getMaterial()
-                    .queryPropertyChecked(MaterialProperties.CHEMICAL_COMPOSITION)
+                    .queryPropertyChecked(MaterialFlags.CHEMICAL_COMPOSITION)
                     .getChemicalProperties();
 
             properties.protons += other.protons * componentAmount;

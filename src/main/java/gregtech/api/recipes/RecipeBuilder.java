@@ -4,7 +4,7 @@ import gregtech.api.items.stats.MetaItem;
 import gregtech.api.recipes.Recipe.ChanceEntry;
 import gregtech.api.unification.material.type.FluidMaterial;
 import gregtech.api.unification.OreDictUnifier;
-import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.material.Material;
 import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.util.EnumValidationResult;
 import gregtech.api.util.GTLog;

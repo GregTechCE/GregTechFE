@@ -5,21 +5,20 @@ import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.PlayerInvUtil;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import gregtech.api.capability.item.ElectricItem;
 import gregtech.api.capability.GTAttributes;
 import gregtech.api.capability.item.CustomDamageItem;
+import gregtech.api.capability.item.ElectricItem;
 import gregtech.api.enchants.EnchantmentData;
 import gregtech.api.items.GTItem;
 import gregtech.api.items.GTItemSettings;
 import gregtech.api.items.util.AutoTaggedItem;
 import gregtech.api.items.util.CustomEnchantableItem;
 import gregtech.api.items.util.ExtendedRemainderItem;
-import gregtech.api.unification.material.forms.MaterialForm;
-import gregtech.api.unification.material.properties.MaterialProperties;
+import gregtech.api.unification.material.flags.MaterialFlags;
+import gregtech.api.unification.forms.MaterialForm;
 import gregtech.api.unification.material.properties.SolidForm;
 import gregtech.api.unification.material.properties.ToolProperties;
-import gregtech.api.unification.material.type.Material;
-import gregtech.api.util.GTUtility;
+import gregtech.api.unification.material.Material;
 import gregtech.api.util.SimpleReference;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -93,7 +92,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
     }
 
     private static int getMaxDurability(ToolItemSettings settings, Material material) {
-        int materialDurability = material.queryProperty(MaterialProperties.TOOL_PROPERTIES)
+        int materialDurability = material.queryProperty(MaterialFlags.TOOL_PROPERTIES)
                 .map(ToolProperties::getDurability)
                 .orElse(1);
         return Math.round(materialDurability * settings.durabilityMultiplier);
@@ -169,7 +168,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
     }
 
     protected void addBuiltinEnchantments(List<EnchantmentData> outEnchantments) {
-        this.material.queryProperty(MaterialProperties.TOOL_PROPERTIES)
+        this.material.queryProperty(MaterialFlags.TOOL_PROPERTIES)
                 .map(ToolProperties::getEnchantments)
                 .ifPresent(outEnchantments::addAll);
     }
@@ -187,13 +186,13 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
 
     @Override
     public int getMiningLevel(Tag<Item> tag, BlockState state, ItemStack stack, @Nullable LivingEntity user) {
-        return this.material.queryPropertyChecked(MaterialProperties.HARVEST_LEVEL);
+        return this.material.queryPropertyChecked(MaterialFlags.HARVEST_LEVEL);
     }
 
     @Override
     public float getMiningSpeedMultiplier(Tag<Item> tag, BlockState state, ItemStack stack, @Nullable LivingEntity user) {
         if (canDamageItem(stack, damagePerBlockBreak, null)) {
-            float materialSpeed = this.material.queryProperty(MaterialProperties.TOOL_PROPERTIES)
+            float materialSpeed = this.material.queryProperty(MaterialFlags.TOOL_PROPERTIES)
                     .map(ToolProperties::getMiningSpeed)
                     .orElse(1.0f);
             return materialSpeed * this.miningSpeedMultiplier;
@@ -206,7 +205,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
         if (canDamageItem(stack, damagePerEntityAttack, null)) {
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 
-            float materialAttackDamage = this.material.queryProperty(MaterialProperties.TOOL_PROPERTIES)
+            float materialAttackDamage = this.material.queryProperty(MaterialFlags.TOOL_PROPERTIES)
                     .map(ToolProperties::getAttackDamage)
                     .orElse(0.0f);
             float attackDamage = this.baseAttackDamage + this.attackDamageMultiplier * materialAttackDamage;
@@ -227,7 +226,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
 
     @Override
     public int getEnchantability() {
-        Optional<ToolProperties> toolProperties = this.material.queryProperty(MaterialProperties.TOOL_PROPERTIES);
+        Optional<ToolProperties> toolProperties = this.material.queryProperty(MaterialFlags.TOOL_PROPERTIES);
         return toolProperties
                 .map(ToolProperties::getEnchantability)
                 .orElse(0);
@@ -235,9 +234,9 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
 
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        Optional<SolidForm> solidForm = this.material.queryProperty(MaterialProperties.SOLID_FORM);
+        Optional<SolidForm> solidForm = this.material.queryProperty(MaterialFlags.SOLID_FORM);
         if (solidForm.isPresent()) {
-            MaterialForm materialForm = solidForm.get().getMaterialForm();;
+            MaterialForm materialForm = solidForm.get().getMaterialForm();
             return materialForm.getItemTag(material).contains(ingredient.getItem());
         }
         return false;

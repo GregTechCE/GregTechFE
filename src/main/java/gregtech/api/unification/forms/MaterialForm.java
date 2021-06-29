@@ -1,8 +1,8 @@
-package gregtech.api.unification.material.forms;
+package gregtech.api.unification.forms;
 
 import gregtech.api.GTValues;
-import gregtech.api.unification.material.type.Material;
-import gregtech.api.unification.MaterialAmount;
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.MaterialAmount;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;

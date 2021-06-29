@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import gregtech.api.capability.item.CustomDamageItem;
 import gregtech.api.items.toolitem.ToolItemSettings;
 import gregtech.api.items.toolitem.ToolItemType;
-import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.material.Material;
 import gregtech.mixin.accessor.HoeItemAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

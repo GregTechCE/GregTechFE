@@ -1,14 +1,12 @@
-package gregtech.api.unification.material.type;
+package gregtech.api.unification.material;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import gregtech.api.GTValues;
-import gregtech.api.unification.Element;
-import gregtech.api.unification.material.MaterialHandler;
+import gregtech.api.unification.element.Element;
 import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.properties.MaterialComponent;
-import gregtech.api.unification.material.MaterialIconSet;
-import gregtech.api.unification.material.properties.MaterialProperty;
+import gregtech.api.unification.material.flags.MaterialProperty;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;

@@ -2,23 +2,20 @@ package gregtech.api.items.material;
 
 import gregtech.api.GTValues;
 import gregtech.api.render.RemappingModelResourceProvider;
-import gregtech.api.unification.material.type.Material;
+import gregtech.api.unification.material.Material;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class MaterialItemRegistry {
 
