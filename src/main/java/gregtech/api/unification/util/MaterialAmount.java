@@ -21,6 +21,20 @@ public class MaterialAmount {
     public static final MaterialAmount LONG_ROD = INGOT;
     public static final MaterialAmount GEAR = INGOT.mul(4);
     public static final MaterialAmount SMALL_GEAR = INGOT;
+    public static final MaterialAmount SPRING = INGOT;
+    public static final MaterialAmount SMALL_SPRING = INGOT.div(4);
+    public static final MaterialAmount FINE_WIRE = INGOT.div(8);
+    public static final MaterialAmount FOIL = INGOT.div(4);
+    public static final MaterialAmount BOLT = INGOT.div(8);
+    public static final MaterialAmount SCREW = INGOT.div(9);
+    public static final MaterialAmount RING = INGOT.div(4);
+    public static final MaterialAmount ROTOR = INGOT.mul(4);
+    public static final MaterialAmount LENS = GEM.mul(3).div(4);
+
+    public static final MaterialAmount CHIPPED_GEM = GEM.div(4);
+    public static final MaterialAmount FLAWED_GEM = GEM.div(2);
+    public static final MaterialAmount FLAWLESS_GEM = GEM.mul(2);
+    public static final MaterialAmount EXQUISITE_GEM = GEM.mul(4);
 
     private final long amount;
 
