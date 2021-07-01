@@ -35,7 +35,7 @@ public class ChemicalComposition {
     }
 
     public static ChemicalComposition composite(MaterialComponent... components) {
-        Preconditions.checkArgument(components.length > 0);
+        Preconditions.checkArgument(components.length > 1);
         return new ChemicalComposition(null, Arrays.asList(components));
     }
 

@@ -8,13 +8,23 @@ public class Elements {
 
     public static final Element Hydrogen;
     public static final Element Al;
+    public static final Element C;
+    public static final Element O;
+    public static final Element Cl;
     public static final Element Technetium;
+
 
     static {
 
         Hydrogen = register("hydrogen", new Element(new Element.Settings().basicProperties("H", 1, 0)));
 
         Al = register("aluminium", new Element(new Element.Settings().basicProperties("Al", 13, 13)));
+
+        C = register("carbon", new Element(new Element.Settings().basicProperties("C",6,6)));
+
+        O = register("oxygen", new Element(new Element.Settings().basicProperties("O",8,8)));
+
+        Cl = register("chlorine", new Element(new Element.Settings().basicProperties("Cl",17,18)));
 
         Technetium = register("technetium", new Element(new Element.Settings().basicProperties("Tc", 43, 55)));
 
@@ -39,9 +49,7 @@ public class Elements {
 //    Li(3, 4, -1, null, "Lithium", false),
 //    Be(4, 5, -1, null, "Beryllium", false),
 //    B(5, 5, -1, null, "Boron", false),
-//    C(6, 6, -1, null, "Carbon", false),
 //    N(7, 7, -1, null, "Nitrogen", false),
-//    O(8, 8, -1, null, "Oxygen", false),
 //    F(9, 9, -1, null, "Fluorine", false),
 //    Ne(10, 10, -1, null, "Neon", false),
 //    Na(11, 11, -1, null, "Sodium", false),
@@ -49,7 +57,6 @@ public class Elements {
 //    Si(14, 14, -1, null, "Silicon", false),
 //    P(15, 15, -1, null, "Phosphor", false),
 //    S(16, 16, -1, null, "Sulfur", false),
-//    Cl(17, 18, -1, null, "Chlorine", false),
 //    Ar(18, 22, -1, null, "Argon", false),
 //    K(19, 20, -1, null, "Potassium", false),
 //    Ca(20, 20, -1, null, "Calcium", false),

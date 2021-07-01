@@ -159,6 +159,12 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
+        public Settings visual(int color) {
+            property(COLOR, color);
+
+            return this;
+        }
+
         public Settings visual(int color, MaterialIconSet iconSet) {
             property(COLOR, color);
             property(ICON_SET, iconSet);
@@ -166,8 +172,22 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
+        public Settings composition(MaterialComponent... composition) {
+            property(CHEMICAL_COMPOSITION, ChemicalComposition.composite(composition));
+
+            return this;
+        }
+
         public Settings element(Element element) {
             property(CHEMICAL_COMPOSITION, ChemicalComposition.element(element));
+
+            return this;
+        }
+
+        public Settings dust(int harvestLevel) {
+            Preconditions.checkArgument(harvestLevel >= 0, "harvestLevel >= 0");
+
+            flag(GENERATE_DUST);
 
             return this;
         }
@@ -180,6 +200,18 @@ public class Material implements Comparable<Material> {
             property(SOLID_FORM, SolidForm.METAL);
             property(HARVEST_LEVEL, harvestLevel);
             property(FLUID_PROPERTIES, FluidProperties.fluid(moltenTemperature));
+
+            return this;
+        }
+
+        public Settings fluid() {
+            property(FLUID_PROPERTIES, FluidProperties.fluid(FluidProperties.DEFAULT_TEMPERATURE));
+
+            return this;
+        }
+
+        public Settings gas() {
+            property(FLUID_PROPERTIES, FluidProperties.gas(FluidProperties.DEFAULT_TEMPERATURE));
 
             return this;
         }
@@ -226,10 +258,16 @@ public class Material implements Comparable<Material> {
          * This material is used as base in electric tiered components (Electric Motor, Electric Piston, etc.)
          */
         public Settings baseForElectricComponents() {
-
             flag(GENERATE_PLATE);
             flag(GENERATE_ROD);
             flag(GENERATE_SMALL_GEAR);
+
+            return this;
+        }
+
+
+        public Settings plasma() {
+            flag(GENERATE_PLASMA);
 
             return this;
         }
