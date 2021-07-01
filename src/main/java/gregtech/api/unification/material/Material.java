@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public abstract class Material implements Comparable<Material> {
+public class Material implements Comparable<Material> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
     private static final boolean MATERIAL_ERRORS_ARE_FATAL = true;

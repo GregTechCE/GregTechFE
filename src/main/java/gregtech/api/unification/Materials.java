@@ -2,35 +2,56 @@ package gregtech.api.unification;
 
 import gregtech.api.GTValues;
 import gregtech.api.unification.element.Element;
-import gregtech.api.unification.material.properties.MaterialComponent;
-import gregtech.api.unification.material.type.*;
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.properties.*;
 import gregtech.api.unification.ore.MaterialForm;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import static com.google.common.collect.ImmutableList.of; //TODO: switch to java.util.list.of();
+import static gregtech.api.unification.element.Elements.*;
+import static gregtech.api.unification.material.properties.SolidForm.*;
 import static gregtech.api.unification.util.MaterialIconSets.*;
 import static gregtech.api.unification.material.flags.MaterialFlags.*;
-import static gregtech.api.unification.material.properties.MaterialProperties.*;
 
-@SuppressWarnings("WeakerAccess")
 public class Materials {
-
-
-
-    private Materials(){
-
-    }
-
-    private static final long STD_SOLID = GENERATE_PLATE | GENERATE_ROD | GENERATE_BOLT_SCREW | GENERATE_LONG_ROD;
-    private static final long STD_GEM = GENERATE_ORE | STD_SOLID | GENERATE_LENS;
-    private static final long STD_METAL = GENERATE_PLATE;
-    private static final long EXT_METAL = STD_METAL | GENERATE_ROD | GENERATE_BOLT_SCREW | GENERATE_LONG_ROD;
-    private static final long EXT2_METAL = EXT_METAL | GENERATE_GEAR | GENERATE_FOIL | GENERATE_FINE_WIRE;
 
     /**
      * Direct Elements
      */
-    public static IngotMaterial Aluminium = new IngotMaterial(1, "aluminium", 0x80C8F0, DULL, 2, of(), EXT2_METAL | GENERATE_SMALL_GEAR | GENERATE_ORE | GENERATE_RING | GENERATE_FRAME, Element.Al, 10.0F, 2.0f, 128, 1700);
-    public static IngotMaterial Americium = new IngotMaterial(2, "americium", 0xC8C8C8, METALLIC, 3, of(), STD_METAL | GENERATE_ROD | GENERATE_LONG_ROD, Element.Am);
+    public static Material Aluminium;
+
+
+    private Materials(){
+    }
+
+    private static <T extends Material> T register(String name, T material) {
+        return Registry.register(Material.REGISTRY, new Identifier(GTValues.MODID, name), material);
+    }
+
+    static {
+        Aluminium = register("aluminium", new Material(new Material.Settings()
+                .property(COLOR, 0x80C8F0)
+                .property(ICON_SET, DULL)
+                .property(SOLID_FORM, METAL)
+                .property(CHEMICAL_COMPOSITION, ChemicalComposition.element(Al))
+                .property(FLUID_PROPERTIES, FluidProperties.fluid(661)) //molten - melting point 660,32
+                .property(HARVEST_LEVEL, 2)
+                .property(TOOL_PROPERTIES, ToolProperties.create(10.0F,2.0F, 128, 14))
+                .property(CABLE_PROPERTIES, CableProperties.create(GTValues.V[GTValues.EV], 1, 2))
+//                .property(ORE_PROPERTIES, new OreProperties(new OreProperties.Settings().byproduct(OreProcessingStep.?,Bauxite)))
+                .property(BLAST_FURNACE_TEMPERATURE, 1700)
+                .flag(GENERATE_FOIL)
+                .flag(GENERATE_BOLT_SCREW) //for tools
+                .flag(GENERATE_GEAR)
+                .flag(GENERATE_GEAR_SMALL)
+        ));
+    }
+
+    /**
+     * Direct Elements
+     */
+    public static IngotMaterial Americium = new IngotMaterial(2, "americium", 0xC8C8C8, METALLIC, 3, of(), STD_METAL | GENERATE_ROD | GENERATE_ROD_LONG, Element.Am);
     public static IngotMaterial Antimony = new IngotMaterial(3, "antimony", 0xDCDCC8, SHINY, 2, of(), EXT_METAL | MORTAR_GRINDABLE, Element.Sb);
     public static FluidMaterial Argon = new FluidMaterial(4, "argon", 0xBBBB00, FLUID, of(), STATE_GAS | GENERATE_PLASMA, Element.Ar);
     public static DustMaterial Arsenic = new DustMaterial(5, "arsenic", 0xDDDDDD, SAND, 2, of(), 0, Element.As);
@@ -742,7 +763,6 @@ public class Materials {
         Endstone.addOreByProducts(Helium3);
         Osmium.addOreByProducts(Iridium);
         Magnesium.addOreByProducts(Olivine);
-        Aluminium.addOreByProducts(Bauxite);
         Titanium.addOreByProducts(Almandine);
         Obsidian.addOreByProducts(Olivine);
         Ash.addOreByProducts(Carbon);
@@ -802,7 +822,6 @@ public class Materials {
         Steel.setCableProperties(GTValues.V[4], 2, 2);
         BlackSteel.setCableProperties(GTValues.V[4], 3, 2);
         Titanium.setCableProperties(GTValues.V[4], 4, 2);
-        Aluminium.setCableProperties(GTValues.V[4], 1, 1);
 
         Graphene.setCableProperties(GTValues.V[5], 1, 1);
         Osmium.setCableProperties(GTValues.V[5], 4, 2);
