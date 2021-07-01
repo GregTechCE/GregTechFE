@@ -40,6 +40,10 @@ public class MaterialForm {
         this.matcher = new MaterialFormMatcher(tagNameTemplate);
     }
 
+    public Identifier getName() {
+        return Preconditions.checkNotNull(REGISTRY.getId(this), "MaterialForm not registered");
+    }
+
     public MaterialAmount getMaterialAmount(Material material) {
         return materialAmount;
     }
@@ -63,6 +67,11 @@ public class MaterialForm {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(REGISTRY.getId(this));
     }
 
     @Nullable

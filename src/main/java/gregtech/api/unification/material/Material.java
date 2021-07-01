@@ -57,7 +57,7 @@ public class Material implements Comparable<Material> {
     }
 
     public Identifier getName() {
-        return Preconditions.checkNotNull(REGISTRY.getId(this));
+        return Preconditions.checkNotNull(REGISTRY.getId(this), "Material not registered");
     }
 
     public String getTranslationKey() {
@@ -96,8 +96,7 @@ public class Material implements Comparable<Material> {
 
     @Override
     public String toString() {
-        Identifier identifier = REGISTRY.getId(this);
-        return String.valueOf(identifier);
+        return String.valueOf(REGISTRY.getId(this));
     }
 
     /** Verifies all material flags and values in registry */
