@@ -9,50 +9,50 @@ public class MaterialItemForms {
 
     //Common dust forms
     public static final MaterialItemForm DUST;
-    public static final MaterialItemForm DUST_SMALL;
-    public static final MaterialItemForm DUST_TINY;
+    public static final MaterialItemForm SMALL_DUST;
+    public static final MaterialItemForm TINY_DUST;
 
     //Common ingot forms
     public static final MaterialItemForm INGOT;
-    public static final MaterialItemForm INGOT_HOT;
+    public static final MaterialItemForm HOT_INGOT;
     public static final MaterialItemForm NUGGET;
 
     //Common gem forms
     public static final MaterialItemForm GEM;
 
-    public static final MaterialItemForm GEM_CHIPPED;
-    public static final MaterialItemForm GEM_FLAWED;
-    public static final MaterialItemForm GEM_FLAWLESS;
-    public static final MaterialItemForm GEM_EXQUISITE;
+    public static final MaterialItemForm CHIPPED_GEM;
+    public static final MaterialItemForm FLAWED_GEM;
+    public static final MaterialItemForm FLAWLESS_GEM;
+    public static final MaterialItemForm EXQUISITE_GEM;
 
     //Ore processing forms
-    public static final MaterialItemForm CRUSHED;
-    public static final MaterialItemForm CRUSHED_CENTRIFUGED;
-    public static final MaterialItemForm CRUSHED_PURIFIED;
+    public static final MaterialItemForm CRUSHED_ORE;
+    public static final MaterialItemForm CRUSHED_CENTRIFUGED_ORE;
+    public static final MaterialItemForm CRUSHED_PURIFIED_ORE;
 
-    public static final MaterialItemForm DUST_IMPURE;
-    public static final MaterialItemForm DUST_PURE;
+    public static final MaterialItemForm IMPURE_DUST;
+    public static final MaterialItemForm PURE_DUST;
 
     //Various crafting parts
     public static final MaterialItemForm PLATE;
-    public static final MaterialItemForm PLATE_DENSE;
+    public static final MaterialItemForm DENSE_PLATE;
     public static final MaterialItemForm FOIL;
 
-    public static final MaterialItemForm STICK;
-    public static final MaterialItemForm STICK_LONG;
+    public static final MaterialItemForm ROD;
+    public static final MaterialItemForm LONG_ROD;
 
     public static final MaterialItemForm BOLT;
     public static final MaterialItemForm SCREW;
     public static final MaterialItemForm RING;
 
     public static final MaterialItemForm SPRING;
-    public static final MaterialItemForm SPRING_SMALL;
+    public static final MaterialItemForm SMALL_SPRING;
 
-    public static final MaterialItemForm WIRE_FINE;
+    public static final MaterialItemForm FINE_WIRE;
 
     public static final MaterialItemForm ROTOR;
     public static final MaterialItemForm GEAR;
-    public static final MaterialItemForm GEAR_SMALL;
+    public static final MaterialItemForm SMALL_GEAR;
 
     public static final MaterialItemForm LENSE;
 
