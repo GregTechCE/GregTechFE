@@ -90,16 +90,16 @@ public class MaterialFlags {
     public static final MaterialFlag GENERATE_FINE_WIRE;
 
     public static final MaterialFlag GENERATE_ROD;
-    public static final MaterialFlag GENERATE_ROD_LONG;
+    public static final MaterialFlag GENERATE_LONG_ROD;
 
     public static final MaterialFlag GENERATE_BOLT_SCREW;
     public static final MaterialFlag GENERATE_RING;
 
     public static final MaterialFlag GENERATE_GEAR;
-    public static final MaterialFlag GENERATE_GEAR_SMALL;
+    public static final MaterialFlag GENERATE_SMALL_GEAR;
 
     public static final MaterialFlag GENERATE_SPRING;
-    public static final MaterialFlag GENERATE_SPRING_SMALL;
+    public static final MaterialFlag GENERATE_SMALL_SPRING;
 
     public static final MaterialFlag GENERATE_LENS;
 
@@ -265,7 +265,7 @@ public class MaterialFlags {
                     .requiresPredicate(SOLID_FORM, SolidForm::isMetalOrGem)
         ));
 
-        GENERATE_ROD_LONG = register("generate_long_rod", new MaterialFlag(
+        GENERATE_LONG_ROD = register("generate_long_rod", new MaterialFlag(
                 new MaterialFlag.Settings()
                     .requiresPredicate(SOLID_FORM, SolidForm::isMetalOrGem)
                     .requires(GENERATE_ROD)
@@ -290,7 +290,7 @@ public class MaterialFlags {
                     .requires(GENERATE_ROD)
         ));
 
-        GENERATE_GEAR_SMALL = register("generate_gear_small", new MaterialFlag(
+        GENERATE_SMALL_GEAR = register("generate_small_gear", new MaterialFlag(
                 new MaterialFlag.Settings()
                     .requires(SOLID_FORM, SolidForm.METAL)
                     .requires(GENERATE_PLATE)
@@ -299,10 +299,10 @@ public class MaterialFlags {
         GENERATE_SPRING = register("generate_spring", new MaterialFlag(
                 new MaterialFlag.Settings()
                     .requires(SOLID_FORM, SolidForm.METAL)
-                    .requires(GENERATE_ROD_LONG)
+                    .requires(GENERATE_LONG_ROD)
         ));
 
-        GENERATE_SPRING_SMALL = register("generate_spring_small", new MaterialFlag(
+        GENERATE_SMALL_SPRING = register("generate_small_spring", new MaterialFlag(
                 new MaterialFlag.Settings()
                     .requires(SOLID_FORM, SolidForm.METAL)
                     .requires(CABLE_PROPERTIES)
