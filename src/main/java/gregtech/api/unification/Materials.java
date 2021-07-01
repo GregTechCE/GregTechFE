@@ -3,14 +3,17 @@ package gregtech.api.unification;
 import gregtech.api.GTValues;
 import gregtech.api.unification.element.Element;
 import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.properties.*;
 import gregtech.api.unification.ore.MaterialForm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.Set;
+
 import static com.google.common.collect.ImmutableList.of; //TODO: switch to java.util.list.of();
+import static java.util.Set.*;
 import static gregtech.api.unification.element.Elements.*;
-import static gregtech.api.unification.material.properties.SolidForm.*;
 import static gregtech.api.unification.util.MaterialIconSets.*;
 import static gregtech.api.unification.material.flags.MaterialFlags.*;
 
@@ -19,7 +22,7 @@ public class Materials {
     /**
      * Direct Elements
      */
-    public static Material Aluminium;
+    public static final Material Aluminium;
 
 
     private Materials(){
@@ -31,20 +34,15 @@ public class Materials {
 
     static {
         Aluminium = register("aluminium", new Material(new Material.Settings()
-                .property(COLOR, 0x80C8F0)
-                .property(ICON_SET, DULL)
-                .property(SOLID_FORM, METAL)
-                .property(CHEMICAL_COMPOSITION, ChemicalComposition.element(Al))
-                .property(FLUID_PROPERTIES, FluidProperties.fluid(661)) //molten - melting point 660,32
-                .property(HARVEST_LEVEL, 2)
-                .property(TOOL_PROPERTIES, ToolProperties.create(10.0F,2.0F, 128, 14))
-                .property(CABLE_PROPERTIES, CableProperties.create(GTValues.V[GTValues.EV], 1, 2))
+                .visual(0x80C8F0, DULL)
+                .element(Al)
+                .metal(2, 661)
+                .canCreateTools(10.0F,2.0F, 128)
+                .canCreateCables(GTValues.V[GTValues.EV], 1, 2)
+                .smeltsInBlastFurnace(1700)
+                .baseForElectricComponents()
 //                .property(ORE_PROPERTIES, new OreProperties(new OreProperties.Settings().byproduct(OreProcessingStep.?,Bauxite)))
-                .property(BLAST_FURNACE_TEMPERATURE, 1700)
-                .flag(GENERATE_FOIL)
-                .flag(GENERATE_BOLT_SCREW) //for tools
-                .flag(GENERATE_GEAR)
-                .flag(GENERATE_GEAR_SMALL)
+                .flags(Set.of(GENERATE_FOIL, GENERATE_GEAR))
         ));
     }
 
@@ -82,7 +80,7 @@ public class Materials {
     public static FluidMaterial Helium3 = new FluidMaterial(30, "helium3", 0xDDDD00, GAS, of(), STATE_GAS, Element.He_3);
     public static IngotMaterial Indium = new IngotMaterial(31, "indium", 0x6600BB, METALLIC, 2, of(), 0, Element.In);
     public static IngotMaterial Iridium = new IngotMaterial(32, "iridium", 0xFFFFFF, DULL, 3, of(), GENERATE_ORE | EXT2_METAL | GENERATE_ORE | GENERATE_RING | GENERATE_ROTOR, Element.Ir, 7.0F, 3.0f, 2560, 2719);
-    public static IngotMaterial Iron = new IngotMaterial(33, "iron", 0xAAAAAA, METALLIC, 2, of(), EXT2_METAL | GENERATE_ORE | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_DENSE | GENERATE_FRAME | GENERATE_LONG_ROD | GENERATE_PLASMA | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, Element.Fe, 7.0F, 2.5f, 256);
+    public static IngotMaterial Iron = new IngotMaterial(33, "iron", 0xAAAAAA, METALLIC, 2, of(), EXT2_METAL | GENERATE_ORE | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_DENSE | GENERATE_FRAME | GENERATE_ROD_LONG | GENERATE_PLASMA | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, Element.Fe, 7.0F, 2.5f, 256);
     public static IngotMaterial Lanthanum = new IngotMaterial(34, "lanthanum", 0xFFFFFF, METALLIC, 2, of(), 0, Element.La, 1193);
     public static IngotMaterial Lead = new IngotMaterial(35, "lead", 0x8C648C, DULL, 1, of(), EXT2_METAL | GENERATE_ORE | MORTAR_GRINDABLE | GENERATE_DENSE, Element.Pb);
     public static IngotMaterial Lithium = new IngotMaterial(36, "lithium", 0xCBCBCB, DULL, 2, of(), STD_METAL | GENERATE_ORE, Element.Li);
@@ -92,7 +90,7 @@ public class Materials {
     public static FluidMaterial Mercury = new FluidMaterial(40, "mercury", 0xFFDDDD, FLUID, of(), SMELT_INTO_FLUID, Element.Hg);
     public static IngotMaterial Molybdenum = new IngotMaterial(41, "molybdenum", 0xAAAADD, DULL, 2, of(), GENERATE_ORE, Element.Mo, 7.0F, 2.0f, 512);
     public static IngotMaterial Neodymium = new IngotMaterial(42, "neodymium", 0x777777, METALLIC, 2, of(), STD_METAL | GENERATE_ROD | GENERATE_ORE, Element.Nd, 7.0F, 2.0f, 512, 1297);
-    public static IngotMaterial Darmstadtium = new IngotMaterial(43, "darmstadtium", 0xAAAAAA, METALLIC, 6, of(), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_SMALL_GEAR | GENERATE_LONG_ROD | GENERATE_FRAME, Element.Ds, 24.0F, 6.0f, 155360);
+    public static IngotMaterial Darmstadtium = new IngotMaterial(43, "darmstadtium", 0xAAAAAA, METALLIC, 6, of(), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_ROD_LONG | GENERATE_FRAME, Element.Ds, 24.0F, 6.0f, 155360);
     public static IngotMaterial Nickel = new IngotMaterial(44, "nickel", 0xAAAAFF, METALLIC, 2, of(), STD_METAL | GENERATE_ORE | MORTAR_GRINDABLE | GENERATE_PLASMA, Element.Ni);
     public static IngotMaterial Niobium = new IngotMaterial(45, "niobium", 0x9486AA, METALLIC, 2, of(), STD_METAL | GENERATE_ORE, Element.Nb, 2750);
     public static FluidMaterial Nitrogen = new FluidMaterial(46, "nitrogen", 0x7090AF, FLUID, of(), STATE_GAS | GENERATE_PLASMA, Element.N);
@@ -121,7 +119,7 @@ public class Materials {
     public static IngotMaterial Thorium = new IngotMaterial(69, "thorium", 0x001E00, SHINY, 2, of(), STD_METAL | GENERATE_ORE, Element.Th, 6.0F, 2.0f, 512);
     public static IngotMaterial Thulium = new IngotMaterial(70, "thulium", 0xFFFFFF, METALLIC, 2, of(), STD_METAL, Element.Tm, 1818);
     public static IngotMaterial Tin = new IngotMaterial(71, "tin", 0xDCDCDC, DULL, 1, of(), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_ROTOR | GENERATE_ORE, Element.Sn);
-    public static IngotMaterial Titanium = new IngotMaterial(72, "titanium", 0xDCA0F0, METALLIC, 3, of(), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_SMALL_GEAR | GENERATE_LONG_ROD | GENERATE_SPRING | GENERATE_FRAME | GENERATE_DENSE, Element.Ti, 7.0F, 3.0f, 1600, 1941);
+    public static IngotMaterial Titanium = new IngotMaterial(72, "titanium", 0xDCA0F0, METALLIC, 3, of(), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_ROD_LONG | GENERATE_SPRING | GENERATE_FRAME | GENERATE_DENSE, Element.Ti, 7.0F, 3.0f, 1600, 1941);
     public static FluidMaterial Tritium = new FluidMaterial(73, "tritium", 0xFF0000, METALLIC, of(), STATE_GAS, Element.T);
     public static IngotMaterial Tungsten = new IngotMaterial(74, "tungsten", 0x323232, METALLIC, 3, of(), EXT2_METAL, Element.W, 7.0F, 3.0f, 2560, 3000);
     public static IngotMaterial Uranium = new IngotMaterial(75, "uranium", 0x32F032, METALLIC, 3, of(), STD_METAL | GENERATE_ORE, Element.U, 6.0F, 3.0f, 512);
@@ -149,7 +147,7 @@ public class Materials {
     public static GemMaterial BlueTopaz = new GemMaterial(92, "blue_topaz", 0x0000FF, GEM_HORIZONTAL, 3, of(new MaterialComponent(Aluminium, 2), new MaterialComponent(Silicon, 1), new MaterialComponent(Fluorine, 2), new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 6)), STD_GEM | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT, 7.0F, 3.0f, 256);
     public static DustMaterial Bone = new DustMaterial(93, "bone", 0xFFFFFF, ROUGH, 1, of(new MaterialComponent(Calcium, 1)), MORTAR_GRINDABLE | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES);
     public static IngotMaterial Brass = new IngotMaterial(94, "brass", 0xFFB400, METALLIC, 1, of(new MaterialComponent(Zinc, 1), new MaterialComponent(Copper, 3)), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING, 8.0F, 3.0f, 152);
-    public static IngotMaterial Bronze = new IngotMaterial(95, "bronze", 0xFF8000, DULL, 2, of(new MaterialComponent(Tin, 1), new MaterialComponent(Copper, 3)), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_ROTOR | GENERATE_FRAME | GENERATE_LONG_ROD, 6.0F, 2.5f, 192);
+    public static IngotMaterial Bronze = new IngotMaterial(95, "bronze", 0xFF8000, DULL, 2, of(new MaterialComponent(Tin, 1), new MaterialComponent(Copper, 3)), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_ROTOR | GENERATE_FRAME | GENERATE_ROD_LONG, 6.0F, 2.5f, 192);
     public static DustMaterial BrownLimonite = new DustMaterial(96, "brown_limonite", 0xC86400, METALLIC, 1, of(new MaterialComponent(Iron, 1), new MaterialComponent(Hydrogen, 1), new MaterialComponent(Oxygen, 2)), GENERATE_ORE);
     public static DustMaterial Calcite = new DustMaterial(97, "calcite", 0xFAE6DC, DULL, 1, of(new MaterialComponent(Calcium, 1), new MaterialComponent(Carbon, 1), new MaterialComponent(Oxygen, 3)), GENERATE_ORE);
     public static DustMaterial Cassiterite = new DustMaterial(98, "cassiterite", 0xDCDCDC, METALLIC, 1, of(new MaterialComponent(Tin, 1), new MaterialComponent(Oxygen, 2)), GENERATE_ORE);
@@ -183,7 +181,7 @@ public class Materials {
     public static IngotMaterial Invar = new IngotMaterial(126, "invar", 0xB4B478, METALLIC, 2, of(new MaterialComponent(Iron, 2), new MaterialComponent(Nickel, 1)), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_FRAME, 7.0F, 3.0f, 512);
     public static IngotMaterial Kanthal = new IngotMaterial(127, "kanthal", 0xC2D2DF, METALLIC, 2, of(new MaterialComponent(Iron, 1), new MaterialComponent(Aluminium, 1), new MaterialComponent(Chrome, 1)), EXT_METAL, null, 1800);
     public static GemMaterial Lazurite = new GemMaterial(128, "lazurite", 0x6478FF, LAPIS, 1, of(new MaterialComponent(Aluminium, 6), new MaterialComponent(Silicon, 6), new MaterialComponent(Calcium, 8), new MaterialComponent(Sodium, 8)), GENERATE_PLATE | GENERATE_ORE | NO_SMASHING | NO_SMELTING | CRYSTALLISABLE | GENERATE_ROD | DECOMPOSITION_BY_ELECTROLYZING);
-    public static IngotMaterial Magnalium = new IngotMaterial(129, "magnalium", 0xC8BEFF, DULL, 2, of(new MaterialComponent(Magnesium, 1), new MaterialComponent(Aluminium, 2)), EXT2_METAL | GENERATE_LONG_ROD, 6.0F, 2.0f, 256);
+    public static IngotMaterial Magnalium = new IngotMaterial(129, "magnalium", 0xC8BEFF, DULL, 2, of(new MaterialComponent(Magnesium, 1), new MaterialComponent(Aluminium, 2)), EXT2_METAL | GENERATE_ROD_LONG, 6.0F, 2.0f, 256);
     public static DustMaterial Magnesite = new DustMaterial(130, "magnesite", 0xFAFAB4, METALLIC, 2, of(new MaterialComponent(Magnesium, 1), new MaterialComponent(Carbon, 1), new MaterialComponent(Oxygen, 3)), GENERATE_ORE);
     public static DustMaterial Magnetite = new DustMaterial(131, "magnetite", 0x1E1E1E, METALLIC, 2, of(new MaterialComponent(Iron, 3), new MaterialComponent(Oxygen, 4)), GENERATE_ORE);
     public static DustMaterial Molybdenite = new DustMaterial(132, "molybdenite", 0x191919, METALLIC, 2, of(new MaterialComponent(Molybdenum, 1), new MaterialComponent(Sulfur, 2)), GENERATE_ORE);
@@ -227,8 +225,8 @@ public class Materials {
     public static IngotMaterial SolderingAlloy = new IngotMaterial(180, "soldering_alloy", 0xDCDCE6, DULL, 1, of(new MaterialComponent(Tin, 9), new MaterialComponent(Antimony, 1)), EXT_METAL | GENERATE_FINE_WIRE, null);
     public static DustMaterial Spessartine = new DustMaterial(181, "spessartine", 0xFF6464, GEM_VERTICAL, 2, of(new MaterialComponent(Aluminium, 2), new MaterialComponent(Manganese, 3), new MaterialComponent(Silicon, 3), new MaterialComponent(Oxygen, 12)), GENERATE_ORE);
     public static DustMaterial Sphalerite = new DustMaterial(182, "sphalerite", 0xFFFFFF, ROUGH, 1, of(new MaterialComponent(Zinc, 1), new MaterialComponent(Sulfur, 1)), GENERATE_ORE | INDUCTION_SMELTING_LOW_OUTPUT | DISABLE_DECOMPOSITION);
-    public static IngotMaterial StainlessSteel = new IngotMaterial(183, "stainless_steel", 0xC8C8DC, SHINY, 2, of(new MaterialComponent(Iron, 6), new MaterialComponent(Chrome, 1), new MaterialComponent(Manganese, 1), new MaterialComponent(Nickel, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_SMALL_GEAR | GENERATE_FRAME | GENERATE_LONG_ROD, null, 7.0F, 4.0f, 480, 1700);
-    public static IngotMaterial Steel = new IngotMaterial(184, "steel", 0x505050, DULL, 2, of(new MaterialComponent(Iron, 1)), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_ROTOR | GENERATE_SMALL_GEAR | GENERATE_DENSE | DISABLE_DECOMPOSITION | GENERATE_FRAME | GENERATE_LONG_ROD, null, 6.0F, 3.0f, 512, 1000);
+    public static IngotMaterial StainlessSteel = new IngotMaterial(183, "stainless_steel", 0xC8C8DC, SHINY, 2, of(new MaterialComponent(Iron, 6), new MaterialComponent(Chrome, 1), new MaterialComponent(Manganese, 1), new MaterialComponent(Nickel, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_FRAME | GENERATE_ROD_LONG, null, 7.0F, 4.0f, 480, 1700);
+    public static IngotMaterial Steel = new IngotMaterial(184, "steel", 0x505050, DULL, 2, of(new MaterialComponent(Iron, 1)), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_DENSE | DISABLE_DECOMPOSITION | GENERATE_FRAME | GENERATE_ROD_LONG, null, 6.0F, 3.0f, 512, 1000);
     public static DustMaterial Stibnite = new DustMaterial(185, "stibnite", 0x464646, ROUGH, 2, of(new MaterialComponent(Antimony, 2), new MaterialComponent(Sulfur, 3)), GENERATE_ORE);
     public static FluidMaterial SulfuricAcid = new FluidMaterial(186, "sulfuric_acid", 0xFF8000, FLUID, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Sulfur, 1), new MaterialComponent(Oxygen, 4)), 0);
     public static GemMaterial Tanzanite = new GemMaterial(187, "tanzanite", 0x4000C8, GEM_VERTICAL, 2, of(new MaterialComponent(Calcium, 2), new MaterialComponent(Aluminium, 3), new MaterialComponent(Silicon, 3), new MaterialComponent(Hydrogen, 1), new MaterialComponent(Oxygen, 13)), EXT_METAL | GENERATE_ORE | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT, null, 7.0F, 2.0f, 256);
@@ -240,7 +238,7 @@ public class Materials {
     public static DustMaterial Uraninite = new DustMaterial(193, "uraninite", 0x232323, ROUGH, 3, of(new MaterialComponent(Uranium, 1), new MaterialComponent(Oxygen, 2)), GENERATE_ORE | DISABLE_DECOMPOSITION);
     public static DustMaterial Uvarovite = new DustMaterial(194, "uvarovite", 0xB4FFB4, GEM_VERTICAL, 2, of(new MaterialComponent(Calcium, 3), new MaterialComponent(Chrome, 2), new MaterialComponent(Silicon, 3), new MaterialComponent(Oxygen, 12)), 0);
     public static IngotMaterial VanadiumGallium = new IngotMaterial(195, "vanadium_gallium", 0x80808C, SHINY, 2, of(new MaterialComponent(Vanadium, 3), new MaterialComponent(Gallium, 1)), STD_METAL | GENERATE_FOIL | GENERATE_ROD, null, 4500);
-    public static IngotMaterial WroughtIron = new IngotMaterial(197, "wrought_iron", 0xC8B4B4, METALLIC, 2, of(new MaterialComponent(Iron, 1)), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_LONG_ROD | DISABLE_DECOMPOSITION, null, 6.0F, 3.5f, 384);
+    public static IngotMaterial WroughtIron = new IngotMaterial(197, "wrought_iron", 0xC8B4B4, METALLIC, 2, of(new MaterialComponent(Iron, 1)), EXT2_METAL | MORTAR_GRINDABLE | GENERATE_RING | GENERATE_ROD_LONG | DISABLE_DECOMPOSITION, null, 6.0F, 3.5f, 384);
     public static DustMaterial Wulfenite = new DustMaterial(198, "wulfenite", 0xFF8000, DULL, 3, of(new MaterialComponent(Lead, 1), new MaterialComponent(Molybdenum, 1), new MaterialComponent(Oxygen, 4)), GENERATE_ORE);
     public static DustMaterial YellowLimonite = new DustMaterial(199, "yellow_limonite", 0xC8C800, METALLIC, 2, of(new MaterialComponent(Iron, 1), new MaterialComponent(Hydrogen, 1), new MaterialComponent(Oxygen, 2)), GENERATE_ORE | INDUCTION_SMELTING_LOW_OUTPUT);
     public static IngotMaterial YttriumBariumCuprate = new IngotMaterial(200, "yttrium_barium_cuprate", 0x504046, METALLIC, 2, of(new MaterialComponent(Yttrium, 1), new MaterialComponent(Barium, 2), new MaterialComponent(Copper, 3), new MaterialComponent(Oxygen, 7)), EXT_METAL | GENERATE_FOIL | GENERATE_FINE_WIRE, null, 4500);
@@ -336,7 +334,7 @@ public class Materials {
      * Not possible to determine exact Components
      */
     public static FluidMaterial SaltWater = new FluidMaterial(428, "salt_water", 255, FLUID, of(new MaterialComponent(Salt, 1), new MaterialComponent(Water, 1)), DISABLE_DECOMPOSITION);
-    public static RoughSolidMaterial Wood = new RoughSolidMaterial(196, "wood", 0x896727, WOOD, 0, of(), STD_SOLID | FLAMMABLE | NO_SMELTING | GENERATE_GEAR | GENERATE_LONG_ROD | GENERATE_FRAME, () -> MaterialForm.plank);
+    public static RoughSolidMaterial Wood = new RoughSolidMaterial(196, "wood", 0x896727, WOOD, 0, of(), STD_SOLID | FLAMMABLE | NO_SMELTING | GENERATE_GEAR | GENERATE_ROD_LONG | GENERATE_FRAME, () -> MaterialForm.plank);
     public static FluidMaterial WoodGas = new FluidMaterial(370, "wood_gas", 0xB1A571, GAS, of(), STATE_GAS | DISABLE_DECOMPOSITION);
     public static FluidMaterial WoodVinegar = new FluidMaterial(371, "wood_vinegar", 0xA54B0F, FLUID, of(), 0);
     public static FluidMaterial WoodTar = new FluidMaterial(372, "wood_tar", 0x2D2118, FLUID, of(), 0);
@@ -440,7 +438,7 @@ public class Materials {
     public static IngotMaterial RedSteel = new IngotMaterial(232, "red_steel", 0x8C6464, DULL, 2, of(new MaterialComponent(SterlingSilver, 1), new MaterialComponent(BismuthBronze, 1), new MaterialComponent(Steel, 2), new MaterialComponent(BlackSteel, 4)), EXT_METAL, null, 7.0F, 4.5f, 896, 1300);
     public static IngotMaterial BlueSteel = new IngotMaterial(233, "blue_steel", 0x64648C, DULL, 2, of(new MaterialComponent(RoseGold, 1), new MaterialComponent(Brass, 1), new MaterialComponent(Steel, 2), new MaterialComponent(BlackSteel, 4)), EXT_METAL | GENERATE_FRAME, null, 7.5F, 5.0f, 1024, 1400);
     public static IngotMaterial DamascusSteel = new IngotMaterial(234, "damascus_steel", 0x6E6E6E, METALLIC, 2, of(new MaterialComponent(Steel, 1)), EXT_METAL, null, 8.0F, 5.0f, 1280, 1500);
-    public static IngotMaterial TungstenSteel = new IngotMaterial(235, "tungsten_steel", 0x6464A0, METALLIC, 4, of(new MaterialComponent(Steel, 1), new MaterialComponent(Tungsten, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_SMALL_GEAR | GENERATE_LONG_ROD | GENERATE_DENSE | GENERATE_FRAME, null, 8.0F, 4.0f, 2560, 3000);
+    public static IngotMaterial TungstenSteel = new IngotMaterial(235, "tungsten_steel", 0x6464A0, METALLIC, 4, of(new MaterialComponent(Steel, 1), new MaterialComponent(Tungsten, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_ROD_LONG | GENERATE_DENSE | GENERATE_FRAME, null, 8.0F, 4.0f, 2560, 3000);
     public static FluidMaterial NitroFuel = new FluidMaterial(236, "nitro_fuel", 0xC8FF00, FLUID, of(), FLAMMABLE | EXPLOSIVE | NO_SMELTING | NO_SMASHING);
     public static IngotMaterial RedAlloy = new IngotMaterial(237, "red_alloy", 0xC80000, DULL, 0, of(new MaterialComponent(Copper, 1), new MaterialComponent(Redstone, 1)), GENERATE_PLATE | GENERATE_FINE_WIRE);
     public static IngotMaterial CobaltBrass = new IngotMaterial(238, "cobalt_brass", 0xB4B4A0, METALLIC, 2, of(new MaterialComponent(Brass, 7), new MaterialComponent(Aluminium, 1), new MaterialComponent(Cobalt, 1)), EXT2_METAL, null, 8.0F, 2.0f, 256);
@@ -494,12 +492,12 @@ public class Materials {
     public static DustMaterial Soapstone = new DustMaterial(295, "soapstone", 0x5F915F, ROUGH, 1, of(new MaterialComponent(Magnesium, 3), new MaterialComponent(Silicon, 4), new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 12)), GENERATE_ORE);
     public static DustMaterial Concrete = new DustMaterial(296, "concrete", 0x646464, ROUGH, 1, of(new MaterialComponent(Stone, 1)), NO_SMASHING | SMELT_INTO_FLUID);
     public static IngotMaterial IronMagnetic = new IngotMaterial(297, "iron_magnetic", 0xC8C8C8, MAGNETIC, 2, of(new MaterialComponent(Iron, 1)), EXT2_METAL | MORTAR_GRINDABLE);
-    public static IngotMaterial SteelMagnetic = new IngotMaterial(298, "steel_magnetic", 0x808080, MAGNETIC, 2, of(new MaterialComponent(Steel, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_SMALL_GEAR | MORTAR_GRINDABLE, null, 1000);
-    public static IngotMaterial NeodymiumMagnetic = new IngotMaterial(299, "neodymium_magnetic", 0x646464, MAGNETIC, 2, of(new MaterialComponent(Neodymium, 1)), EXT2_METAL | GENERATE_LONG_ROD, null, 1297);
+    public static IngotMaterial SteelMagnetic = new IngotMaterial(298, "steel_magnetic", 0x808080, MAGNETIC, 2, of(new MaterialComponent(Steel, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | MORTAR_GRINDABLE, null, 1000);
+    public static IngotMaterial NeodymiumMagnetic = new IngotMaterial(299, "neodymium_magnetic", 0x646464, MAGNETIC, 2, of(new MaterialComponent(Neodymium, 1)), EXT2_METAL | GENERATE_ROD_LONG, null, 1297);
     public static IngotMaterial TungstenCarbide = new IngotMaterial(300, "tungsten_carbide", 0x330066, METALLIC, 4, of(new MaterialComponent(Tungsten, 1), new MaterialComponent(Carbon, 1)), EXT2_METAL, null, 12.0F, 4.0f, 1280, 2460);
     public static IngotMaterial VanadiumSteel = new IngotMaterial(301, "vanadium_steel", 0xC0C0C0, METALLIC, 3, of(new MaterialComponent(Vanadium, 1), new MaterialComponent(Chrome, 1), new MaterialComponent(Steel, 7)), EXT2_METAL, null, 7.0F, 3.0f, 1920, 1453);
-    public static IngotMaterial HSSG = new IngotMaterial(302, "hssg", 0x999900, METALLIC, 3, of(new MaterialComponent(TungstenSteel, 5), new MaterialComponent(Chrome, 1), new MaterialComponent(Molybdenum, 2), new MaterialComponent(Vanadium, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_SMALL_GEAR | GENERATE_LONG_ROD | GENERATE_FRAME, null, 10.0F, 5.5f, 4000, 4500);
-    public static IngotMaterial HSSE = new IngotMaterial(303, "hsse", 0x336600, METALLIC, 4, of(new MaterialComponent(HSSG, 6), new MaterialComponent(Cobalt, 1), new MaterialComponent(Manganese, 1), new MaterialComponent(Silicon, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_SMALL_GEAR | GENERATE_LONG_ROD | GENERATE_FRAME, null, 10.0F, 8.0f, 5120, 5400);
+    public static IngotMaterial HSSG = new IngotMaterial(302, "hssg", 0x999900, METALLIC, 3, of(new MaterialComponent(TungstenSteel, 5), new MaterialComponent(Chrome, 1), new MaterialComponent(Molybdenum, 2), new MaterialComponent(Vanadium, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_ROD_LONG | GENERATE_FRAME, null, 10.0F, 5.5f, 4000, 4500);
+    public static IngotMaterial HSSE = new IngotMaterial(303, "hsse", 0x336600, METALLIC, 4, of(new MaterialComponent(HSSG, 6), new MaterialComponent(Cobalt, 1), new MaterialComponent(Manganese, 1), new MaterialComponent(Silicon, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_ROD_LONG | GENERATE_FRAME, null, 10.0F, 8.0f, 5120, 5400);
     public static IngotMaterial HSSS = new IngotMaterial(304, "hsss", 0x660033, METALLIC, 4, of(new MaterialComponent(HSSG, 6), new MaterialComponent(Iridium, 2), new MaterialComponent(Osmium, 1)), EXT2_METAL | GENERATE_GEAR, null, 15.0F, 7.0f, 3000, 5400);
     /**
      * Clear matter materials

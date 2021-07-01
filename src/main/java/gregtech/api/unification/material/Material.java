@@ -4,8 +4,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import gregtech.api.GTValues;
+import gregtech.api.enchants.EnchantmentData;
+import gregtech.api.unification.element.Element;
 import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.flags.MaterialProperty;
+import gregtech.api.unification.material.properties.*;
+import gregtech.api.unification.util.MaterialIconSet;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -16,10 +20,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static gregtech.api.unification.material.flags.MaterialFlags.*;
+
 public class Material implements Comparable<Material> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
     private static final boolean MATERIAL_ERRORS_ARE_FATAL = true;
+    private static final int CABLE_MINIMAL_VOLTAGE = GTValues.V[GTValues.ULV];
 
     public static final Registry<Material> REGISTRY = FabricRegistryBuilder
             .createSimple(Material.class, new Identifier(GTValues.MODID, "materials"))
@@ -128,6 +135,16 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
+        public Settings flags(Set<MaterialFlag> flags) {
+            Preconditions.checkNotNull(flags, "flags");
+
+            for (MaterialFlag flag : flags) {
+                flag(flag);
+            }
+
+            return this;
+        }
+
         @Deprecated
         public void flag(MaterialProperty<?> property) {
             throw new IllegalArgumentException(FLAG_PROPERTY_ERROR_MESSAGE);
@@ -139,6 +156,81 @@ public class Material implements Comparable<Material> {
 
             this.materialFlags.add(property);
             this.properties.put(property, value);
+            return this;
+        }
+
+        public Settings visual(int color, MaterialIconSet iconSet) {
+            property(COLOR, color);
+            property(ICON_SET, iconSet);
+
+            return this;
+        }
+
+        public Settings element(Element element) {
+            property(CHEMICAL_COMPOSITION, ChemicalComposition.element(element));
+
+            return this;
+        }
+
+        public Settings metal(int harvestLevel, int moltenTemperature) {
+            Preconditions.checkArgument(harvestLevel >= 0, "harvestLevel >= 0");
+            Preconditions.checkArgument(moltenTemperature >= 0, "moltenTemperature >= 0");
+
+            flag(GENERATE_DUST);
+            property(SOLID_FORM, SolidForm.METAL);
+            property(HARVEST_LEVEL, harvestLevel);
+            property(FLUID_PROPERTIES, FluidProperties.fluid(moltenTemperature));
+
+            return this;
+        }
+
+        public Settings canCreateTools(float miningSpeed, float attackDamage, int durability) {
+            return canCreateToolsWithDefaultEnchant(miningSpeed, attackDamage, durability, 12);
+        }
+
+        public Settings canCreateToolsWithDefaultEnchant(float miningSpeed, float attackDamage, int durability, int enchantability, EnchantmentData... enchantments) {
+            Preconditions.checkArgument(miningSpeed >= 0, "miningSpeed >= 0");
+            Preconditions.checkArgument(attackDamage >= 0, "attackDamage >= 0");
+            Preconditions.checkArgument(durability >= 1, "durability >= 1");
+            Preconditions.checkArgument(enchantability >= 1, "enchantability >= 1"); //MC minimal enchantability is 1
+
+            flag(GENERATE_BOLT_SCREW);
+            flag(GENERATE_ROD);
+            flag(GENERATE_LONG_ROD);
+            flag(GENERATE_PLATE);
+            property(TOOL_PROPERTIES, ToolProperties.create(miningSpeed, attackDamage, durability, enchantability));
+
+            return this;
+        }
+
+        public Settings canCreateCables(int voltage, int amperage, int lossPerBlock) {
+            Preconditions.checkArgument(voltage >= CABLE_MINIMAL_VOLTAGE, "voltage >= " + CABLE_MINIMAL_VOLTAGE);
+            Preconditions.checkArgument(amperage > 0, "amperage > 0");
+            Preconditions.checkArgument(lossPerBlock >= 0, "lossPerBlock >= 0");
+
+            property(CABLE_PROPERTIES, CableProperties.create(voltage, amperage, lossPerBlock));
+
+            return this;
+        }
+
+        public Settings smeltsInBlastFurnace(int temperature) {
+            Preconditions.checkArgument(temperature >= 0, "temperature >= 0");
+
+            property(BLAST_FURNACE_TEMPERATURE, temperature);
+
+            return this;
+        }
+
+
+        /**
+         * This material is used as base in electric tiered components (Electric Motor, Electric Piston, etc.)
+         */
+        public Settings baseForElectricComponents() {
+
+            flag(GENERATE_PLATE);
+            flag(GENERATE_ROD);
+            flag(GENERATE_SMALL_GEAR);
+
             return this;
         }
     }
