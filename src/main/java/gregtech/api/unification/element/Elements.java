@@ -7,19 +7,31 @@ import net.minecraft.util.registry.Registry;
 public class Elements {
 
     public static final Element Hydrogen;
+    public static final Element Al;
     public static final Element Technetium;
+
+    static {
+
+        Hydrogen = register("hydrogen", new Element(new Element.Settings().basicProperties("H", 1, 0)));
+
+        Al = register("aluminium", new Element(new Element.Settings().basicProperties("Al", 13, 13)));
+
+        Technetium = register("technetium", new Element(new Element.Settings().basicProperties("Tc", 43, 55)));
+
+        /**
+         * Isotopes
+         */
+
+    }
+
+    private Elements() {
+    }
 
     private static Element register(String name, Element element) {
         return Registry.register(Element.REGISTRY, new Identifier(GTValues.MODID, name), element);
     }
-
-    static {
-        Hydrogen = register("hydrogen", new Element(new Element.Settings().basicProperties("H", 1, 0)));
-        Technetium = register("technetium", new Element(new Element.Settings().basicProperties("Tc", 43, 55)));
-    }
 }
 
-//    H(1, 0, -1, null, "Hydrogen", false),
 //    D(1, 1, -1, "H", "Deuterium", true),
 //    T(1, 2, -1, "D", "Tritium", true),
 //    He(2, 2, -1, null, "Helium", false),
@@ -34,7 +46,6 @@ public class Elements {
 //    Ne(10, 10, -1, null, "Neon", false),
 //    Na(11, 11, -1, null, "Sodium", false),
 //    Mg(12, 12, -1, null, "Magnesium", false),
-//    Al(13, 13, -1, null, "Aluminium", false),
 //    Si(14, 14, -1, null, "Silicon", false),
 //    P(15, 15, -1, null, "Phosphor", false),
 //    S(16, 16, -1, null, "Sulfur", false),
@@ -64,7 +75,6 @@ public class Elements {
 //    Zr(40, 51, -1, null, "Zirconium", false),
 //    Nb(41, 53, -1, null, "Niobium", false),
 //    Mo(42, 53, -1, null, "Molybdenum", false),
-//    Tc(43, 55, -1, null, "Technetium", false),
 //    Ru(44, 57, -1, null, "Ruthenium", false),
 //    Rh(45, 58, -1, null, "Rhodium", false),
 //    Pd(46, 60, -1, null, "Palladium", false),
