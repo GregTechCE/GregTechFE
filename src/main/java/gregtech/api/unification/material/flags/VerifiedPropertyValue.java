@@ -4,5 +4,5 @@ import gregtech.api.unification.material.Material;
 
 public interface VerifiedPropertyValue {
 
-    void verifyValue(Material ownedMaterial, MaterialProperty<?> parentProperty) throws RuntimeException;
+    boolean verifyValue(Material ownedMaterial, MaterialProperty<?> parentProperty);
 }

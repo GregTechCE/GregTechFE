@@ -6,7 +6,7 @@ import gregtech.api.GTValues;
 import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.ore.MaterialForm;
-import gregtech.api.unification.material.MaterialAmount;
+import gregtech.api.unification.util.MaterialAmount;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.inventory.Inventory;

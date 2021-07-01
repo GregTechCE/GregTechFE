@@ -1,4 +1,4 @@
-package gregtech.api.unification.material;
+package gregtech.api.unification.util;
 
 import gregtech.api.GTValues;
 import net.minecraft.util.Identifier;

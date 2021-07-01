@@ -1,391 +1,145 @@
 package gregtech.api.unification.material;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import gregtech.api.GTValues;
-import gregtech.api.unification.element.Element;
 import gregtech.api.unification.material.flags.MaterialFlag;
-import gregtech.api.unification.material.properties.MaterialComponent;
 import gregtech.api.unification.material.flags.MaterialProperty;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Map.Entry;
 
-//@ZenClass("mods.gregtech.material.Material")
-//@ZenRegister
 public abstract class Material implements Comparable<Material> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
+    private static final boolean MATERIAL_ERRORS_ARE_FATAL = true;
 
     public static final Registry<Material> REGISTRY = FabricRegistryBuilder
             .createSimple(Material.class, new Identifier(GTValues.MODID, "materials"))
             .buildAndRegister();
 
-    private static final List<MaterialHandler> materialHandlers = new ArrayList<>();
+    private final Set<MaterialFlag> materialFlags;
+    private final Map<MaterialProperty<?>, Object> properties;
 
-    public static void registerMaterialHandler(MaterialHandler materialHandler) {
-        materialHandlers.add(materialHandler);
+    public Material(Settings settings) {
+        this.materialFlags = ImmutableSet.copyOf(settings.materialFlags);
+        this.properties = ImmutableMap.copyOf(settings.properties);
     }
 
-    public static void runMaterialHandlers() {
-        materialHandlers.forEach(MaterialHandler::onMaterialsInit);
+    private boolean verifyMaterial() {
+        boolean isMaterialValid = true;
+
+        for (MaterialFlag flag : materialFlags) {
+            isMaterialValid &= flag.verifyMaterialFlags(this);
+        }
+        for (MaterialProperty<?> property : properties.keySet()) {
+            isMaterialValid &= property.verifyPropertyValue(this, properties.get(property));
+        }
+        if (!isMaterialValid) {
+            LOGGER.error("Material {} is not valid. See above messages for errors", this);
+            return false;
+        }
+        return true;
     }
 
-    public static final class MatFlags {
-
-        private static final Map<String, Entry<Long, Class<? extends Material>>> materialFlagRegistry = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-        public static void registerMaterialFlag(String name, long value, Class<? extends Material> classFilter) {
-            if (materialFlagRegistry.containsKey(name))
-                throw new IllegalArgumentException("Flag with name " + name + " already registered!");
-
-            for (Map.Entry<Long, Class<? extends Material>> entry : materialFlagRegistry.values()) {
-                if (entry.getKey() == value)
-                    throw new IllegalArgumentException("Flag with ID " + getIntValueOfFlag(value) + " already registered!");
-            }
-            materialFlagRegistry.put(name, new SimpleEntry<>(value, classFilter));
-        }
-
-        private static int getIntValueOfFlag(long value) {
-            int index = 0;
-            while (value != 1) {
-                value >>= 1;
-                index++;
-            }
-            return index;
-        }
-
-        public static void registerMaterialFlagsHolder(Class<?> holder, Class<? extends Material> lowerBounds) {
-            for (Field holderField : holder.getFields()) {
-                int modifiers = holderField.getModifiers();
-                if (holderField.getType() != long.class ||
-                    !Modifier.isPublic(modifiers) ||
-                    !Modifier.isStatic(modifiers) ||
-                    !Modifier.isFinal(modifiers))
-                    continue;
-                String flagName = holderField.getName();
-                long flagValue;
-                try {
-                    flagValue = holderField.getLong(null);
-                } catch (IllegalAccessException exception) {
-                    throw new RuntimeException(exception);
-                }
-                registerMaterialFlag(flagName, flagValue, lowerBounds);
-            }
-        }
-
-        public static long resolveFlag(String name, Class<? extends Material> selfClass) {
-            Entry<Long, Class<? extends Material>> flagEntry = materialFlagRegistry.get(name);
-            if (flagEntry == null)
-                throw new IllegalArgumentException("Flag with name " + name + " not registered");
-            else if (!flagEntry.getValue().isAssignableFrom(selfClass))
-                throw new IllegalArgumentException("Flag " + name + " cannot be applied to material type " +
-                    selfClass.getSimpleName() + ", lower bound is " + flagEntry.getValue().getSimpleName());
-            return flagEntry.getKey();
-        }
-
-        /**
-         * Enables electrolyzer decomposition recipe generation
-         */
-//        public static final long DECOMPOSITION_BY_ELECTROLYZING = createFlag(40);
-
-        /**
-         * Enables centrifuge decomposition recipe generation
-         */
-//        public static final long DECOMPOSITION_BY_CENTRIFUGING = createFlag(41);
-
-        /**
-         * Add to material if it has constantly burning aura
-         */
-//        public static final long BURNING = createFlag(7);
-
-        /**
-         * Add to material if it is some kind of flammable
-         */
-//        public static final long FLAMMABLE = createFlag(42);
-
-        /**
-         * Add to material if it is some kind of explosive
-         */
-//        public static final long EXPLOSIVE = createFlag(4);
-
-        /**
-         * Add to material if any of it's items cannot be recycled to get scrub
-         */
-//        public static final long NO_RECYCLING = createFlag(6);
-
-        /**
-         * Disables decomposition recipe generation for this material and all materials that has it as component
-         */
-//        public static final long DISABLE_DECOMPOSITION = createFlag(43);
-
-        /**
-         * Decomposition recipe requires hydrogen as additional input. Amount is equal to input amount
-         */
-//        public static final long DECOMPOSITION_REQUIRES_HYDROGEN = createFlag(8);
-
-        static {
-            registerMaterialFlagsHolder(MatFlags.class, Material.class);
-        }
+    public Identifier getName() {
+        return Preconditions.checkNotNull(REGISTRY.getId(this));
     }
 
-    /**
-     * Color of material in RGB format
-     */
-    //@ZenProperty("color")
-    public final int materialRGB;
-
-    /**
-     * Chemical formula of this material
-     */
-    //@ZenProperty
-    public final String chemicalFormula;
-
-    /**
-     * Icon set for this material meta-items generation
-     */
-    //@ZenProperty("iconSet")
-    public final MaterialIconSet materialIconSet;
-
-    /**
-     * List of this material component
-     */
-    //@ZenProperty("components")
-    public final ImmutableList<MaterialComponent> materialComponents;
-
-    /**
-     * Generation flags of this material
-     *
-     * @see MatFlags
-     * @see DustMaterial.MatFlags
-     */
-    //@ZenProperty("generationFlagsRaw")
-    protected long materialGenerationFlags;
-
-    /**
-     * Element of this material consist of
-     */
-    //@ZenProperty
-    public final Element element;
-
-    public Material(int materialRGB, MaterialIconSet materialIconSet, ImmutableList<MaterialComponent> materialComponents, long materialGenerationFlags, Element element) {
-        this.materialRGB = materialRGB;
-        this.materialIconSet = materialIconSet;
-        this.materialComponents = materialComponents;
-        this.materialGenerationFlags = verifyMaterialBits(materialGenerationFlags);
-        this.element = element;
-        this.chemicalFormula = calculateChemicalFormula();
-        calculateDecompositionType();
-        initializeMaterial();
-    }
-
-    //NEW METHODS
-
-    public <T> Optional<T> queryProperty(MaterialProperty<T> property) {
-
-    }
-
-    public <T> T queryPropertyChecked(MaterialProperty<T> property) {
-        return queryProperty(property).orElseThrow();
-    }
-
-    public boolean hasFlag(MaterialFlag flag) {
-    }
-
-    //END NEW METHODS
-
-    private String calculateChemicalFormula() {
-        if (element != null) {
-            return element.name();
-        }
-        if (!materialComponents.isEmpty()) {
-            StringBuilder components = new StringBuilder();
-            for (MaterialComponent component : materialComponents) {
-                components.append(component.toFormulaString());
-            }
-            return components.toString();
-        }
-        return "";
-    }
-
-    protected void initializeMaterial() {
-    }
-
-    protected long verifyMaterialBits(long materialBits) {
-        return materialBits;
-    }
-
-    public void addFlag(long... materialGenerationFlags) {
-        long combined = 0;
-        for (long materialGenerationFlag : materialGenerationFlags) {
-            combined |= materialGenerationFlag;
-        }
-        this.materialGenerationFlags |= verifyMaterialBits(combined);
-    }
-
-    //@ZenMethod("hasFlagRaw")
-    public boolean hasFlag(long generationFlag) {
-        return (materialGenerationFlags & generationFlag) == generationFlag;
-    }
-
-    //@ZenMethod
-    public void addFlags(String... flagNames) {
-        addFlag(convertMaterialFlags(getClass(), flagNames));
-    }
-
-    public static long convertMaterialFlags(Class<? extends Material> materialClass, String... flagNames) {
-        long combined = 0;
-        for (String flagName : flagNames) {
-            long materialFlagId = MatFlags.resolveFlag(flagName, materialClass);
-            combined |= materialFlagId;
-        }
-        return combined;
-    }
-
-    //@ZenMethod
-    public boolean hasFlag(String flagName) {
-        long materialFlagId = MatFlags.resolveFlag(flagName, getClass());
-        return hasFlag(materialFlagId);
-    }
-
-    protected void calculateDecompositionType() {
-        if (!materialComponents.isEmpty() &&
-            !hasFlag(MatFlags.DECOMPOSITION_BY_CENTRIFUGING) &&
-            !hasFlag(MatFlags.DECOMPOSITION_BY_ELECTROLYZING) &&
-            !hasFlag(MatFlags.DISABLE_DECOMPOSITION)) {
-            boolean onlyMetalMaterials = true;
-
-            for (MaterialComponent materialStack : materialComponents) {
-                Material material = materialStack.material;
-                onlyMetalMaterials &= material instanceof IngotMaterial;
-            }
-            //allow centrifuging of alloy materials only
-            if (onlyMetalMaterials) {
-                materialGenerationFlags |= MatFlags.DECOMPOSITION_BY_CENTRIFUGING;
-            } else {
-                //otherwise, we use electrolyzing to break material into components
-                materialGenerationFlags |= MatFlags.DECOMPOSITION_BY_ELECTROLYZING;
-            }
-        }
-    }
-
-    //@ZenGetter("radioactive")
-    public boolean isRadioactive() {
-        if (element != null) {
-            return element.halfLifeSeconds >= 0;
-        }
-
-        for (MaterialComponent material : materialComponents) {
-            if (material.material.isRadioactive()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //@ZenGetter("protons")
-    public long getProtons() {
-        if (element != null) {
-            return element.getProtons();
-        }
-        if (materialComponents.isEmpty()) {
-            return Element.Tc.getProtons();
-        }
-
-        long totalProtons = 0;
-        for (MaterialComponent material : materialComponents) {
-            totalProtons += material.amount * material.material.getProtons();
-        }
-
-        return totalProtons;
-    }
-
-    //@ZenGetter("neutrons")
-    public long getNeutrons() {
-        if (element != null) {
-            return element.getNeutrons();
-        }
-        if (materialComponents.isEmpty()) {
-            return Element.Tc.getNeutrons();
-        }
-
-        long totalNeutrons = 0;
-        for (MaterialComponent material : materialComponents) {
-            totalNeutrons += material.amount * material.material.getNeutrons();
-        }
-
-        return totalNeutrons;
-    }
-
-    //@ZenGetter("mass")
-    public long getMass() {
-        if (element != null) {
-            return element.getMass();
-        }
-        if (materialComponents.isEmpty()) {
-            return Element.Tc.getMass();
-        }
-
-        long totalMass = 0;
-        for (MaterialComponent material : materialComponents) {
-            totalMass += material.amount * material.material.getMass();
-        }
-
-        return totalMass;
-    }
-
-    //@ZenGetter("averageMass")
-    public long getAverageMass() {
-        if (element != null) {
-            return element.getMass();
-        }
-        if (materialComponents.isEmpty()) {
-            return Element.Tc.getMass();
-        }
-
-        long totalMass = 0, totalAmount = 0;
-        for (MaterialComponent material : materialComponents) {
-            totalAmount += material.amount;
-            totalMass += material.amount * material.material.getAverageMass();
-        }
-
-        return totalMass / totalAmount;
-    }
-
-    //@ZenGetter("unlocalizedName")
     public String getTranslationKey() {
         Identifier id = REGISTRY.getId(this);
         Preconditions.checkNotNull(id);
-
         return "material." + id.getNamespace() + "." + id.getPath();
     }
 
-    //@ZenGetter("localizedName")
     public Text getDisplayName() {
         return new TranslatableText(getTranslationKey());
     }
 
+    public boolean hasFlag(MaterialFlag flag) {
+        return this.materialFlags.contains(flag);
+    }
+
+    public <T> Optional<T> queryProperty(MaterialProperty<T> property) {
+        Object propertyValue = this.properties.get(property);
+        if (propertyValue == null) {
+            return Optional.ofNullable(property.getDefaultValue());
+        }
+        return Optional.of(property.cast(propertyValue));
+    }
+
+    public <T> T queryPropertyChecked(MaterialProperty<T> property) {
+        return queryProperty(property).orElseThrow(() -> {
+            String errorMessage = String.format("Material %s does not have a property %s", this, property);
+            return new IllegalArgumentException(errorMessage);
+        });
+    }
+
     @Override
-    //@ZenMethod
     public int compareTo(Material material) {
         return toString().compareTo(material.toString());
     }
 
     @Override
-    //@ZenGetter("name")
     public String toString() {
         Identifier identifier = REGISTRY.getId(this);
-        return identifier != null ? identifier.toString() : "";
+        return String.valueOf(identifier);
     }
 
-    //@ZenOperator(OperatorType.MUL)
-    //public MaterialComponent createMaterialComponent(int amount) {
-    //    return new MaterialComponent(this, amount);
-    //}
+    /** Verifies all material flags and values in registry */
+    public static void verifyMaterialRegistry() {
+        int invalidMaterialsFound = 0;
+
+        for (Identifier materialId : REGISTRY.getIds()) {
+            Material material = Preconditions.checkNotNull(REGISTRY.get(materialId));
+            if (!material.verifyMaterial()) {
+                invalidMaterialsFound++;
+            }
+        }
+
+        if (invalidMaterialsFound > 0) {
+            LOGGER.error("Found {} invalid materials, see messages above for errors", invalidMaterialsFound);
+
+            if (MATERIAL_ERRORS_ARE_FATAL) {
+                LOGGER.error("Loading cannot continue");
+                throw new IllegalStateException("Material registry is in invalid state");
+            }
+        }
+    }
+
+    public static class Settings {
+        private static final String FLAG_PROPERTY_ERROR_MESSAGE =
+                "Cannot use .flag(MaterialFlag) to add material properties, use .property(MaterialProperty, T) instead!";
+        private final Set<MaterialFlag> materialFlags = new HashSet<>();
+        private final Map<MaterialProperty<?>, Object> properties = new HashMap<>();
+
+        public Settings flag(MaterialFlag flag) {
+            Preconditions.checkNotNull(flag, "flag");
+            Preconditions.checkArgument(!(flag instanceof MaterialProperty<?>), FLAG_PROPERTY_ERROR_MESSAGE);
+
+            this.materialFlags.add(flag);
+            return this;
+        }
+
+        @Deprecated
+        public void flag(MaterialProperty<?> property) {
+            throw new IllegalArgumentException(FLAG_PROPERTY_ERROR_MESSAGE);
+        }
+
+        public <T> Settings property(MaterialProperty<T> property, T value) {
+            Preconditions.checkNotNull(property, "property");
+            Preconditions.checkNotNull(value, "value");
+
+            this.materialFlags.add(property);
+            this.properties.put(property, value);
+            return this;
+        }
+    }
 }

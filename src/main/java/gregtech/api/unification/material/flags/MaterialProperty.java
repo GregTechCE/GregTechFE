@@ -23,27 +23,27 @@ public class MaterialProperty<T> extends MaterialFlag {
         return propertyValueType.cast(data);
     }
 
-    public boolean checkPropertyValue(Material material, T propertyValue) {
-        try {
-            verifyPropertyValue(material, propertyValue);
-        } catch (RuntimeException ex) {
-            LOGGER.error("Material {} property {} value is invalid: {}", material, this, ex.getMessage(), ex);
-            return false;
-        }
-        return true;
-    }
-
     @Nullable
     public T getDefaultValue() {
         return defaultValue;
     }
 
-    private void verifyPropertyValue(Material material, T propertyValue) {
-        Preconditions.checkNotNull(propertyValue, "propertyValue");
+    public boolean verifyPropertyValue(Material material, Object propertyValue) {
+        if (propertyValue == null) {
+            LOGGER.error("Material {} property {} value is null, which is invalid", material, this);
+            return false;
+        }
+
+        if (!propertyValueType.isInstance(propertyValue)) {
+            LOGGER.error("Material {} property {} value is not of a type {} (actual type: {})",
+                    material, this, propertyValueType, propertyValue.getClass());
+            return false;
+        }
 
         if (propertyValue instanceof VerifiedPropertyValue verifiedValue) {
-            verifiedValue.verifyValue(material, this);
+            return verifiedValue.verifyValue(material, this);
         }
+        return true;
     }
 
     public static class Settings<T> extends MaterialFlag.Settings {

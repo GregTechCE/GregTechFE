@@ -3,10 +3,11 @@ package gregtech.api.items.material;
 import gregtech.api.damagesources.GTDamageSource;
 import gregtech.api.items.util.AutoTaggedItem;
 import gregtech.api.items.util.ItemEntityAwareItem;
-import gregtech.api.unification.material.properties.MaterialProperties;
-import gregtech.api.unification.material.type.DustMaterial;
 import gregtech.api.unification.material.Material;
-import gregtech.api.unification.material.MaterialAmount;
+import gregtech.api.unification.material.flags.MaterialFlags;
+import gregtech.api.unification.material.properties.ChemicalComposition;
+import gregtech.api.unification.util.MaterialAmount;
+import gregtech.api.unification.util.MaterialIconSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -30,6 +31,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTaggedItem {
@@ -69,7 +71,8 @@ public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTagge
         super.inventoryTick(stack, world, entity, slot, selected);
 
         if (world.getTime() % 20 == 0L) {
-            if (this.material.isRadioactive()) {
+            ChemicalComposition composition = this.material.queryPropertyChecked(MaterialFlags.CHEMICAL_COMPOSITION);
+            if (composition.getChemicalProperties().isRadioactive()) {
                 float damageMultiplier = getDamageMultiplier(stack);
                 entity.damage(GTDamageSource.RADIATION, damageMultiplier * RADIATION_DAMAGE_PER_SECOND);
             }
@@ -84,7 +87,8 @@ public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTagge
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        if (this.material.isRadioactive()) {
+        ChemicalComposition composition = this.material.queryPropertyChecked(MaterialFlags.CHEMICAL_COMPOSITION);
+        if (composition.getChemicalProperties().isRadioactive()) {
             tooltip.add(new TranslatableText("item.gregtech.material.tooltip.radioactive"));
         }
         if (this.itemForm.hasHeatDamage()) {
@@ -110,8 +114,9 @@ public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTagge
     public void addItemTags(Set<Tag.Identified<Item>> outTags) {
         this.itemForm.addTagsForMaterial(material, outTags);
 
-        if (this.material instanceof DustMaterial dustMaterial) {
-            if (dustMaterial.harvestLevel >= 2 && this.itemForm.canBeUsedAsBeaconPayment()) {
+        Optional<Integer> harvestLevel = this.material.queryProperty(MaterialFlags.HARVEST_LEVEL);
+        if (harvestLevel.isPresent() && harvestLevel.get() >= 2) {
+            if (this.itemForm.canBeUsedAsBeaconPayment()) {
                 outTags.add(ItemTags.BEACON_PAYMENT_ITEMS);
             }
         }
@@ -122,7 +127,8 @@ public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTagge
         Identifier itemFormName = this.itemForm.getName();
         String modelType = itemFormName.getNamespace() + "/" + itemFormName.getPath();
 
-        Identifier modelId = this.material.materialIconSet.getModelLocation(modelType);
+        MaterialIconSet iconSet = this.material.queryPropertyChecked(MaterialFlags.ICON_SET);
+        Identifier modelId = iconSet.getModelLocation(modelType);
         return new ModelIdentifier(modelId, "inventory");
     }
 
@@ -136,7 +142,7 @@ public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTagge
 
     int getItemBurnTime() {
         MaterialAmount formAmount = this.itemForm.getMaterialAmount();
-        int oneDustBurnTime = material.queryProperty(MaterialProperties.BURN_TIME).orElse(0);
+        int oneDustBurnTime = material.queryProperty(MaterialFlags.BURN_TIME).orElse(0);
         return formAmount.mul(oneDustBurnTime).divFloor(MaterialAmount.DUST);
     }
 

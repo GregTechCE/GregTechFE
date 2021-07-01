@@ -13,16 +13,16 @@ import gregtech.api.items.GTItem;
 import gregtech.api.items.GTItemSettings;
 import gregtech.api.items.util.AutoTaggedItem;
 import gregtech.api.items.util.CustomEnchantableItem;
+import gregtech.api.items.util.DynamicAttributeModifierItem;
 import gregtech.api.items.util.ExtendedRemainderItem;
-import gregtech.api.unification.material.flags.MaterialFlags;
 import gregtech.api.unification.forms.MaterialForm;
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.flags.MaterialFlags;
 import gregtech.api.unification.material.properties.SolidForm;
 import gregtech.api.unification.material.properties.ToolProperties;
-import gregtech.api.unification.material.Material;
 import gregtech.api.util.SimpleReference;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.tool.attribute.v1.DynamicAttributeTool;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.util.ModelIdentifier;
@@ -50,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class ToolItem extends GTItem implements CustomDamageItem, CustomEnchantableItem, Vanishable, DynamicAttributeTool, AutoTaggedItem, ExtendedRemainderItem {
+public abstract class ToolItem extends GTItem implements CustomDamageItem, CustomEnchantableItem, Vanishable, DynamicAttributeModifierItem, AutoTaggedItem, ExtendedRemainderItem {
 
     protected final ToolItemType toolItemType;
     protected final Material material;
@@ -138,19 +138,9 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
         return new ModelIdentifier(modelId, "inventory");
     }
 
-    /**
-     * Returns a tag used to determine tools effective blocks
-     * Valid values are listed in FabricToolTags and pretty much represent vanilla tool types
-     *
-     * @see net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-     * @return tag of the tool class this item has
-     */
-    protected abstract Tag.Identified<Item> getToolClassTag();
-
     @Override
     public void addItemTags(Set<Tag.Identified<Item>> outTags) {
         outTags.add(this.toolItemType.getToolTypeTag());
-        outTags.add(getToolClassTag());
     }
 
     protected ItemStack getBrokenItemRemainder(ItemStack stack) {
@@ -184,14 +174,22 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
         }
     }
 
-    @Override
-    public int getMiningLevel(Tag<Item> tag, BlockState state, ItemStack stack, @Nullable LivingEntity user) {
+    public int getMiningLevel() {
         return this.material.queryPropertyChecked(MaterialFlags.HARVEST_LEVEL);
     }
 
+    protected abstract boolean isCorrectToolForBlock(BlockState state);
+
     @Override
-    public float getMiningSpeedMultiplier(Tag<Item> tag, BlockState state, ItemStack stack, @Nullable LivingEntity user) {
-        if (canDamageItem(stack, damagePerBlockBreak, null)) {
+    public final boolean isSuitableFor(BlockState state) {
+        int miningLevel = getMiningLevel();
+        return ToolHelper.checkHarvestLevelRequirements(state, miningLevel) &&
+                isCorrectToolForBlock(state);
+    }
+
+    @Override
+    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
+        if (isSuitableFor(state) && canDamageItem(stack, damagePerBlockBreak, null)) {
             float materialSpeed = this.material.queryProperty(MaterialFlags.TOOL_PROPERTIES)
                     .map(ToolProperties::getMiningSpeed)
                     .orElse(1.0f);
@@ -201,7 +199,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getDynamicModifiers(EquipmentSlot slot, ItemStack stack, @Nullable LivingEntity user) {
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
         if (canDamageItem(stack, damagePerEntityAttack, null)) {
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 

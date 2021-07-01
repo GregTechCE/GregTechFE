@@ -1,4 +1,4 @@
-package gregtech.api.unification.material;
+package gregtech.api.unification.util;
 
 import java.util.Objects;
 
@@ -14,6 +14,13 @@ public class MaterialAmount {
     public static final MaterialAmount SMALL_DUST = DUST.div(4);
     public static final MaterialAmount TINY_DUST = DUST.div(9);
     public static final MaterialAmount NUGGET = DUST.div(9);
+
+    public static final MaterialAmount PLATE = INGOT;
+    public static final MaterialAmount DENSE_PLATE = INGOT.mul(9);
+    public static final MaterialAmount ROD = INGOT.div(2);
+    public static final MaterialAmount LONG_ROD = INGOT;
+    public static final MaterialAmount GEAR = INGOT.mul(4);
+    public static final MaterialAmount SMALL_GEAR = INGOT;
 
     private final long amount;
 

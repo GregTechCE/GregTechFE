@@ -7,7 +7,7 @@ import gregtech.api.unification.material.type.*;
 import gregtech.api.unification.ore.MaterialForm;
 
 import static com.google.common.collect.ImmutableList.of; //TODO: switch to java.util.list.of();
-import static gregtech.api.unification.material.MaterialIconSets.*;
+import static gregtech.api.unification.util.MaterialIconSets.*;
 import static gregtech.api.unification.material.flags.MaterialFlags.*;
 import static gregtech.api.unification.material.properties.MaterialProperties.*;
 

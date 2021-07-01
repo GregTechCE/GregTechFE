@@ -73,7 +73,7 @@ public class ChemicalComposition {
             return new ChemicalProperties(element);
         }
         if (components.isEmpty()) {
-            return new ChemicalProperties(Elements.Tc);
+            return new ChemicalProperties(Elements.Technetium);
         }
 
         ChemicalProperties properties = new ChemicalProperties();
@@ -96,7 +96,7 @@ public class ChemicalComposition {
 
     private String computeChemicalFormula() {
         if (element != null) {
-            return element.getElementSymbol();
+            return element.getChemicalSymbol();
         }
 
         if (!components.isEmpty()) {
@@ -138,6 +138,10 @@ public class ChemicalComposition {
 
         public long getMass() {
             return mass;
+        }
+
+        public boolean isRadioactive() {
+            return isRadioactive;
         }
 
         public long getAverageMass() {

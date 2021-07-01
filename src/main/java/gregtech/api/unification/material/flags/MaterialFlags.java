@@ -1,8 +1,8 @@
 package gregtech.api.unification.material.flags;
 
 import gregtech.api.GTValues;
-import gregtech.api.unification.material.MaterialIconSet;
-import gregtech.api.unification.material.MaterialIconSets;
+import gregtech.api.unification.util.MaterialIconSet;
+import gregtech.api.unification.util.MaterialIconSets;
 import gregtech.api.unification.material.properties.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
