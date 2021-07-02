@@ -1,11 +1,12 @@
 package gregtech.api.items.material;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import gregtech.api.GTCreativeTabs;
 import gregtech.api.GTValues;
+import gregtech.api.unification.forms.MaterialForm;
 import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.Material;
-import gregtech.api.unification.ore.MaterialForm;
 import gregtech.api.unification.util.MaterialAmount;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -18,10 +19,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MaterialItemForm {
 
@@ -33,25 +31,27 @@ public class MaterialItemForm {
     private final MaterialAmount materialAmount;
     private final int maxStackSize;
     private final Set<MaterialForm> tags;
-    private final Set<Material> ignoredMaterials;
+    private final Map<Material, Item> builtinItems;
     private final MaterialItemForm purifiedInto;
     private final boolean dealsHeatDamage;
     private final boolean canBeUsedAsBeaconPayment;
+    private final boolean canBeBurned;
 
     public MaterialItemForm(Settings settings) {
         this.requiredMaterialFlags = settings.requiredMaterialFlags;
         this.materialAmount = settings.materialAmount;
         this.maxStackSize = settings.maxCount;
         this.tags = settings.tags;
-        this.ignoredMaterials = settings.ignoredMaterials;
+        this.builtinItems = ImmutableMap.copyOf(settings.builtinItems);
         this.purifiedInto = settings.purifiedInto;
         this.dealsHeatDamage = settings.dealsHeatDamage;
         this.canBeUsedAsBeaconPayment = settings.canBeUsedAsBeaconPayment;
+        this.canBeBurned = settings.canBeBurned;
     }
 
     public void addTagsForMaterial(Material material, Set<Tag.Identified<Item>> outTags) {
         for (MaterialForm materialForm : this.tags) {
-            outTags.add(materialForm.getItemTagForMaterial(material));
+            outTags.add(materialForm.getItemTag(material));
         }
     }
 
@@ -76,6 +76,10 @@ public class MaterialItemForm {
         return dealsHeatDamage;
     }
 
+    public boolean canBeBurned() {
+        return canBeBurned;
+    }
+
     protected FabricItemSettings createItemSettings(Material material) {
         return new FabricItemSettings()
                 .maxCount(maxStackSize)
@@ -86,13 +90,18 @@ public class MaterialItemForm {
         return new MaterialItem(createItemSettings(material), this, material);
     }
 
+    @Nullable
+    public Item getBuiltinItemFor(Material material) {
+        return builtinItems.get(material);
+    }
+
     public boolean shouldGenerateFor(Material material) {
         for (MaterialFlag flag : this.requiredMaterialFlags) {
             if (!material.hasFlag(flag)) {
                 return false;
             }
         }
-        return !ignoredMaterials.contains(material);
+        return true;
     }
 
     private String getTranslationKey() {
@@ -113,12 +122,13 @@ public class MaterialItemForm {
         List<MaterialFlag> requiredMaterialFlags;
         MaterialAmount materialAmount = MaterialAmount.ZERO;
         int maxCount = Inventory.MAX_COUNT_PER_STACK;
-        Set<Material> ignoredMaterials = new HashSet<>();
+        Map<Material, Item> builtinItems = new HashMap<>();
 
         Set<MaterialForm> tags = new HashSet<>();
         MaterialItemForm purifiedInto;
         boolean dealsHeatDamage;
         boolean canBeUsedAsBeaconPayment;
+        boolean canBeBurned;
 
         public Settings requiredMaterialFlags(MaterialFlag... materialFlags) {
             this.requiredMaterialFlags = Arrays.asList(materialFlags);
@@ -135,8 +145,8 @@ public class MaterialItemForm {
             return this;
         }
 
-        public Settings ignoreMaterial(Material material) {
-            this.ignoredMaterials.add(material);
+        public Settings addBuiltinItem(Material material, Item builtinItem) {
+            this.builtinItems.put(material, builtinItem);
             return this;
         }
 
@@ -157,6 +167,11 @@ public class MaterialItemForm {
 
         public Settings canBeUsedAsBeaconPayment() {
             this.canBeUsedAsBeaconPayment = true;
+            return this;
+        }
+
+        public Settings canBeBurned() {
+            this.canBeBurned = true;
             return this;
         }
     }

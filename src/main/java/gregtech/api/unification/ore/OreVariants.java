@@ -23,7 +23,6 @@ public class OreVariants {
 
     public static final OreVariant END_STONE;
 
-
     private static OreVariant register(String name, OreVariant variant) {
         return Registry.register(OreVariant.REGISTRY, new Identifier(GTValues.MODID, name), variant);
     }
@@ -58,7 +57,7 @@ public class OreVariants {
             .modelPath(new Identifier(GTValues.MODID, "block/ore_variant/gravel"))
             .soundGroup(BlockSoundGroup.GRAVEL)
             .mineableTag(BlockTags.SHOVEL_MINEABLE)
-            .affectedByGravity()
+            .affectedByGravity(0xFF807C7B)
         ));
 
         SANDSTONE = register("sandstone", new OreVariant(new OreVariant.Settings()

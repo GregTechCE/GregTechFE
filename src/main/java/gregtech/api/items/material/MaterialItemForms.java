@@ -26,6 +26,7 @@ public class MaterialItemForms {
     public static final MaterialItemForm EXQUISITE_GEM;
 
     //Ore processing forms
+    public static final MaterialItemForm RAW_RESOURCE;
     public static final MaterialItemForm CRUSHED_ORE;
     public static final MaterialItemForm CRUSHED_CENTRIFUGED_ORE;
     public static final MaterialItemForm CRUSHED_PURIFIED_ORE;

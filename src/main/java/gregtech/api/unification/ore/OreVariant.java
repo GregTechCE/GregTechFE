@@ -1,17 +1,28 @@
 package gregtech.api.unification.ore;
 
 import com.google.common.base.Preconditions;
+import gregtech.api.GTCreativeTabs;
 import gregtech.api.GTValues;
+import gregtech.api.block.ore.OreBlock;
+import gregtech.api.block.ore.OreBlockItem;
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.flags.MaterialFlags;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.yarn.constants.MiningLevels;
 import net.minecraft.block.Block;
+import net.minecraft.block.MapColor;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.structure.rule.RuleTest;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
+import org.jetbrains.annotations.Nullable;
 
 public class OreVariant {
 
@@ -20,14 +31,15 @@ public class OreVariant {
             .buildAndRegister();
 
     private final String blockNameTemplate;
-    private final Tag.Identified<Block> mineableTag;
     private final Identifier modelPath;
     private final RuleTest generationRule;
     private final float hardness;
     private final float blastResistance;
-    private final int baseHarvestLevel;
     private final BlockSoundGroup soundGroup;
+    private final Tag.Identified<Block> mineableTag;
+    private final int baseHarvestLevel;
     private final boolean affectedByGravity;
+    private final int fallingParticleColor;
 
     public OreVariant(Settings settings) {
         Preconditions.checkNotNull(settings.modelPath, "modelPath not set");
@@ -43,10 +55,46 @@ public class OreVariant {
         this.baseHarvestLevel = settings.baseHarvestLevel;
         this.soundGroup = settings.soundGroup;
         this.affectedByGravity = settings.affectedByGravity;
+        this.fallingParticleColor = settings.fallingParticleColor;
     }
 
     public Identifier getName() {
         return Preconditions.checkNotNull(REGISTRY.getId(this), "OreVariant not registered");
+    }
+
+    protected FabricBlockSettings createOreBlockSettings(Material material) {
+        return FabricBlockSettings.of(net.minecraft.block.Material.STONE)
+                .requiresTool()
+                .strength(this.hardness, this.blastResistance)
+                .sounds(this.soundGroup);
+    }
+
+    protected FabricItemSettings createOreBlockItemSettings(Material material) {
+        return new FabricItemSettings()
+                .group(GTCreativeTabs.ORES);
+    }
+
+    public OreBlock createOreBlock(Material material) {
+        return new OreBlock(createOreBlockSettings(material), this, material);
+    }
+
+    @Nullable
+    public OreBlockItem createOreBlockItem(OreBlock oreBlock) {
+        return new OreBlockItem(createOreBlockItemSettings(oreBlock.getMaterial()), oreBlock);
+    }
+
+    public String getTranslationKey() {
+        Identifier id = getName();
+        return "ore_variant." + id.getNamespace() + "." + id.getPath();
+    }
+
+    public MutableText getDisplayName(Material material) {
+        Text materialName = material.getDisplayName();
+        return new TranslatableText(getTranslationKey(), materialName);
+    }
+
+    public boolean shouldGenerateFor(Material material) {
+        return material.hasFlag(MaterialFlags.ORE_PROPERTIES);
     }
 
     public String createBlockName(String materialName) {
@@ -85,6 +133,10 @@ public class OreVariant {
         return affectedByGravity;
     }
 
+    public int getFallingParticleColor() {
+        return fallingParticleColor;
+    }
+
     @Override
     public String toString() {
         return String.valueOf(REGISTRY.getId(this));
@@ -101,6 +153,7 @@ public class OreVariant {
         private BlockSoundGroup soundGroup = BlockSoundGroup.STONE;
         private boolean affectedByGravity = false;
         private Identifier modelPath;
+        private int fallingParticleColor;
 
         public Settings blockNameTemplate(String blockNameTemplate) {
             Preconditions.checkNotNull(blockNameTemplate);
@@ -148,8 +201,9 @@ public class OreVariant {
             return this;
         }
 
-        public Settings affectedByGravity() {
+        public Settings affectedByGravity(int fallingParticleColor) {
             this.affectedByGravity = true;
+            this.fallingParticleColor = fallingParticleColor;
             return this;
         }
     }

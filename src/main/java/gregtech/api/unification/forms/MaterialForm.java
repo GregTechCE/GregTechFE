@@ -6,7 +6,9 @@ import gregtech.api.unification.material.Material;
 import gregtech.api.unification.util.MaterialAmount;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
@@ -31,6 +33,7 @@ public class MaterialForm {
     private final MaterialFormMatcher matcher;
 
     private final Map<Material, Tag.Identified<Item>> materialItemTagCache = new HashMap<>();
+    private final Map<Material, Tag.Identified<Block>> materialBlockTagCache = new HashMap<>();
 
     public MaterialForm(Settings settings) {
         Preconditions.checkNotNull(settings.tagNameTemplate, "tagNameTemplate not set");
@@ -52,12 +55,24 @@ public class MaterialForm {
         return materialItemTagCache.computeIfAbsent(material, this::createItemTag);
     }
 
-    protected Tag.Identified<Item> createItemTag(Material material) {
+    public Tag.Identified<Block> getBlockTag(Material material) {
+        return materialBlockTagCache.computeIfAbsent(material, this::createBlockTag);
+    }
+
+    protected Identifier createTagIdentifier(Material material) {
         Identifier materialId = material.getName();
         String tagName = this.tagNameTemplate.replace(MATERIAL_TEMPLATE, materialId.getPath());
-        Identifier tagId = new Identifier(COMMON_TAG_NAMESPACE, tagName);
+        return new Identifier(COMMON_TAG_NAMESPACE, tagName);
+    }
 
+    protected Tag.Identified<Item> createItemTag(Material material) {
+        Identifier tagId = createTagIdentifier(material);
         return TagRegistry.create(tagId, ItemTags::getTagGroup);
+    }
+
+    protected Tag.Identified<Block> createBlockTag(Material material) {
+        Identifier tagId = createTagIdentifier(material);
+        return TagRegistry.create(tagId, BlockTags::getTagGroup);
     }
 
     private static Material findMaterialByName(String materialName) {

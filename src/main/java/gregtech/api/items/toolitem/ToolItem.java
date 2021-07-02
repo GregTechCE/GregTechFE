@@ -183,7 +183,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
     @Override
     public final boolean isSuitableFor(BlockState state) {
         int miningLevel = getMiningLevel();
-        return ToolHelper.checkHarvestLevelRequirements(state, miningLevel) &&
+        return MiningLevelHelper.checkHarvestLevelRequirements(state, miningLevel) &&
                 isCorrectToolForBlock(state);
     }
 

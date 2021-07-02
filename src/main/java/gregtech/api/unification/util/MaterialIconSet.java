@@ -14,6 +14,10 @@ public class MaterialIconSet {
         this.modelSetPath = modelSetPath;
     }
 
+    public Identifier getBlockTextureLocation(String blockType) {
+        return new Identifier(modelSetPath.getNamespace(), "block/" + modelSetPath.getPath() + "/" + blockType);
+    }
+
     public Identifier getModelLocation(String modelType) {
         return new Identifier(modelSetPath.getNamespace(), modelSetPath.getPath() + "/" + modelType);
     }

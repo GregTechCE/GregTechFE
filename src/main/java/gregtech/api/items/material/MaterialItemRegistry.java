@@ -9,9 +9,12 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -21,21 +24,18 @@ public class MaterialItemRegistry {
 
     public static final MaterialItemRegistry INSTANCE = new MaterialItemRegistry();
 
-    private final Map<MaterialItemId, MaterialItem> registeredMaterialItems = new HashMap<>();
+    private final Map<MaterialItemId, Item> registeredMaterialItems = new HashMap<>();
 
     private MaterialItemRegistry() {
     }
 
-    @Nullable
-    public MaterialItem getItem(MaterialItemId itemId) {
-        return registeredMaterialItems.get(itemId);
+    @NotNull
+    public Item getItem(MaterialItemId itemId) {
+        return registeredMaterialItems.getOrDefault(itemId, Items.AIR);
     }
 
     public ItemStack getMaterialItem(MaterialItemId itemId, int amount) {
-        MaterialItem materialItem = registeredMaterialItems.get(itemId);
-        if (materialItem == null) {
-            return ItemStack.EMPTY;
-        }
+        Item materialItem = registeredMaterialItems.get(itemId);
         return new ItemStack(materialItem, amount);
     }
 
@@ -73,6 +73,13 @@ public class MaterialItemRegistry {
                 MaterialItemForm itemForm = MaterialItemForm.REGISTRY.get(formId);
 
                 //noinspection ConstantConditions
+                Item builtinItem = itemForm.getBuiltinItemFor(material);
+                if (builtinItem != null) {
+                    MaterialItemId materialItemId = new MaterialItemId(itemForm, material);
+                    this.registeredMaterialItems.put(materialItemId, builtinItem);
+                    continue;
+                }
+
                 if (itemForm.shouldGenerateFor(material)) {
                     MaterialItemId materialItemId = new MaterialItemId(itemForm, material);
                     MaterialItem materialItem = createMaterialItem(materialItemId);
@@ -89,8 +96,10 @@ public class MaterialItemRegistry {
 
     @Environment(EnvType.CLIENT)
     public void registerMaterialItemsClient() {
-        for (MaterialItem materialItem : this.registeredMaterialItems.values()) {
-            registerMaterialItemClient(materialItem);
+        for (Item item : this.registeredMaterialItems.values()) {
+            if (item instanceof MaterialItem materialItem) {
+                registerMaterialItemClient(materialItem);
+            }
         }
     }
 

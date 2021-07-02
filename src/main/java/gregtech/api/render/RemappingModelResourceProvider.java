@@ -1,5 +1,7 @@
 package gregtech.api.render;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelProviderException;
@@ -17,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public enum RemappingModelResourceProvider implements ModelResourceProvider {
     INSTANCE;
 
@@ -24,14 +27,6 @@ public enum RemappingModelResourceProvider implements ModelResourceProvider {
 
     public void registerItemModel(Item item, Identifier newModelLocation) {
         this.modelRemapMap.put(getItemModelLocation(item), newModelLocation);
-    }
-
-    public void registerBlockModel(BlockState blockState, Identifier newModelLocation) {
-        this.modelRemapMap.put(getBlockModelLocation(blockState), newModelLocation);
-    }
-
-    public static ModelIdentifier getBlockModelLocation(BlockState blockState) {
-        return BlockModels.getModelId(blockState);
     }
 
     public static ModelIdentifier getItemModelLocation(Item item) {
