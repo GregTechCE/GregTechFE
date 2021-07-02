@@ -1,58 +1,17 @@
 package gregtech.api.multiblock;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
  * Contains an context used for storing temporary data
- * related to current check and shared between all predicates doing it
+ * related to current check and shared between all predicates testing structure itegrity
  */
-public class PatternMatchContext {
+public interface PatternMatchContext {
 
-    private Map<String, Object> data = new HashMap<>();
+    <T> void set(ContextKey<T> contextKey, T value);
 
-    public void reset() {
-        this.data.clear();
-    }
+    <T> Optional<T> get(ContextKey<T> contextKey);
 
-    public void set(String key, Object value) {
-        this.data.put(key, value);
-    }
-
-    public int getInt(String key) {
-        return data.containsKey(key) ? (int) data.get(key) : 0;
-    }
-
-    public void increment(String key, int value) {
-        set(key, getOrDefault(key, 0) + value);
-    }
-
-    public <T> T getOrDefault(String key, T defaultValue) {
-        return (T) data.getOrDefault(key, defaultValue);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T get(String key) {
-        return (T) data.get(key);
-    }
-
-    public <T> T getOrCreate(String key, Supplier<T> creator) {
-        T result = get(key);
-        if (result == null) {
-            result = creator.get();
-            set(key, result);
-        }
-        return result;
-    }
-
-    public <T> T getOrPut(String key, T initialValue) {
-        T result = get(key);
-        if (result == null) {
-            result = initialValue;
-            set(key, result);
-        }
-        return result;
-    }
-
+    <T> T computeIfAbsent(ContextKey<T> contextKey, Supplier<T> constructor);
 }

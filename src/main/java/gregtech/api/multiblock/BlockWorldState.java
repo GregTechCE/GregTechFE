@@ -1,80 +1,23 @@
 package gregtech.api.multiblock;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.function.Predicate;
+public interface BlockWorldState {
 
-public class BlockWorldState {
+    public World getWorld();
 
-    private World world;
-    private BlockPos pos;
-    private IBlockState state;
-    private TileEntity tileEntity;
-    private boolean tileEntityInitialized;
-    private PatternMatchContext matchContext;
-    private PatternMatchContext layerContext;
+    public BlockPos getPos();
 
-    public static IPatternCenterPredicate wrap(Predicate<BlockWorldState> predicate) {
-        return predicate::test;
-    }
-
-    public void update(World worldIn, BlockPos posIn, PatternMatchContext matchContext, PatternMatchContext layerContext) {
-        this.world = worldIn;
-        this.pos = posIn;
-        this.state = null;
-        this.tileEntity = null;
-        this.tileEntityInitialized = false;
-        this.matchContext = matchContext;
-        this.layerContext = layerContext;
-    }
-
-    public PatternMatchContext getMatchContext() {
-        return matchContext;
-    }
-
-    public PatternMatchContext getLayerContext() {
-        return layerContext;
-    }
-
-    public IBlockState getBlockState() {
-        if (this.state == null) {
-            this.state = this.world.getBlockState(this.pos);
-        }
-
-        return this.state;
-    }
+    public BlockState getBlockState();
 
     @Nullable
-    public TileEntity getTileEntity() {
-        if (this.tileEntity == null && !this.tileEntityInitialized) {
-            this.tileEntity = this.world.getTileEntity(this.pos);
-            this.tileEntityInitialized = true;
-        }
+    public BlockEntity getBlockEntity();
 
-        return this.tileEntity;
-    }
+    public PatternMatchContext getMatchContext();
 
-    public BlockPos getPos() {
-        return this.pos.toImmutable();
-    }
-
-    public IBlockState getOffsetState(EnumFacing face) {
-        if (pos instanceof MutableBlockPos) {
-            ((MutableBlockPos) pos).move(face);
-            IBlockState blockState = world.getBlockState(pos);
-            ((MutableBlockPos) pos).move(face.getOpposite());
-            return blockState;
-        }
-        return world.getBlockState(this.pos.offset(face));
-    }
-
-    public World getWorld() {
-        return world;
-    }
+    public PatternMatchContext getLayerContext();
 }

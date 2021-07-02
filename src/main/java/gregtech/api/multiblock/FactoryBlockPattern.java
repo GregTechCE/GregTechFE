@@ -1,10 +1,10 @@
 package gregtech.api.multiblock;
 
 import com.google.common.base.Joiner;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import gregtech.api.multiblock.BlockPattern.RelativeDirection;
 import gregtech.api.util.IntRange;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,15 +22,19 @@ import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 public class FactoryBlockPattern {
 
     private static final Joiner COMMA_JOIN = Joiner.on(",");
-    private final List<String[]> depth = new ArrayList<>();
-    private final List<int[]> aisleRepetitions = new ArrayList<>();
+
     private final Map<Character, IntRange> countLimits = new HashMap<>();
     private final Map<Character, Predicate<BlockWorldState>> symbolMap = new HashMap<>();
-    private final TIntObjectMap<Predicate<PatternMatchContext>> layerValidators = new TIntObjectHashMap<>();
+
+    private final Int2ObjectMap<Predicate<PatternMatchContext>> layerValidators = new Int2ObjectOpenHashMap<>();
     private final List<Predicate<PatternMatchContext>> contextValidators = new ArrayList<>();
+
+    private final List<String[]> depth = new ArrayList<>();
+    private final List<int[]> aisleRepetitions = new ArrayList<>();
+    private final RelativeDirection[] structureDir = new RelativeDirection[3];
+
     private int aisleHeight;
     private int rowWidth;
-    private RelativeDirection[] structureDir = new RelativeDirection[3];
 
     private FactoryBlockPattern(RelativeDirection charDir, RelativeDirection stringDir, RelativeDirection aisleDir) {
         structureDir[0] = charDir;
@@ -39,18 +43,9 @@ public class FactoryBlockPattern {
         int flags = 0;
         for (int i = 0; i < 3; i++) {
             switch (structureDir[i]) {
-                case UP:
-                case DOWN:
-                    flags |= 0x1;
-                    break;
-                case LEFT:
-                case RIGHT:
-                    flags |= 0x2;
-                    break;
-                case FRONT:
-                case BACK:
-                    flags |= 0x4;
-                    break;
+                case UP, DOWN -> flags |= 0x1;
+                case LEFT, RIGHT -> flags |= 0x2;
+                case FRONT, BACK -> flags |= 0x4;
             }
         }
         if (flags != 0x7) throw new IllegalArgumentException("Must have 3 different axes!");

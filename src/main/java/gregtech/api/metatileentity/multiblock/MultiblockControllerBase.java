@@ -8,7 +8,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.multiblock.BlockPattern;
 import gregtech.api.multiblock.BlockWorldState;
-import gregtech.api.multiblock.IPatternCenterPredicate;
+import gregtech.api.multiblock.PatternCenterPredicate;
 import gregtech.api.multiblock.PatternMatchContext;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.OrientedOverlayRenderer;
@@ -99,7 +99,7 @@ public abstract class MultiblockControllerBase extends MetaTileEntity {
 
     public static Predicate<BlockWorldState> tilePredicate(BiFunction<BlockWorldState, MetaTileEntity, Boolean> predicate) {
         return blockWorldState -> {
-            TileEntity tileEntity = blockWorldState.getTileEntity();
+            TileEntity tileEntity = blockWorldState.getBlockEntity();
             if (!(tileEntity instanceof MetaTileEntityHolder))
                 return false;
             MetaTileEntity metaTileEntity = ((MetaTileEntityHolder) tileEntity).getMetaTileEntity();
@@ -135,7 +135,7 @@ public abstract class MultiblockControllerBase extends MetaTileEntity {
         return blockWorldState -> blockWorldState.getBlockState().getBlock().isAir(blockWorldState.getBlockState(), blockWorldState.getWorld(), blockWorldState.getPos());
     }
 
-    public IPatternCenterPredicate selfPredicate() {
+    public PatternCenterPredicate selfPredicate() {
         return BlockWorldState.wrap(tilePredicate((state, tile) -> tile.metaTileEntityId.equals(metaTileEntityId)));
     }
 
