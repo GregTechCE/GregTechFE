@@ -1,0 +1,7 @@
+{
+  "parent": "gregtech:block/cube_overlay_all",
+  "textures": {
+    "base": "minecraft:block/bedrock",
+    "overlay": "#ore_texture"
+  }
+}

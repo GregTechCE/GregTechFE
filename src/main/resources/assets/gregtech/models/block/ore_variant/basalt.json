@@ -1,0 +1,9 @@
+{
+  "parent": "gregtech:block/cube_overlay_bottom_top",
+  "textures": {
+    "top": "minecraft:block/basalt_top",
+    "bottom": "minecraft:block/basalt_top",
+    "side": "minecraft:block/basalt_side",
+    "overlay": "#ore_texture"
+  }
+}

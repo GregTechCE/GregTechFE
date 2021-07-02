@@ -1,0 +1,7 @@
+{
+  "parent": "gregtech:block/cube_overlay_all",
+  "textures": {
+    "base": "minecraft:block/end_stone",
+    "overlay": "#ore_texture"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "parent": "gregtech:block/cube_overlay",
+  "textures": {
+    "particle": "#side",
+    "base_down": "#bottom",
+    "base_up": "#top",
+    "base_north": "#side",
+    "base_south": "#side",
+    "base_west": "#side",
+    "base_east": "#side",
+    "overlay_down": "#overlay",
+    "overlay_up": "#overlay",
+    "overlay_north": "#overlay",
+    "overlay_south": "#overlay",
+    "overlay_west": "#overlay",
+    "overlay_east": "#overlay"
+  }
+}

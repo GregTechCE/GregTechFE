@@ -20,10 +20,14 @@ import java.util.Map;
 public enum RemappingModelResourceProvider implements ModelResourceProvider {
     INSTANCE;
 
-    private final Map<ModelIdentifier, ModelIdentifier> modelRemapMap = new HashMap<>();
+    private final Map<ModelIdentifier, Identifier> modelRemapMap = new HashMap<>();
 
-    public void registerItemModel(Item item, ModelIdentifier newModelLocation) {
+    public void registerItemModel(Item item, Identifier newModelLocation) {
         this.modelRemapMap.put(getItemModelLocation(item), newModelLocation);
+    }
+
+    public void registerBlockModel(BlockState blockState, Identifier newModelLocation) {
+        this.modelRemapMap.put(getBlockModelLocation(blockState), newModelLocation);
     }
 
     public static ModelIdentifier getBlockModelLocation(BlockState blockState) {
@@ -37,7 +41,7 @@ public enum RemappingModelResourceProvider implements ModelResourceProvider {
     @Override
     public @Nullable UnbakedModel loadModelResource(Identifier resourceId, ModelProviderContext context) throws ModelProviderException {
         if (resourceId instanceof ModelIdentifier modelIdentifier) {
-            ModelIdentifier remappedIdentifier = this.modelRemapMap.get(modelIdentifier);
+            Identifier remappedIdentifier = this.modelRemapMap.get(modelIdentifier);
             if (remappedIdentifier != null) {
                 return context.loadModel(remappedIdentifier);
             }

@@ -19,20 +19,27 @@ public class OreVariant {
             .createSimple(OreVariant.class, new Identifier(GTValues.MODID, "ore_variants"))
             .buildAndRegister();
 
+    private final String blockNameTemplate;
     private final Tag.Identified<Block> mineableTag;
     private final Identifier modelPath;
     private final RuleTest generationRule;
     private final float hardness;
+    private final float blastResistance;
     private final int baseHarvestLevel;
     private final BlockSoundGroup soundGroup;
     private final boolean affectedByGravity;
 
     public OreVariant(Settings settings) {
         Preconditions.checkNotNull(settings.modelPath, "modelPath not set");
+        Preconditions.checkNotNull(settings.generationRule, "generationRule not set");
+        Preconditions.checkNotNull(settings.blockNameTemplate, "blockNameTemplate not set");
+
+        this.blockNameTemplate = settings.blockNameTemplate;
         this.mineableTag = settings.mineableTag;
         this.modelPath = settings.modelPath;
         this.generationRule = settings.generationRule;
         this.hardness = settings.hardness;
+        this.blastResistance = settings.blastResistance;
         this.baseHarvestLevel = settings.baseHarvestLevel;
         this.soundGroup = settings.soundGroup;
         this.affectedByGravity = settings.affectedByGravity;
@@ -40,6 +47,10 @@ public class OreVariant {
 
     public Identifier getName() {
         return Preconditions.checkNotNull(REGISTRY.getId(this), "OreVariant not registered");
+    }
+
+    public String createBlockName(String materialName) {
+        return this.blockNameTemplate.replace("{material}", materialName);
     }
 
     public Tag.Identified<Block> getMineableTag() {
@@ -56,6 +67,10 @@ public class OreVariant {
 
     public float getHardness() {
         return hardness;
+    }
+
+    public float getBlastResistance() {
+        return blastResistance;
     }
 
     public int getBaseHarvestLevel() {
@@ -76,13 +91,22 @@ public class OreVariant {
     }
 
     public static class Settings {
+
+        private String blockNameTemplate;
         private Tag.Identified<Block> mineableTag = BlockTags.PICKAXE_MINEABLE;
-        private RuleTest generationRule = OreFeatureConfig.Rules.STONE_ORE_REPLACEABLES;
-        private float hardness = 1.0f;
-        private int baseHarvestLevel = MiningLevels.WOOD;
+        private RuleTest generationRule;
+        private float hardness;
+        private float blastResistance;
+        private int baseHarvestLevel = MiningLevels.STONE;
         private BlockSoundGroup soundGroup = BlockSoundGroup.STONE;
         private boolean affectedByGravity = false;
         private Identifier modelPath;
+
+        public Settings blockNameTemplate(String blockNameTemplate) {
+            Preconditions.checkNotNull(blockNameTemplate);
+            this.blockNameTemplate = blockNameTemplate;
+            return this;
+        }
 
         public Settings generationRule(RuleTest generationRule) {
             Preconditions.checkNotNull(generationRule);
@@ -90,14 +114,15 @@ public class OreVariant {
             return this;
         }
 
-        public Settings modelPath(Identifier modelPath) {
-            Preconditions.checkNotNull(modelPath);
-            this.modelPath = modelPath;
+        public Settings strength(float hardness, float blastResistance) {
+            this.hardness = hardness;
+            this.blastResistance = blastResistance;
             return this;
         }
 
-        public Settings hardness(float hardness) {
-            this.hardness = hardness;
+        public Settings modelPath(Identifier modelPath) {
+            Preconditions.checkNotNull(modelPath);
+            this.modelPath = modelPath;
             return this;
         }
 
