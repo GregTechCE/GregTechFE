@@ -103,6 +103,8 @@ public class MaterialFlags {
 
     public static final MaterialFlag GENERATE_LENS;
 
+    public static final MaterialFlag GENERATE_ROTOR;
+
     // INITIALIZATION
 
     private MaterialFlags(){
@@ -312,6 +314,14 @@ public class MaterialFlags {
                 new MaterialFlag.Settings()
                     .requires(SOLID_FORM, SolidForm.GEM)
                     .requires(GENERATE_PLATE)
+        ));
+
+        GENERATE_ROTOR = register("generate_rotor", new MaterialFlag(
+                new MaterialFlag.Settings()
+                    .requires(SOLID_FORM, SolidForm.METAL)
+                    .requires(GENERATE_PLATE)
+                    .requires(GENERATE_RING)
+                    .requires(GENERATE_BOLT_SCREW)
         ));
     }
 }
