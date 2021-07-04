@@ -35,7 +35,7 @@ public class ChemicalComposition {
     }
 
     public static ChemicalComposition composite(MaterialComponent... components) {
-        Preconditions.checkArgument(components.length > 1);
+        Preconditions.checkArgument(components.length > 0);
         return new ChemicalComposition(null, Arrays.asList(components));
     }
 
@@ -73,7 +73,7 @@ public class ChemicalComposition {
             return new ChemicalProperties(element);
         }
         if (components.isEmpty()) {
-            return new ChemicalProperties(Elements.Technetium);
+            return new ChemicalProperties(Elements.Tc);
         }
 
         ChemicalProperties properties = new ChemicalProperties();

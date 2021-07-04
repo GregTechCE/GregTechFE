@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 import static gregtech.api.unification.material.flags.MaterialFlags.*;
 
@@ -134,7 +135,7 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
-        public Settings flags(Set<MaterialFlag> flags) {
+        public Settings flags(MaterialFlag... flags) {
             Preconditions.checkNotNull(flags, "flags");
 
             for (MaterialFlag flag : flags) {
@@ -215,6 +216,32 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
+        public Settings gem(int harvestLevel, boolean crystallisable, boolean higherSifterOutput) {
+            Preconditions.checkArgument(harvestLevel >= 0, "harvestLevel >= 0");
+
+            property(SOLID_FORM, SolidForm.GEM);
+            property(HARVEST_LEVEL, harvestLevel);
+
+            if (crystallisable) {
+                flag(CRYSTALLISABLE);
+            }
+
+            if (higherSifterOutput) {
+                flag(HIGH_SIFTER_OUTPUT);
+            }
+
+            return this;
+        }
+
+        public Settings polymer(int harvestLevel) {
+            Preconditions.checkArgument(harvestLevel >= 0, "harvestLevel >= 0");
+
+            property(SOLID_FORM, SolidForm.POLYMER);
+            property(HARVEST_LEVEL, harvestLevel);
+
+            return this;
+        }
+
         public Settings canCreateTools(float miningSpeed, float attackDamage, int durability) {
             return canCreateToolsWithDefaultEnchant(miningSpeed, attackDamage, durability, 12);
         }
@@ -264,9 +291,79 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
+        public Settings baseForPumpComponent() {
+            flag(GENERATE_BOLT_SCREW);
+            flag(GENERATE_PLATE);
+            flag(GENERATE_ROTOR);
+
+            return this;
+        }
 
         public Settings plasma() {
             flag(GENERATE_PLASMA);
+
+            return this;
+        }
+
+        public Settings canCreateFluidPipe(int throughput, int maxContentTemperature, boolean gasProof) {
+            flag(GENERATE_PLATE);
+
+            return this;
+        }
+
+        public Settings mortarGrindable() {
+            flag(GENERATE_DUST);
+            flag(MORTAR_GRINDABLE);
+
+            return this;
+        }
+
+        public Settings smeltsInArcFurnace(Material material) {
+            property(ARC_SMELT_PROPERTY, ArcSmeltProperty.arcSmeltInto(material));
+
+            return this;
+        }
+
+        public Settings canCreateCell(int capacity) {
+            flag(GENERATE_RING);
+            flag(GENERATE_DENSE_PLATE);
+
+            return this;
+        }
+
+        public Settings baseForElectricToolHeads() {
+            flag(GENERATE_PLATE);
+            flag(GENERATE_RING);
+            flag(GENERATE_BOLT_SCREW);
+
+            return this;
+        }
+
+        public Settings polarizeInto(Supplier<Material> material) {
+            property(POLARIZABLE_METAL, PolarizableMetalProperty.polarizedInto(material));
+
+            return this;
+        }
+
+        public Settings demagnetizeInto(Supplier<Material> material) {
+            property(POLARIZABLE_METAL, PolarizableMetalProperty.demagnetizedInto(material));
+
+            return this;
+        }
+
+
+        public Settings flammable(int burnTime) {
+            Preconditions.checkArgument(burnTime > 0, "burnTime > 0");
+
+            flammable();
+
+            property(BURN_TIME, burnTime);
+
+            return this;
+        }
+
+        public Settings flammable() {
+            flag(FLAMMABLE);
 
             return this;
         }
