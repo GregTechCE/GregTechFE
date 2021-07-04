@@ -5,7 +5,7 @@ import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import gregtech.api.GTValues;
-import gregtech.api.recipes.CountableIngredient;
+import gregtech.api.recipes.util.CountableIngredient;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.crafttweaker.CTRecipeBuilder.CraftTweakerIngredientWrapper;
 import gregtech.api.recipes.recipes.PrimitiveBlastFurnaceRecipe;

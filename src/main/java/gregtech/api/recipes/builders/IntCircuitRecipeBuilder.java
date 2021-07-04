@@ -1,6 +1,6 @@
 package gregtech.api.recipes.builders;
 
-import gregtech.api.recipes.CountableIngredient;
+import gregtech.api.recipes.util.CountableIngredient;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeBuilder;
 import gregtech.api.recipes.RecipeMap;

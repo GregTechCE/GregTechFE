@@ -26,7 +26,7 @@ public class GTShapelessRecipe extends ShapelessRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeSerializers.SHAPELESS;
+        return CraftingRecipeSerializers.SHAPELESS;
     }
 
     @Override

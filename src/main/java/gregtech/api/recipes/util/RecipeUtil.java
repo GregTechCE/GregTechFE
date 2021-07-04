@@ -1,4 +1,4 @@
-package gregtech.api.recipes;
+package gregtech.api.recipes.util;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv;

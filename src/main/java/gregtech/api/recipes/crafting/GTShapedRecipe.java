@@ -25,7 +25,7 @@ public class GTShapedRecipe extends ShapedRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeSerializers.SHAPED;
+        return CraftingRecipeSerializers.SHAPED;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package gregtech.api.recipes;
 
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.FixedFluidInvView;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.FixedItemInvView;
+import gregtech.api.recipes.context.RecipeContext;
+import net.minecraft.util.Identifier;
 
 public interface MachineRecipe<C extends RecipeContext> {
+
+    Identifier getId();
+
+    RecipeSerializer<?> getSerializer();
 
     boolean matches(C context);
 
