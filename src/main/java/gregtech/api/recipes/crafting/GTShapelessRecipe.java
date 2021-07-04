@@ -31,12 +31,12 @@ public class GTShapelessRecipe extends ShapelessRecipe {
 
     @Override
     public ItemStack craft(CraftingInventory inventory) {
-        return RecipeUtil.processElectricItemOnOutput(inventory, getOutput(), transferMaxCharge);
+        return CraftingRecipeUtil.processElectricItemOnOutput(inventory, getOutput(), transferMaxCharge);
     }
 
     @Override
     public DefaultedList<ItemStack> getRemainder(CraftingInventory inventory) {
-        return RecipeUtil.getRecipeRemainder(inventory);
+        return CraftingRecipeUtil.getRecipeRemainder(inventory);
     }
 
     @Override

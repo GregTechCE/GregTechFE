@@ -1,76 +1,40 @@
 package gregtech.api.recipes;
 
-import gregtech.api.unification.material.Material;
-import gregtech.api.unification.ore.MaterialForm;
-import gregtech.api.unification.stack.UnificationEntry;
+import com.google.common.base.Preconditions;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraftforge.oredict.OreIngredient;
-
-import java.util.Arrays;
-import java.util.Objects;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.tag.Tag;
 
 public class CountableIngredient {
 
-    public static CountableIngredient from(ItemStack stack) {
-        return new CountableIngredient(Ingredient.fromStacks(stack), stack.getCount());
+    private final Ingredient ingredient;
+    private final int amount;
+
+    private CountableIngredient(Ingredient ingredient, int amount) {
+        Preconditions.checkNotNull(ingredient, "ingredient");
+        Preconditions.checkArgument(amount > 0, "amount is less than or zero");
+        this.ingredient = ingredient;
+        this.amount = amount;
+    }
+
+    public static CountableIngredient from(Ingredient ingredient, int amount) {
+        return new CountableIngredient(ingredient, amount);
     }
 
     public static CountableIngredient from(ItemStack stack, int amount) {
-        return new CountableIngredient(Ingredient.fromStacks(stack), amount);
+        return new CountableIngredient(Ingredient.ofStacks(stack), amount);
     }
 
-    public static CountableIngredient from(String oredict) {
-        return new CountableIngredient(new OreIngredient(oredict), 1);
-    }
-
-    public static CountableIngredient from(String oredict, int count) {
-        return new CountableIngredient(new OreIngredient(oredict), count);
-    }
-
-    public static CountableIngredient from(MaterialForm prefix, Material material) {
-        return from(prefix, material, 1);
-    }
-
-    public static CountableIngredient from(MaterialForm prefix, Material material, int count) {
-        return new CountableIngredient(new OreIngredient(new UnificationEntry(prefix, material).toString()), count);
-    }
-
-    private Ingredient ingredient;
-    private int count;
-
-    public CountableIngredient(Ingredient ingredient, int count) {
-        this.ingredient = ingredient;
-        this.count = count;
+    public static CountableIngredient from(Tag.Identified<Item> tag, int count) {
+        return new CountableIngredient(Ingredient.fromTag(tag), count);
     }
 
     public Ingredient getIngredient() {
         return ingredient;
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CountableIngredient that = (CountableIngredient) o;
-        return count == that.count &&
-            Objects.equals(ingredient, that.ingredient);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(ingredient, count);
-    }
-
-    @Override
-    public String toString() {
-        return "CountableIngredient{" +
-            "ingredient=" + Arrays.toString(ingredient.getMatchingStacks()) +
-            ", count=" + count +
-            '}';
+    public int getAmount() {
+        return amount;
     }
 }

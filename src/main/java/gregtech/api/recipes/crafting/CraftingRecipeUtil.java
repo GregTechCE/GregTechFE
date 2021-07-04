@@ -11,7 +11,7 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 
-public class RecipeUtil {
+public class CraftingRecipeUtil {
 
     public static DefaultedList<ItemStack> getRecipeRemainder(CraftingInventory inventory) {
         DefaultedList<ItemStack> reminderList = DefaultedList.ofSize(inventory.size(), ItemStack.EMPTY);
