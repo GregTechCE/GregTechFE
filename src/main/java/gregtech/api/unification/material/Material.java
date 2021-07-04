@@ -222,13 +222,22 @@ public class Material implements Comparable<Material> {
             property(SOLID_FORM, SolidForm.GEM);
             property(HARVEST_LEVEL, harvestLevel);
 
-            if(crystallisable){
+            if (crystallisable) {
                 flag(CRYSTALLISABLE);
             }
 
-            if(higherSifterOutput){
+            if (higherSifterOutput) {
                 flag(HIGH_SIFTER_OUTPUT);
             }
+
+            return this;
+        }
+
+        public Settings polymer(int harvestLevel) {
+            Preconditions.checkArgument(harvestLevel >= 0, "harvestLevel >= 0");
+
+            property(SOLID_FORM, SolidForm.POLYMER);
+            property(HARVEST_LEVEL, harvestLevel);
 
             return this;
         }
@@ -343,5 +352,20 @@ public class Material implements Comparable<Material> {
         }
 
 
+        public Settings flammable(int burnTime) {
+            Preconditions.checkArgument(burnTime > 0, "burnTime > 0");
+
+            flammable();
+
+            property(BURN_TIME, burnTime);
+
+            return this;
+        }
+
+        public Settings flammable() {
+            flag(FLAMMABLE);
+
+            return this;
+        }
     }
 }

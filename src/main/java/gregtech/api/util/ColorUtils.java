@@ -6,7 +6,9 @@ public class ColorUtils {
     public static final int COLOR_VERY_LIGHT_GREY = 0xDCDCDC;
     public static final int COLOR_LIGHT_GREY = 0xC8C8C8;
     public static final int COLOR_DARK_GREY = 0x808080;
+    public static final int COLOR_DARK_RED = 0xC80000;
     public static final int COLOR_YELLOW = 0xFFFF00;
+    public static final int COLOR_WHITE = 0xFFFFFF;
 
     private ColorUtils() {
     }

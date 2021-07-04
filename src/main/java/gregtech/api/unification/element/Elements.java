@@ -7,11 +7,17 @@ import net.minecraft.util.registry.Registry;
 public class Elements {
 
     public static final Element H;
-    public static final Element Al;
+    public static final Element Be;
     public static final Element C;
     public static final Element O;
+    public static final Element Al;
+    public static final Element Si;
     public static final Element Cl;
+    public static final Element Cr;
+    public static final Element Mn;
     public static final Element Fe;
+    public static final Element Co;
+    public static final Element Ni;
     public static final Element Cu;
     public static final Element Zn;
     public static final Element Tc;
@@ -24,18 +30,23 @@ public class Elements {
 
         H = register("hydrogen", new Element(new Element.Settings().basicProperties("H", 1, 0)));
 
-        Al = register("aluminium", new Element(new Element.Settings().basicProperties("Al", 13, 13)));
+        Be = register("beryllium", new Element(new Element.Settings().basicProperties("Be", 4, 5)));
 
         C = register("carbon", new Element(new Element.Settings().basicProperties("C", 6, 6)));
 
         O = register("oxygen", new Element(new Element.Settings().basicProperties("O", 8, 8)));
 
+        Al = register("aluminium", new Element(new Element.Settings().basicProperties("Al", 13, 13)));
+        Si = register("silicon", new Element(new Element.Settings().basicProperties("Si", 14, 14)));
+
         Cl = register("chlorine", new Element(new Element.Settings().basicProperties("Cl", 17, 18)));
 
+        Cr = register("chromium", new Element(new Element.Settings().basicProperties("Cr", 24, 28)));
+        Mn = register("manganese", new Element(new Element.Settings().basicProperties("Mn", 25, 30)));
         Fe = register("iron", new Element(new Element.Settings().basicProperties("Fe", 26, 30)));
-
+        Co = register("cobalt", new Element(new Element.Settings().basicProperties("Co", 27, 32)));
+        Ni = register("nickel", new Element(new Element.Settings().basicProperties("Ni", 28, 30)));
         Cu = register("copper", new Element(new Element.Settings().basicProperties("Cu", 29, 34)));
-
         Zn = register("zinc", new Element(new Element.Settings().basicProperties("Zn", 30, 35)));
 
         Tc = register("technetium", new Element(new Element.Settings().basicProperties("Tc", 43, 55)));
@@ -61,14 +72,12 @@ public class Elements {
 //    He(2, 2, -1, null, "Helium", false),
 //    He_3(2, 1, -1, "H&D", "Helium-3", true),
 //    Li(3, 4, -1, null, "Lithium", false),
-//    Be(4, 5, -1, null, "Beryllium", false),
 //    B(5, 5, -1, null, "Boron", false),
 //    N(7, 7, -1, null, "Nitrogen", false),
 //    F(9, 9, -1, null, "Fluorine", false),
 //    Ne(10, 10, -1, null, "Neon", false),
 //    Na(11, 11, -1, null, "Sodium", false),
 //    Mg(12, 12, -1, null, "Magnesium", false),
-//    Si(14, 14, -1, null, "Silicon", false),
 //    P(15, 15, -1, null, "Phosphor", false),
 //    S(16, 16, -1, null, "Sulfur", false),
 //    Ar(18, 22, -1, null, "Argon", false),
@@ -77,10 +86,6 @@ public class Elements {
 //    Sc(21, 24, -1, null, "Scandium", false),
 //    Ti(22, 26, -1, null, "Titanium", false),
 //    V(23, 28, -1, null, "Vanadium", false),
-//    Cr(24, 28, -1, null, "Chrome", false),
-//    Mn(25, 30, -1, null, "Manganese", false),
-//    Co(27, 32, -1, null, "Cobalt", false),
-//    Ni(28, 30, -1, null, "Nickel", false),
 //    Ga(31, 39, -1, null, "Gallium", false),
 //    Ge(32, 40, -1, null, "Germanium", false),
 //    As(33, 42, -1, null, "Arsenic", false),
