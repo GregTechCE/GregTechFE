@@ -2,13 +2,23 @@ package gregtech.api.recipes;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.*;
+import gregtech.api.data.GTClientPlayNetworkHandler;
+import gregtech.api.data.GTServerResourceManager;
+import gregtech.mixin.accessor.ClientWorldAccessor;
+import gregtech.mixin.accessor.MinecraftServerAccessor;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ServerResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.profiler.Profiler;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +41,22 @@ public class GTRecipeManager extends SinglePreparationResourceReloader<Map<Strin
 
     public GTRecipeManager(RecipeManager recipeManager) {
         this.recipeManager = recipeManager;
+    }
+
+    @Nullable
+    public static GTRecipeManager get(World world) {
+        if (world instanceof ServerWorld serverWorld) {
+            MinecraftServer server = serverWorld.getServer();
+            ServerResourceManager resourceManager = ((MinecraftServerAccessor) server).getServerResourceManager();
+
+            return ((GTServerResourceManager) resourceManager).gregtech_getRecipeManager();
+        }
+        if (world instanceof ClientWorld clientWorld) {
+            ClientPlayNetworkHandler netHandler = ((ClientWorldAccessor) clientWorld).getNetHandler();
+
+            return ((GTClientPlayNetworkHandler) netHandler).gregtech_getRecipeManager();
+        }
+        return null;
     }
 
     @Nullable
@@ -135,6 +161,17 @@ public class GTRecipeManager extends SinglePreparationResourceReloader<Map<Strin
 
             LOGGER.info("Loaded {} recipes into the recipe map {}", pair.getValue().size(), recipeMap);
             this.recipes.put(machineRecipeType, recipeMap);
+        }
+    }
+
+    public void setRecipes(Map<MachineRecipeType, List<MachineRecipe<?>>> recipes) {
+        this.recipes.clear();
+
+        for (MachineRecipeType recipeType : recipes.keySet()) {
+            RecipeMap recipeMap = new RecipeMap(recipeType);
+            recipeMap.appendRecipes(recipes.get(recipeType));
+
+            this.recipes.put(recipeType, recipeMap);
         }
     }
 }

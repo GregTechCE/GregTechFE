@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.context.RecipeContext;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -12,6 +13,7 @@ public class MachineRecipeType {
 
     public static final Registry<MachineRecipeType> REGISTRY = FabricRegistryBuilder
             .createSimple(MachineRecipeType.class, new Identifier(GTValues.MODID, "recipe_maps"))
+            .attribute(RegistryAttribute.SYNCED)
             .buildAndRegister();
 
     private final Class<? extends RecipeContext> contextClass;
