@@ -20,12 +20,12 @@ public class VanillaRecipeWrappers {
     private static final Logger LOGGER = LoggerFactory.getLogger(VanillaRecipeWrappers.class);
     private static final int VANILLA_COOKING_RECIPE_EU_PER_TICK = 4;
 
-    public static <C extends ElectricMachineContext> List<MachineRecipe<C>> mirrorVanillaRecipes(RecipeManager recipeManager, RecipeType<? extends Recipe<?>> recipeType) {
+    public static List<MachineRecipe<?>> mirrorVanillaRecipes(RecipeManager recipeManager, RecipeType<? extends Recipe<?>> recipeType) {
         List<? extends Recipe<?>> allRecipes = recipeManager.listAllOfType(recipeType);
-        ArrayList<MachineRecipe<C>> convertedRecipes = new ArrayList<>();
+        ArrayList<MachineRecipe<?>> convertedRecipes = new ArrayList<>();
 
         for (Recipe<?> recipe : allRecipes) {
-            MachineRecipe<C> mappedRecipe = convertRecipe(recipe);
+            MachineRecipe<?> mappedRecipe = convertRecipe(recipe);
             if (mappedRecipe == null) {
                 LOGGER.warn("Failed to map vanilla recipe class {} ({}) to MachineRecipe equivalent", recipe.getClass(), recipe.getId());
                 continue;
@@ -36,7 +36,7 @@ public class VanillaRecipeWrappers {
     }
 
     @Nullable
-    private static <C extends ElectricMachineContext> MachineRecipe<C> convertRecipe(Recipe<?> recipe) {
+    private static  MachineRecipe<?> convertRecipe(Recipe<?> recipe) {
         if (recipe instanceof AbstractCookingRecipe abstractCookingRecipe) {
             return createCookingRecipeWrapper(abstractCookingRecipe);
         }
@@ -52,7 +52,7 @@ public class VanillaRecipeWrappers {
         ItemStack recipeOutput = recipe.getOutput().copy();
         int recipeDuration = recipe.getCookTime();
 
-        return new ElectricMachineRecipe<>(
+        return new ElectricMachineRecipe<>(recipe.getId(),
                 recipeInputs,
                 Collections.emptyList(),
                 DefaultedList.copyOf(ItemStack.EMPTY, recipeOutput),

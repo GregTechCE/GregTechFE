@@ -9,6 +9,8 @@ public interface MachineRecipe<C extends RecipeContext> {
 
     RecipeSerializer<?> getSerializer();
 
+    Class<? extends RecipeContext> getMinimumSupportedContextClass();
+
     boolean matches(C context);
 
     boolean canFitOutputs(C context);

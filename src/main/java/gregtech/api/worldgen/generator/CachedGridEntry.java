@@ -26,6 +26,7 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.feature.OreFeatureConfig;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -36,6 +37,7 @@ public class CachedGridEntry implements GridEntryInfo, IBlockGeneratorAccess, IB
     private static final Map<World, Cache<Long, CachedGridEntry>> gridEntryCache = new WeakHashMap<>();
 
     public static CachedGridEntry getOrCreateEntry(World world, int gridX, int gridZ, int primerChunkX, int primerChunkZ) {
+        OreFeatureConfig.Rules.DEEPSLATE_ORE_REPLACEABLES
         Cache<Long, CachedGridEntry> currentValue = gridEntryCache.get(world);
         if (currentValue == null) {
             currentValue = createGridCache();
