@@ -1,5 +1,6 @@
 package gregtech.api.recipes;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.*;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.resource.Resource;
@@ -8,6 +9,7 @@ import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.profiler.Profiler;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,18 +21,22 @@ import java.util.*;
 
 public class GTRecipeManager extends SinglePreparationResourceReloader<Map<String, List<MachineRecipe<?>>>> {
 
-    private static final Gson GSON = new GsonBuilder()
-            .setPrettyPrinting()
-            .disableHtmlEscaping()
-            .create();
-
     private static final Logger LOGGER = LoggerFactory.getLogger(GTRecipeManager.class);
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final String GT_MACHINE_RECIPES_FOLDER = "gt_machine_recipes";
     private static final String RECIPE_EXTENSION = ".json";
+
     private final RecipeManager recipeManager;
+    private final Map<MachineRecipeType, RecipeMap> recipes = new HashMap<>();
 
     public GTRecipeManager(RecipeManager recipeManager) {
         this.recipeManager = recipeManager;
+    }
+
+    @Nullable
+    public RecipeMap getRecipesOfType(MachineRecipeType recipeType) {
+        Preconditions.checkNotNull(recipeType, "recipeType");
+        return this.recipes.get(recipeType);
     }
 
     private static MachineRecipe<?> parseRecipe(Identifier recipeId, JsonElement jsonElement) {
@@ -52,17 +58,17 @@ public class GTRecipeManager extends SinglePreparationResourceReloader<Map<Strin
         return recipeSerializer.read(recipeId, object);
     }
 
-    private static Map<String, RecipeMap> buildRecipeMapIndex()  {
-        HashMap<String, RecipeMap> recipeMapsByFullName = new HashMap<>();
+    private static Map<String, MachineRecipeType> buildRecipeTypeIndex()  {
+        HashMap<String, MachineRecipeType> recipeTypesByFullName = new HashMap<>();
 
-        for (Identifier identifier : RecipeMap.REGISTRY.getIds()) {
+        for (Identifier identifier : MachineRecipeType.REGISTRY.getIds()) {
             String normalizedPath = identifier.getPath().replace('/', '_');
             String fullPath = identifier.getNamespace() + '_' + normalizedPath;
-            RecipeMap recipeMap = RecipeMap.REGISTRY.get(identifier);
+            MachineRecipeType recipeType = MachineRecipeType.REGISTRY.get(identifier);
 
-            recipeMapsByFullName.put(fullPath, recipeMap);
+            recipeTypesByFullName.put(fullPath, recipeType);
         }
-        return recipeMapsByFullName;
+        return recipeTypesByFullName;
     }
 
     @Override
@@ -109,23 +115,26 @@ public class GTRecipeManager extends SinglePreparationResourceReloader<Map<Strin
 
     @Override
     protected void apply(Map<String, List<MachineRecipe<?>>> prepared, ResourceManager manager, Profiler profiler) {
-        Map<String, RecipeMap> recipeMapIndex = buildRecipeMapIndex();
-
-        for (RecipeMap recipeMap : recipeMapIndex.values()) {
-            recipeMap.clearRecipes();
-        }
+        Map<String, MachineRecipeType> recipeTypeIndex = buildRecipeTypeIndex();
+        this.recipes.clear();
 
         for (Map.Entry<String, List<MachineRecipe<?>>> pair : prepared.entrySet()) {
             String recipeMapName = pair.getKey();
-            RecipeMap recipeMap = recipeMapIndex.get(recipeMapName);
+            MachineRecipeType machineRecipeType = recipeTypeIndex.get(recipeMapName);
 
-            if (recipeMap == null) {
+            if (machineRecipeType == null) {
                 LOGGER.error("Failed to find recipe map by name {}. Recipes associated with it will be ignored ({} recipes)", recipeMapName, pair.getValue().size());
                 continue;
             }
-            recipeMap.applyVanillaRecipes(this.recipeManager);
+
+            RecipeMap recipeMap = new RecipeMap(machineRecipeType);
             recipeMap.appendRecipes(pair.getValue());
+            if (recipeManager != null) {
+                recipeMap.applyVanillaRecipes(this.recipeManager);
+            }
+
             LOGGER.info("Loaded {} recipes into the recipe map {}", pair.getValue().size(), recipeMap);
+            this.recipes.put(machineRecipeType, recipeMap);
         }
     }
 }

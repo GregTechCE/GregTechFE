@@ -6,16 +6,12 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.item.FixedItemInvView;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import gregtech.api.GTValues;
 import gregtech.api.recipes.context.RecipeContext;
 import gregtech.api.recipes.recipes.VanillaRecipeWrappers;
-import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,12 +21,7 @@ public class RecipeMap {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipeMap.class);
 
-    public static final Registry<RecipeMap> REGISTRY = FabricRegistryBuilder
-            .createSimple(RecipeMap.class, new Identifier(GTValues.MODID, "recipe_maps"))
-            .buildAndRegister();
-
-    private final Class<? extends RecipeContext> contextClass;
-    private final RecipeType<?> vanillaRecipeType;
+    private final MachineRecipeType recipeType;
 
     private final List<MachineRecipe<?>> recipes = new ArrayList<>();
 
@@ -38,19 +29,13 @@ public class RecipeMap {
     private final Map<FluidKey, List<MachineRecipe<?>>> recipesByFluidInputs = new HashMap<>();
     private final List<MachineRecipe<?>> uncacheableRecipes = new ArrayList<>();
 
-    public RecipeMap(Settings settings) {
-        Preconditions.checkNotNull(settings.contextClass, "contextClass is not set");
-        this.contextClass = settings.contextClass;
-        this.vanillaRecipeType = settings.vanillaRecipeType;
+    public RecipeMap(MachineRecipeType recipeType) {
+        Preconditions.checkNotNull(recipeType, "recipeType");
+        this.recipeType = recipeType;
     }
 
-    public Identifier getName() {
-        return Preconditions.checkNotNull(REGISTRY.getId(this), "RecipeMap not registered");
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(REGISTRY.getId(this));
+    public MachineRecipeType getRecipeType() {
+        return recipeType;
     }
 
     @SuppressWarnings("unchecked")
@@ -63,6 +48,10 @@ public class RecipeMap {
     }
 
     public MachineRecipe<?> findRecipe(RecipeContext recipeContext) {
+        Class<?> contextClass = recipeType.getContextClass();
+        Preconditions.checkArgument(contextClass.isInstance(recipeContext),
+                "Context has invalid type for the provided recipe map");
+
         HashSet<MachineRecipe<?>> lookedUpRecipes = new HashSet<>();
 
         //Lookup item recipes first by checking cached recipes by input item type
@@ -143,44 +132,27 @@ public class RecipeMap {
     }
 
     public void applyVanillaRecipes(RecipeManager recipeManager) {
+        RecipeType<?> vanillaRecipeType = this.recipeType.getVanillaRecipeType();
         if (vanillaRecipeType != null) {
             List<MachineRecipe<?>> vanillaRecipes = VanillaRecipeWrappers
                     .mirrorVanillaRecipes(recipeManager, vanillaRecipeType);
             appendRecipes(vanillaRecipes);
             LOGGER.info("Loaded {} vanilla recipes of type {} into recipe map {}",
-                    vanillaRecipes.size(), this.vanillaRecipeType, this);
+                    vanillaRecipes.size(), vanillaRecipeType, this);
         }
     }
 
     public void appendRecipes(List<MachineRecipe<?>> recipes) {
+        Class<?> contextClass = this.recipeType.getContextClass();
         for (MachineRecipe<?> machineRecipe : recipes) {
             Class<?> minimumClass = machineRecipe.getMinimumSupportedContextClass();
 
-            if (!minimumClass.isAssignableFrom(this.contextClass)) {
+            if (!minimumClass.isAssignableFrom(contextClass)) {
                 LOGGER.error("Failed to add recipe {} to recipe map {}, recipes required context class {}, but recipe map only supports {}",
                         machineRecipe.getId(), this, minimumClass.getSimpleName(), contextClass.getSimpleName());
                 continue;
             }
             addAndCacheRecipe(machineRecipe);
-        }
-    }
-
-    public static class Settings {
-        private Class<? extends RecipeContext> contextClass = RecipeContext.class;
-        private RecipeType<?> vanillaRecipeType;
-
-        public Settings contextClass(Class<? extends RecipeContext> contextClass) {
-            Preconditions.checkNotNull(contextClass, "contextClass");
-            Preconditions.checkArgument(RecipeContext.class.isAssignableFrom(contextClass), "contextClass does not extend RecipeContext");
-
-            this.contextClass = contextClass;
-            return this;
-        }
-
-        public Settings vanillaRecipeType(RecipeType<?> recipeType) {
-            Preconditions.checkNotNull(recipeType, "recipeType");
-            this.vanillaRecipeType = recipeType;
-            return this;
         }
     }
 }
