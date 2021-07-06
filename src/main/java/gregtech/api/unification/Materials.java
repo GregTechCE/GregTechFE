@@ -13,7 +13,7 @@ import static com.google.common.collect.ImmutableList.of; //TODO: switch to java
 import static net.minecraft.enchantment.Enchantments.*;
 import static gregtech.api.unification.util.MaterialIconSets.*;
 import static gregtech.api.unification.material.flags.MaterialFlags.*;
-import static gregtech.api.util.ColorUtils.*;
+import static gregtech.api.util.Colors.*;
 
 public class Materials {
 
@@ -396,7 +396,7 @@ public class Materials {
     public static FluidMaterial Helium3 = new FluidMaterial(30, "helium3", 0xDDDD00, GAS, of(), STATE_GAS, Element.He_3);
     public static IngotMaterial Indium = new IngotMaterial(31, "indium", 0x6600BB, METALLIC, 2, of(), 0, Element.In);
     public static IngotMaterial Iridium = new IngotMaterial(32, "iridium", 0xFFFFFF, DULL, 3, of(), GENERATE_ORE | EXT2_METAL | GENERATE_ORE | GENERATE_RING | GENERATE_ROTOR, Element.Ir, 7.0F, 3.0f, 2560, 2719);
-    public static IngotMaterial Lead = new IngotMaterial(35, "lead", 0x8C648C, DULL, 1, of(), EXT2_METAL | GENERATE_ORE | MORTAR_GRINDABLE | GENERATE_DENSE, Element.Pb);
+    public static Material Lead = new IngotMaterial(35, "lead", 0x8C648C, DULL, 1, of(), EXT2_METAL | GENERATE_ORE | MORTAR_GRINDABLE | GENERATE_DENSE, Element.Pb);
     public static IngotMaterial Lithium = new IngotMaterial(36, "lithium", 0xCBCBCB, DULL, 2, of(), STD_METAL | GENERATE_ORE, Element.Li);
     public static IngotMaterial Magnesium = new IngotMaterial(38, "magnesium", 0xFFBBBB, METALLIC, 2, of(), 0, Element.Mg);
     public static FluidMaterial Mercury = new FluidMaterial(40, "mercury", 0xFFDDDD, FLUID, of(), SMELT_INTO_FLUID, Element.Hg);
@@ -456,7 +456,7 @@ public class Materials {
     public static FluidMaterial Glyceryl = new FluidMaterial(116, "glyceryl", 0x009696, FLUID, of(new MaterialComponent(Carbon, 3), new MaterialComponent(Hydrogen, 5), new MaterialComponent(Nitrogen, 3), new MaterialComponent(Oxygen, 9)), FLAMMABLE | EXPLOSIVE | NO_SMELTING | NO_SMASHING);
     public static GemMaterial GreenSapphire = new GemMaterial(117, "green_sapphire", 0x64C882, GEM_HORIZONTAL, 2, of(new MaterialComponent(Aluminium, 2), new MaterialComponent(Oxygen, 3)), GENERATE_ORE | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT | GENERATE_LENS, 8.0F, 3.0f, 368);
     public static DustMaterial Grossular = new DustMaterial(118, "grossular", 0xC86400, GEM_VERTICAL, 1, of(new MaterialComponent(Calcium, 3), new MaterialComponent(Aluminium, 2), new MaterialComponent(Silicon, 3), new MaterialComponent(Oxygen, 12)), GENERATE_ORE);
-    public static FluidMaterial DistilledWater = new FluidMaterial(119, "distilled_water", COLOR_BLUE, FLUID, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 1)), NO_RECYCLING | DISABLE_DECOMPOSITION);
+    public static Material DistilledWater = new FluidMaterial(119, "distilled_water", COLOR_BLUE, FLUID, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 1)), NO_RECYCLING | DISABLE_DECOMPOSITION);
     public static DustMaterial Ice = new DustMaterial(120, "ice", 0xC8C8FF, ROUGH, 0, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 1)), NO_SMASHING | NO_RECYCLING | SMELT_INTO_FLUID | EXCLUDE_BLOCK_CRAFTING_RECIPES | DISABLE_DECOMPOSITION);
     public static DustMaterial Ilmenite = new DustMaterial(121, "ilmenite", 0x463732, ROUGH, 3, of(new MaterialComponent(Iron, 1), new MaterialComponent(Titanium, 1), new MaterialComponent(Oxygen, 3)), GENERATE_ORE | DISABLE_DECOMPOSITION);
     public static GemMaterial Rutile = new GemMaterial(122, "rutile", 0xD40D5C, GEM_HORIZONTAL, 2, of(new MaterialComponent(Titanium, 1), new MaterialComponent(Oxygen, 2)), STD_GEM | DISABLE_DECOMPOSITION);
@@ -500,7 +500,7 @@ public class Materials {
     public static FluidMaterial NitricAcid = new FluidMaterial(351, "nitric_acid", 0xCCCC00, FLUID, of(new MaterialComponent(Hydrogen, 1), new MaterialComponent(Nitrogen, 1), new MaterialComponent(Oxygen, 3)), 0);
     public static GemMaterial Coke = new GemMaterial(357, "coke", 0x666666, LIGNITE, 1, of(new MaterialComponent(Carbon, 1)), FLAMMABLE | NO_SMELTING | NO_SMASHING | MORTAR_GRINDABLE);
 
-    public static IngotMaterial SolderingAlloy = new IngotMaterial(180, "soldering_alloy", 0xDCDCE6, DULL, 1, of(new MaterialComponent(Tin, 9), new MaterialComponent(Antimony, 1)), EXT_METAL | GENERATE_FINE_WIRE, null);
+    public static Material SolderingAlloy = new IngotMaterial(180, "soldering_alloy", 0xDCDCE6, DULL, 1, of(new MaterialComponent(Tin, 9), new MaterialComponent(Antimony, 1)), EXT_METAL | GENERATE_FINE_WIRE, null);
     public static DustMaterial Spessartine = new DustMaterial(181, "spessartine", 0xFF6464, GEM_VERTICAL, 2, of(new MaterialComponent(Aluminium, 2), new MaterialComponent(Manganese, 3), new MaterialComponent(Silicon, 3), new MaterialComponent(Oxygen, 12)), GENERATE_ORE);
     public static DustMaterial Sphalerite = new DustMaterial(182, "sphalerite", 0xFFFFFF, ROUGH, 1, of(new MaterialComponent(Zinc, 1), new MaterialComponent(Sulfur, 1)), GENERATE_ORE | INDUCTION_SMELTING_LOW_OUTPUT | DISABLE_DECOMPOSITION);
     public static DustMaterial Stibnite = new DustMaterial(185, "stibnite", 0x464646, ROUGH, 2, of(new MaterialComponent(Antimony, 2), new MaterialComponent(Sulfur, 3)), GENERATE_ORE);
@@ -621,7 +621,7 @@ public class Materials {
     public static FluidMaterial RocketFuel = new FluidMaterial(474, "rocket_fuel", 0xBDB78C, FLUID, of(), 0);
     public static FluidMaterial Glue = new FluidMaterial(319, "glue", 0xC8C400, FLUID, of(), 0);
     public static DustMaterial Gunpowder = new DustMaterial(320, "gunpowder", COLOR_DARK_GREY, SAND, 0, of(), FLAMMABLE | EXPLOSIVE | NO_SMELTING | NO_SMASHING);
-    public static FluidMaterial Lubricant = new FluidMaterial(321, "lubricant", 0xFFC400, FLUID, of(), 0);
+    public static Material Lubricant = new FluidMaterial(321, "lubricant", 0xFFC400, FLUID, of(), 0);
     public static FluidMaterial Oil = new FluidMaterial(323, "oil", 0x666666, FLUID, of(), 0);
     public static DustMaterial Oilsands = new DustMaterial(324, "oilsands", 0x0A0A0A, SAND, 1, of(new MaterialComponent(Oil, 1L)), GENERATE_ORE);
     public static DustMaterial RareEarth = new DustMaterial(326, "rare_earth", 0x808064, ROUGH, 0, of(), 0);
@@ -629,7 +629,7 @@ public class Materials {
     public static FluidMaterial IndiumConcentrate = new FluidMaterial(425, "indium_concentrate", 205130, FLUID, of(), 0);
     public static FluidMaterial SeedOil = new FluidMaterial(327, "seed_oil", 0xC4FF00, FLUID, of(), 0);
     public static DustMaterial Stone = new DustMaterial(328, "stone", 0xCDCDCD, ROUGH, 1, of(), MORTAR_GRINDABLE | GENERATE_GEAR | GENERATE_PLATE | NO_SMASHING | NO_RECYCLING);
-    public static FluidMaterial Lava = new FluidMaterial(329, "lava", 0xFF4000, FLUID, of(), 0);
+    public static Material Lava = new FluidMaterial(329, "lava", 0xFF4000, FLUID, of(), 0);
     public static DustMaterial Glowstone = new DustMaterial(330, "glowstone", COLOR_YELLOW, SHINY, 1, of(), NO_SMASHING | SMELT_INTO_FLUID | GENERATE_PLATE | EXCLUDE_PLATE_COMPRESSOR_RECIPE);
     public static GemMaterial NetherStar = new GemMaterial(331, "nether_star", 0xFFFFFF, NETHERSTAR, 4, of(), STD_SOLID | GENERATE_LENS | NO_SMASHING | NO_SMELTING);
     public static DustMaterial Endstone = new DustMaterial(332, "endstone", 0xFFFFFF, DULL, 1, of(), NO_SMASHING);

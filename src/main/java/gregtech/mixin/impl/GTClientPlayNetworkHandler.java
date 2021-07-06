@@ -1,8 +1,8 @@
-package gregtech.api.data;
+package gregtech.mixin.impl;
 
 import gregtech.api.recipes.GTRecipeManager;
 
-public interface GTServerResourceManager {
+public interface GTClientPlayNetworkHandler {
 
     GTRecipeManager gregtech_getRecipeManager();
 }

@@ -1,8 +1,8 @@
 package gregtech.api.gui.widgets.group;
 
 import gregtech.api.gui.Widget;
-import gregtech.api.util.Position;
-import gregtech.api.util.Size;
+import gregtech.api.gui.util.Position;
+import gregtech.api.gui.util.Size;
 
 public class WidgetGroup extends AbstractWidgetGroup {
 

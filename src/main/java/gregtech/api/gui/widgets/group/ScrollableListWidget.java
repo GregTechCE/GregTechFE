@@ -3,9 +3,9 @@ package gregtech.api.gui.widgets.group;
 import gregtech.api.gui.util.GuiUtils;
 import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
-import gregtech.api.util.Position;
+import gregtech.api.gui.util.Position;
 import gregtech.api.gui.util.ScissorStack;
-import gregtech.api.util.Size;
+import gregtech.api.gui.util.Size;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 

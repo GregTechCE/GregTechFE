@@ -1,4 +1,4 @@
-package gregtech.api.util;
+package gregtech.api.data;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

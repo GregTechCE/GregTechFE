@@ -1,4 +1,4 @@
-package gregtech.api.util;
+package gregtech.api.util.ref;
 
 import alexiil.mc.lib.attributes.misc.Reference;
 

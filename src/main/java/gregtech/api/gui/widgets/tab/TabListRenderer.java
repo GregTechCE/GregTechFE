@@ -1,7 +1,7 @@
 package gregtech.api.gui.widgets.tab;
 
 import gregtech.api.gui.resources.TextureArea;
-import gregtech.api.util.Position;
+import gregtech.api.gui.util.Position;
 import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.List;

@@ -1,50 +1,59 @@
 package gregtech.api.recipes.builders;
 
-import gregtech.api.recipes.ModHandler;
-import gregtech.api.recipes.Recipe;
-import gregtech.api.recipes.RecipeBuilder;
-import gregtech.api.recipes.RecipeMap;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import gregtech.api.fluids.MaterialFluidRegistry;
+import gregtech.api.recipes.MachineRecipeTypes;
 import gregtech.api.unification.Materials;
-import gregtech.api.util.ValidationResult;
+import net.minecraft.util.Identifier;
 
-public class CutterRecipeBuilder extends RecipeBuilder<CutterRecipeBuilder> {
+import java.util.stream.Stream;
 
-    public CutterRecipeBuilder() {
-    }
+public class CutterRecipeBuilder extends ElectricMachineRecipeBuilder {
 
-    public CutterRecipeBuilder(Recipe recipe, RecipeMap<CutterRecipeBuilder> recipeMap) {
-        super(recipe, recipeMap);
-    }
+    protected boolean addLubricantToRecipe;
 
-    public CutterRecipeBuilder(RecipeBuilder<CutterRecipeBuilder> recipeBuilder) {
-        super(recipeBuilder);
+    public CutterRecipeBuilder(Identifier id) {
+        super(id, MachineRecipeTypes.CUTTING_SAW);
     }
 
     @Override
-    public CutterRecipeBuilder copy() {
-        return new CutterRecipeBuilder(this);
-    }
-
-    @Override
-    public ValidationResult<Recipe> build() {
-        return ValidationResult.newResult(finalizeAndValidate(),
-                new Recipe(inputs, outputs, chancedOutputs, fluidInputs, fluidOutputs, duration, EUt, hidden));
-    }
-
-    @Override
-    public void buildAndRegister() {
-        if (fluidInputs.isEmpty()) {
-            recipeMap.addRecipe(this.copy()
-                    .fluidInputs(Materials.Water.getFluid(Math.max(4, Math.min(1000, duration * EUt / 320))))
-                    .duration(duration * 2).build());
-            recipeMap.addRecipe(this.copy()
-                    .fluidInputs(ModHandler.getDistilledWater(Math.max(3, Math.min(750, duration * EUt / 426))))
-                    .duration((int) (duration * 1.3)).build());
-            recipeMap.addRecipe(this.copy()
-                    .fluidInputs(Materials.Lubricant.getFluid(Math.max(1, Math.min(250, duration * EUt / 1280))))
-                    .duration(Math.max(1, duration / 2)).build());
-        } else {
-            recipeMap.addRecipe(build());
+    public void copyFrom(MachineRecipeBuilder otherBuilder) {
+        super.copyFrom(otherBuilder);
+        if (otherBuilder instanceof CutterRecipeBuilder other) {
+            this.addLubricantToRecipe = other.addLubricantToRecipe;
         }
+    }
+
+    public CutterRecipeBuilder addLubricantToRecipe() {
+        this.addLubricantToRecipe = true;
+        return this;
+    }
+
+    private MachineRecipeBuilder createLubricantRecipe(String postfix, FluidKey lubricant, int minFluidAmount, int maxFluidAmount, int divisor) {
+        Identifier recipeId = new Identifier(this.id.getNamespace(), this.id.getPath() + "_" + postfix);
+
+        int rawFluidAmount = Math.max(minFluidAmount, Math.min(maxFluidAmount, duration * recipeEUt / divisor));
+        FluidAmount fluidAmount = FluidAmount.of(rawFluidAmount, 1000);
+
+        ElectricMachineRecipeBuilder variantBuilder = new ElectricMachineRecipeBuilder(recipeId, this.recipeType);
+        variantBuilder.copyFrom(this);
+        return variantBuilder.fluidInput(lubricant.withAmount(fluidAmount));
+    }
+
+    @Override
+    public Stream<MachineRecipeBuilder> flatMapBuilder() {
+        if (this.addLubricantToRecipe) {
+            FluidKey distilledWater = MaterialFluidRegistry.INSTANCE.getMaterialFluid(Materials.DistilledWater);
+            FluidKey lubricant = MaterialFluidRegistry.INSTANCE.getMaterialFluid(Materials.Lubricant);
+
+            MachineRecipeBuilder waterRecipe = createLubricantRecipe("water", FluidKeys.WATER, 4, 1000, 320);
+            MachineRecipeBuilder distilledWaterRecipe = createLubricantRecipe("distilled_water", distilledWater, 3, 750, 426);
+            MachineRecipeBuilder lubricantRecipe = createLubricantRecipe("lubricant", lubricant, 1, 250, 1280);
+
+            return Stream.of(waterRecipe, distilledWaterRecipe, lubricantRecipe);
+        }
+        return super.flatMapBuilder();
     }
 }

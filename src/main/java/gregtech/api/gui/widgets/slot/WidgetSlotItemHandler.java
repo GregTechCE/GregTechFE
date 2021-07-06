@@ -2,11 +2,9 @@ package gregtech.api.gui.widgets.slot;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.compat.SlotFixedItemInv;
-import gregtech.api.util.EmptyScreenHandler;
+import gregtech.api.gui.util.EmptyScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-
-import java.awt.*;
 
 class WidgetSlotItemHandler extends SlotFixedItemInv {
 

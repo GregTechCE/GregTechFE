@@ -1,6 +1,6 @@
 package gregtech.api.util;
 
-public class ColorUtils {
+public class Colors {
     public static final int COLOR_BLUE = 0x0000FF;
     public static final int COLOR_ORANGE = 0xFF8000;
     public static final int COLOR_VERY_LIGHT_GREY = 0xDCDCDC;
@@ -10,6 +10,6 @@ public class ColorUtils {
     public static final int COLOR_YELLOW = 0xFFFF00;
     public static final int COLOR_WHITE = 0xFFFFFF;
 
-    private ColorUtils() {
+    private Colors() {
     }
 }

@@ -11,7 +11,7 @@ import gregtech.api.gui.widgets.tab.TabListRenderer;
 import gregtech.api.gui.widgets.tab.VerticalTabListRenderer;
 import gregtech.api.gui.widgets.tab.VerticalTabListRenderer.HorizontalLocation;
 import gregtech.api.gui.widgets.tab.VerticalTabListRenderer.VerticalStartCorner;
-import gregtech.api.util.Position;
+import gregtech.api.gui.util.Position;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Pair;

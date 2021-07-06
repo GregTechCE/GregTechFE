@@ -19,7 +19,7 @@ import gregtech.api.items.stats.FluidStats;
 import gregtech.api.items.util.CustomMaxCountItem;
 import gregtech.api.util.ElectricItemUtil;
 import gregtech.api.util.GTUtility;
-import gregtech.api.util.InventorySlotReference;
+import gregtech.api.util.ref.InventorySlotReference;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

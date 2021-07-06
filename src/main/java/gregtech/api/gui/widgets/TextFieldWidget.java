@@ -2,8 +2,8 @@ package gregtech.api.gui.widgets;
 
 import gregtech.api.gui.RenderContext;
 import gregtech.api.gui.Widget;
-import gregtech.api.util.Position;
-import gregtech.api.util.Size;
+import gregtech.api.gui.util.Position;
+import gregtech.api.gui.util.Size;
 import gregtech.mixin.accessor.ClickableWidgetAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

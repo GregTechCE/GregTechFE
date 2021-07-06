@@ -1,6 +1,8 @@
-package gregtech.api.util;
+package gregtech.api.data;
 
 import com.google.common.base.Preconditions;
+import gregtech.api.gui.util.Position;
+import gregtech.api.gui.util.Size;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;

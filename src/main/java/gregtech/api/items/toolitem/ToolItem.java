@@ -20,7 +20,7 @@ import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.flags.MaterialFlags;
 import gregtech.api.unification.material.properties.SolidForm;
 import gregtech.api.unification.material.properties.ToolProperties;
-import gregtech.api.util.SimpleReference;
+import gregtech.api.util.ref.SimpleReference;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;

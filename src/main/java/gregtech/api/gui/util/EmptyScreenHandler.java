@@ -1,4 +1,4 @@
-package gregtech.api.util;
+package gregtech.api.gui.util;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ScreenHandler;

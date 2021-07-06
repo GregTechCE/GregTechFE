@@ -10,6 +10,7 @@ import gregtech.api.recipes.CacheableMachineRecipe;
 import gregtech.api.recipes.MachineRecipe;
 import gregtech.api.recipes.RecipeSerializer;
 import gregtech.api.recipes.context.GeneratorMachineContext;
+import gregtech.api.recipes.context.RecipeContext;
 import gregtech.api.recipes.util.RecipeUtil;
 import net.minecraft.item.Item;
 import net.minecraft.network.PacketByteBuf;
@@ -41,6 +42,11 @@ public class GeneratorFuelRecipe<C extends GeneratorMachineContext> implements M
     @Override
     public RecipeSerializer<?> getSerializer() {
         return RecipeSerializers.GENERATOR_FUEL_RECIPE;
+    }
+
+    @Override
+    public Class<? extends RecipeContext> getMinimumSupportedContextClass() {
+        return GeneratorMachineContext.class;
     }
 
     public FluidVolume getFuelFluid() {

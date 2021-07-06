@@ -13,7 +13,8 @@ import com.google.gson.JsonParseException;
 import gregtech.api.recipes.RecipeSerializer;
 import gregtech.api.recipes.context.ElectricMachineContext;
 import gregtech.api.recipes.MachineRecipe;
-import gregtech.api.util.SimpleReference;
+import gregtech.api.recipes.context.RecipeContext;
+import gregtech.api.util.ref.SimpleReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -41,6 +42,11 @@ public class FluidCanningRecipe<C extends ElectricMachineContext> implements Mac
     @Override
     public RecipeSerializer<?> getSerializer() {
         return RecipeSerializers.FLUID_CANNING_RECIPE;
+    }
+
+    @Override
+    public Class<? extends RecipeContext> getMinimumSupportedContextClass() {
+        return ElectricMachineContext.class;
     }
 
     public int getDuration() {

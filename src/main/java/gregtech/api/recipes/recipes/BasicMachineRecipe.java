@@ -3,6 +3,7 @@ package gregtech.api.recipes.recipes;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import gregtech.api.recipes.CacheableMachineRecipe;
 import gregtech.api.recipes.MachineRecipe;
@@ -41,11 +42,11 @@ public class BasicMachineRecipe<C extends RecipeContext> implements MachineRecip
                               List<FluidVolume> fluidOutputs,
                               int duration) {
         this.id = id;
-        this.inputs = inputs;
-        this.fluidInputs = fluidInputs;
-        this.outputs = outputs;
-        this.chancedOutputs = chancedOutputs;
-        this.fluidOutputs = fluidOutputs;
+        this.inputs = ImmutableList.copyOf(inputs);
+        this.fluidInputs = ImmutableList.copyOf(fluidInputs);
+        this.outputs = ImmutableList.copyOf(outputs);
+        this.chancedOutputs = ImmutableList.copyOf(chancedOutputs);
+        this.fluidOutputs = ImmutableList.copyOf(fluidOutputs);
         this.duration = duration;
 
         ArrayList<ItemStack> combinedOutputs = new ArrayList<>(outputs);
@@ -63,6 +64,11 @@ public class BasicMachineRecipe<C extends RecipeContext> implements MachineRecip
     @Override
     public RecipeSerializer<?> getSerializer() {
         return RecipeSerializers.BASIC_MACHINE_RECIPE;
+    }
+
+    @Override
+    public Class<? extends RecipeContext> getMinimumSupportedContextClass() {
+        return RecipeContext.class;
     }
 
     public List<CountableIngredient> getInputs() {

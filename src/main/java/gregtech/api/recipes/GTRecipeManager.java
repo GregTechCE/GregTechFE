@@ -2,8 +2,8 @@ package gregtech.api.recipes;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.*;
-import gregtech.api.data.GTClientPlayNetworkHandler;
-import gregtech.api.data.GTServerResourceManager;
+import gregtech.mixin.impl.GTClientPlayNetworkHandler;
+import gregtech.mixin.impl.GTServerResourceManager;
 import gregtech.mixin.accessor.ClientWorldAccessor;
 import gregtech.mixin.accessor.MinecraftServerAccessor;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

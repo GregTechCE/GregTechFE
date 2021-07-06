@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import gregtech.api.recipes.RecipeSerializer;
 import gregtech.api.recipes.context.PBFMachineContext;
+import gregtech.api.recipes.context.RecipeContext;
 import gregtech.api.recipes.util.ChanceEntry;
 import gregtech.api.recipes.util.CountableIngredient;
 import net.minecraft.item.ItemStack;
@@ -30,6 +31,11 @@ public class PBFRecipe<C extends PBFMachineContext> extends BasicMachineRecipe<C
     @Override
     public RecipeSerializer<?> getSerializer() {
         return RecipeSerializers.PRIMITIVE_BLAST_FURNACE_RECIPE;
+    }
+
+    @Override
+    public Class<? extends RecipeContext> getMinimumSupportedContextClass() {
+        return PBFMachineContext.class;
     }
 
     public int getFuelCost() {

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import gregtech.api.recipes.RecipeSerializer;
 import gregtech.api.recipes.context.EBFMachineContext;
+import gregtech.api.recipes.context.RecipeContext;
 import gregtech.api.recipes.util.ChanceEntry;
 import gregtech.api.recipes.util.CountableIngredient;
 import net.minecraft.item.ItemStack;
@@ -34,6 +35,11 @@ public class BlastFurnaceRecipe<C extends EBFMachineContext> extends ElectricMac
     @Override
     public RecipeSerializer<?> getSerializer() {
         return RecipeSerializers.BLAST_FURNACE_RECIPE;
+    }
+
+    @Override
+    public Class<? extends RecipeContext> getMinimumSupportedContextClass() {
+        return EBFMachineContext.class;
     }
 
     @Override

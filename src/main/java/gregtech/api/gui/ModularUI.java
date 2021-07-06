@@ -9,7 +9,7 @@ import gregtech.api.gui.widgets.*;
 import gregtech.api.gui.widgets.ProgressWidget.MoveType;
 import gregtech.api.gui.widgets.group.AbstractWidgetGroup;
 import gregtech.api.gui.widgets.slot.SlotWidget;
-import gregtech.api.util.Position;
+import gregtech.api.gui.util.Position;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 

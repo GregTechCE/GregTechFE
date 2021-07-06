@@ -1,6 +1,6 @@
 package gregtech.api.net;
 
-import gregtech.api.data.GTClientPlayNetworkHandler;
+import gregtech.mixin.impl.GTClientPlayNetworkHandler;
 import gregtech.api.gui.UIHolder;
 import gregtech.api.gui.impl.ModularUIScreenHandler;
 import gregtech.api.recipes.GTRecipeManager;

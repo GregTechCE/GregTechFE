@@ -1,4 +1,4 @@
-package gregtech.api.util;
+package gregtech.api.gui.util;
 
 import com.google.common.base.MoreObjects;
 

@@ -7,18 +7,20 @@ public class FluidProperties {
 
     private final int temperature;
     private final boolean isGaseous;
+    private final boolean generatePlasma;
 
-    private FluidProperties(int temperature, boolean isGaseous) {
+    private FluidProperties(int temperature, boolean isGaseous, boolean generatePlasma) {
         this.temperature = temperature;
         this.isGaseous = isGaseous;
+        this.generatePlasma = generatePlasma;
     }
 
-    public static FluidProperties fluid(int temperature) {
-        return new FluidProperties(temperature, false);
+    public static FluidProperties fluid(int temperature, boolean generatePlasma) {
+        return new FluidProperties(temperature, false, generatePlasma);
     }
 
-    public static FluidProperties gas(int temperature) {
-        return new FluidProperties(temperature, true);
+    public static FluidProperties gas(int temperature, boolean generatePlasma) {
+        return new FluidProperties(temperature, true, generatePlasma);
     }
 
     public int getTemperature() {
@@ -27,5 +29,9 @@ public class FluidProperties {
 
     public boolean isGaseous() {
         return isGaseous;
+    }
+
+    public boolean shouldGeneratePlasma() {
+        return generatePlasma;
     }
 }

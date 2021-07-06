@@ -6,8 +6,8 @@ import gregtech.api.gui.Widget;
 import gregtech.api.gui.WidgetUIAccess;
 import gregtech.api.gui.igredient.IGhostIngredientTarget;
 import gregtech.api.gui.igredient.IIngredientSlot;
-import gregtech.api.util.Position;
-import gregtech.api.util.Size;
+import gregtech.api.gui.util.Position;
+import gregtech.api.gui.util.Size;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 

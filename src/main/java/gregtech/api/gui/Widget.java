@@ -1,8 +1,8 @@
 package gregtech.api.gui;
 
 import com.google.common.base.Preconditions;
-import gregtech.api.util.Position;
-import gregtech.api.util.Size;
+import gregtech.api.gui.util.Position;
+import gregtech.api.gui.util.Size;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
