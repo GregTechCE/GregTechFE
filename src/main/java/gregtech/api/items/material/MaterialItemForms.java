@@ -57,6 +57,8 @@ public class MaterialItemForms {
 
     public static final MaterialItemForm LENSE;
 
+    public static final MaterialItemForm BUCKET;
+
     private static MaterialItemForm register(String name, MaterialItemForm.Settings settings) {
         return Registry.register(MaterialItemForm.REGISTRY, new Identifier(GTValues.MODID, name), new MaterialItemForm(settings));
     }
@@ -66,6 +68,7 @@ public class MaterialItemForms {
     }
 
     static {
+
         //...
     }
 

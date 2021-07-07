@@ -1,37 +1,27 @@
 package gregtech.api.unification.material.properties;
 
+import gregtech.api.fluids.MaterialFluidProperties;
+import gregtech.api.fluids.MaterialFluidTexture;
+
 public class FluidProperties {
 
-    public static final int DEFAULT_TEMPERATURE = 300;
-    public static final int DEFAULT_MELTED_METAL_TEMPERATURE = 1265;
+    private final MaterialFluidProperties properties;
+    private final MaterialFluidTexture texture;
 
-    private final int temperature;
-    private final boolean isGaseous;
-    private final boolean generatePlasma;
-
-    private FluidProperties(int temperature, boolean isGaseous, boolean generatePlasma) {
-        this.temperature = temperature;
-        this.isGaseous = isGaseous;
-        this.generatePlasma = generatePlasma;
+    public FluidProperties(MaterialFluidProperties properties, MaterialFluidTexture texture) {
+        this.properties = properties;
+        this.texture = texture;
     }
 
-    public static FluidProperties fluid(int temperature, boolean generatePlasma) {
-        return new FluidProperties(temperature, false, generatePlasma);
+    public static FluidProperties create(MaterialFluidProperties properties, MaterialFluidTexture texture) {
+        return new FluidProperties(properties, texture);
     }
 
-    public static FluidProperties gas(int temperature, boolean generatePlasma) {
-        return new FluidProperties(temperature, true, generatePlasma);
+    public MaterialFluidProperties getProperties() {
+        return properties;
     }
 
-    public int getTemperature() {
-        return temperature;
-    }
-
-    public boolean isGaseous() {
-        return isGaseous;
-    }
-
-    public boolean shouldGeneratePlasma() {
-        return generatePlasma;
+    public MaterialFluidTexture getTexture() {
+        return texture;
     }
 }

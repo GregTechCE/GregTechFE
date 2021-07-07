@@ -1,37 +1,19 @@
 package gregtech.api.fluids;
 
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.flags.MaterialFlags;
 import gregtech.api.unification.material.properties.FluidProperties;
 
+import java.util.Optional;
+
 public enum MaterialFluidKind {
-    FLUID("fluid", "{material}", true),
-    PLASMA("plasma", "{material}_plasma", false);
+    FLUID;
 
-    private final String registryName;
-    private final String fluidNameTemplate;
-    private final boolean generateFluidBlock;
-
-    MaterialFluidKind(String registryName, String fluidNameTemplate, boolean generateFluidBlock) {
-        this.registryName = registryName;
-        this.fluidNameTemplate = fluidNameTemplate;
-        this.generateFluidBlock = generateFluidBlock;
+    public Optional<FluidProperties> queryFluidProperties(Material material) {
+        return material.queryProperty(MaterialFlags.FLUID_PROPERTIES);
     }
 
-    public String getRegistryName() {
-        return registryName;
-    }
-
-    public String createFluidName(String materialName) {
-        return this.fluidNameTemplate.replace("{material}", materialName);
-    }
-
-    public boolean shouldGenerateFor(FluidProperties properties) {
-        return switch (this) {
-            case FLUID -> true;
-            case PLASMA -> properties.shouldGeneratePlasma();
-        };
-    }
-
-    public boolean shouldGenerateFluidBlock() {
-        return generateFluidBlock;
+    public boolean shouldGenerateFor(Material material) {
+        return true;
     }
 }

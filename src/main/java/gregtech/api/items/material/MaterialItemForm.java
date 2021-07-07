@@ -86,7 +86,7 @@ public class MaterialItemForm {
                 .group(GTCreativeTabs.MATERIALS);
     }
 
-    public MaterialItem createItem(Material material) {
+    public Item createItem(Material material) {
         return new MaterialItem(createItemSettings(material), this, material);
     }
 

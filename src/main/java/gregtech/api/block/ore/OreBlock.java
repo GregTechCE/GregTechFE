@@ -68,7 +68,7 @@ public class OreBlock extends FallingBlock implements AutoTaggedBlock, LootTable
     @Override
     public LootTable.Builder generateLootTable() {
         MaterialItemId itemId = new MaterialItemId(MaterialItemForms.RAW_RESOURCE, material);
-        Item rawResourceItem = MaterialItemRegistry.INSTANCE.getItem(itemId);
+        Item rawResourceItem = MaterialItemRegistry.INSTANCE.getMaterialItem(itemId);
 
         return BlockLootTableGeneratorAccessor.oreDrops(this, rawResourceItem);
     }

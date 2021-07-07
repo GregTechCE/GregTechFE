@@ -15,7 +15,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +29,13 @@ public class MaterialItemRegistry {
     }
 
     @NotNull
-    public Item getItem(MaterialItemId itemId) {
+    public Item getMaterialItem(MaterialItemId itemId) {
         return registeredMaterialItems.getOrDefault(itemId, Items.AIR);
+    }
+
+    @NotNull
+    public Item getMaterialItem(MaterialItemForm itemForm, Material material) {
+        return getMaterialItem(new MaterialItemId(itemForm, material));
     }
 
     public ItemStack getMaterialItem(MaterialItemId itemId, int amount) {
@@ -43,7 +47,7 @@ public class MaterialItemRegistry {
         return getMaterialItem(new MaterialItemId(form, material), amount);
     }
 
-    private MaterialItem createMaterialItem(MaterialItemId itemId) {
+    private Item createMaterialItem(MaterialItemId itemId) {
         return itemId.getForm().createItem(itemId.getMaterial());
     }
 
@@ -82,13 +86,15 @@ public class MaterialItemRegistry {
 
                 if (itemForm.shouldGenerateFor(material)) {
                     MaterialItemId materialItemId = new MaterialItemId(itemForm, material);
-                    MaterialItem materialItem = createMaterialItem(materialItemId);
+                    Item item = createMaterialItem(materialItemId);
 
                     Identifier itemRegistryId = createItemId(formId, materialId);
-                    Registry.register(Registry.ITEM, itemRegistryId, materialItem);
+                    Registry.register(Registry.ITEM, itemRegistryId, item);
 
-                    onMaterialItemRegister(materialItem);
-                    this.registeredMaterialItems.put(materialItemId, materialItem);
+                    if (item instanceof MaterialItem materialItem) {
+                        onMaterialItemRegister(materialItem);
+                    }
+                    this.registeredMaterialItems.put(materialItemId, item);
                 }
             }
         }
