@@ -3,18 +3,16 @@ package gregtech.api.items.material;
 import gregtech.api.damagesources.GTDamageSource;
 import gregtech.api.items.util.AutoTaggedItem;
 import gregtech.api.items.util.ItemEntityAwareItem;
+import gregtech.api.items.util.ModelProviderItem;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.flags.MaterialFlags;
 import gregtech.api.unification.material.properties.ChemicalComposition;
 import gregtech.api.unification.util.MaterialAmount;
 import gregtech.api.unification.util.MaterialIconSet;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeveledCauldronBlock;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.Item;
@@ -34,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTaggedItem {
+public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTaggedItem, ModelProviderItem {
 
     private static final float RADIATION_DAMAGE_PER_SECOND = 1.5f;
     private static final float HEAT_DAMAGE_PER_SECOND = 2.0f;
@@ -122,14 +120,13 @@ public class MaterialItem extends Item implements ItemEntityAwareItem, AutoTagge
         }
     }
 
-    @Environment(EnvType.CLIENT)
-    ModelIdentifier getModelLocation() {
+    @Override
+    public Identifier getModelLocation() {
         Identifier itemFormName = this.itemForm.getName();
         String modelType = itemFormName.getNamespace() + "/" + itemFormName.getPath();
 
         MaterialIconSet iconSet = this.material.queryPropertyChecked(MaterialFlags.ICON_SET);
-        Identifier modelId = iconSet.getModelLocation(modelType);
-        return new ModelIdentifier(modelId, "inventory");
+        return iconSet.getModelLocation(modelType);
     }
 
     float getDamageMultiplier(ItemStack itemStack) {

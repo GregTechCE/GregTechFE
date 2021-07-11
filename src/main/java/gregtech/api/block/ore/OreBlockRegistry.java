@@ -82,18 +82,11 @@ public class OreBlockRegistry {
 
     @Environment(EnvType.CLIENT)
     private void registerOreBlockClient(OreBlock oreBlock) {
-        OreBlockType blockType = new OreBlockType(oreBlock.getVariant(), oreBlock.getMaterial());
-
-        OreBlockVariantProvider.INSTANCE.registerOreBlock(oreBlock.getDefaultState(), new VisualOreBlockType(blockType));
         ColorProviderRegistry.BLOCK.register(OreBlockColorProvider.INSTANCE, oreBlock);
     }
 
     @Environment(EnvType.CLIENT)
     private void registerOreBlockItemClient(OreBlockItem oreBlockItem) {
-        OreBlock oreBlock = oreBlockItem.getOreBlock();
-        OreBlockType blockType = new OreBlockType(oreBlock.getVariant(), oreBlock.getMaterial());
-
-        OreBlockVariantProvider.INSTANCE.registerOreBlockItem(oreBlockItem, new VisualOreBlockType(blockType));
         ColorProviderRegistry.ITEM.register(OreBlockColorProvider.INSTANCE, oreBlockItem);
     }
 

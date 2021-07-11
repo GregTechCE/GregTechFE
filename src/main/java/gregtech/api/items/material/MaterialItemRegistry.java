@@ -1,14 +1,12 @@
 package gregtech.api.items.material;
 
 import gregtech.api.GTValues;
-import gregtech.api.render.RemappingModelResourceProvider;
 import gregtech.api.unification.material.Material;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.cauldron.CauldronBehavior;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -63,9 +61,6 @@ public class MaterialItemRegistry {
 
     @Environment(EnvType.CLIENT)
     private void registerMaterialItemClient(MaterialItem materialItem) {
-        ModelIdentifier modelIdentifier = materialItem.getModelLocation();
-
-        RemappingModelResourceProvider.INSTANCE.registerItemModel(materialItem, modelIdentifier);
         ColorProviderRegistry.ITEM.register(MaterialItemColorProvider.INSTANCE, materialItem);
     }
 

@@ -2,18 +2,21 @@ package gregtech.api.unification.material.properties;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import gregtech.api.unification.material.flags.MaterialFlags;
 import gregtech.api.unification.material.Material;
+import gregtech.api.unification.ore.OreVariant;
+import gregtech.api.unification.ore.OreVariants;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class OreProperties {
 
     private final int oreMultiplier;
     private final int byproductMultiplier;
     private final Map<OreProcessingStep, Material> oreByproducts;
+    private final Set<OreVariant> generatedVariants;
 
     private final boolean disableDirectSmelting;
     private final Material washedIn;
@@ -24,6 +27,7 @@ public class OreProperties {
         this.oreMultiplier = settings.oreMultiplier;
         this.byproductMultiplier = settings.byproductMultiplier;
         this.oreByproducts = ImmutableMap.copyOf(settings.oreByproducts);
+        this.generatedVariants = ImmutableSet.copyOf(settings.generatedVariants);
 
         this.disableDirectSmelting = settings.disableDirectSmelting;
         this.washedIn = settings.washedIn;
@@ -70,6 +74,10 @@ public class OreProperties {
         return smeltedInto;
     }
 
+    public Set<OreVariant> getGeneratedVariants() {
+        return generatedVariants;
+    }
+
     public static class Settings {
         private final Map<OreProcessingStep, Material> oreByproducts = new HashMap<>();
         private int oreMultiplier = 1;
@@ -79,6 +87,7 @@ public class OreProperties {
         private Material washedIn;
         private Material separatedOnto;
         private Material smeltedInto;
+        private final Set<OreVariant> generatedVariants = new HashSet<>();
 
         private boolean isByproductMaterialValid(OreProcessingStep processingStep, Material material) {
             if (material.hasFlag(MaterialFlags.GENERATE_DUST)) {
@@ -88,6 +97,23 @@ public class OreProperties {
                 return material.hasFlag(MaterialFlags.FLUID_PROPERTIES);
             }
             return false;
+        }
+
+        public Settings generateVariants(OreVariant... variants) {
+            this.generatedVariants.addAll(Arrays.asList(variants));
+            return this;
+        }
+
+        public Settings generateOverworldVariants() {
+            return generateVariants(OreVariants.STONE, OreVariants.DEEPSLATE);
+        }
+
+        public Settings generateNetherVariants() {
+            return generateVariants(OreVariants.NETHERRACK, OreVariants.BLACKSTONE);
+        }
+
+        public Settings generateEndVariants() {
+            return generateVariants(OreVariants.END_STONE);
         }
 
         public Settings byproduct(OreProcessingStep processingStep, Material byproduct) {
@@ -115,7 +141,6 @@ public class OreProperties {
             this.disableDirectSmelting = true;
             return this;
         }
-
 
         public Settings washedIn(Material washedIn) {
             Preconditions.checkNotNull(washedIn, "washedIn");

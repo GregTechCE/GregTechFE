@@ -1,0 +1,19 @@
+{
+  "components": [
+    {
+      "apply": {
+        "variant": "gregtech:block/machine_casing"
+      },
+      "static": true
+    },
+    {
+      "function": {
+        "type": "apply_orientation",
+        "property": "orientation"
+      },
+      "apply": {
+        "variant": "gregtech:block/overlay/energy_output"
+      }
+    }
+  ]
+}

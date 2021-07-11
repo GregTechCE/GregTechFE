@@ -1,18 +1,18 @@
 package gregtech.api.unification.ore;
 
 import com.google.common.base.Preconditions;
-import gregtech.api.GTCreativeTabs;
+import gregtech.api.items.GTItemGroups;
 import gregtech.api.GTValues;
 import gregtech.api.block.ore.OreBlock;
 import gregtech.api.block.ore.OreBlockItem;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.flags.MaterialFlags;
+import gregtech.api.unification.material.properties.OreProperties;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.yarn.constants.MiningLevels;
 import net.minecraft.block.Block;
-import net.minecraft.block.MapColor;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.structure.rule.RuleTest;
 import net.minecraft.tag.BlockTags;
@@ -23,6 +23,8 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class OreVariant {
 
@@ -71,7 +73,7 @@ public class OreVariant {
 
     protected FabricItemSettings createOreBlockItemSettings(Material material) {
         return new FabricItemSettings()
-                .group(GTCreativeTabs.ORES);
+                .group(GTItemGroups.ORES);
     }
 
     public OreBlock createOreBlock(Material material) {
@@ -94,7 +96,9 @@ public class OreVariant {
     }
 
     public boolean shouldGenerateFor(Material material) {
-        return material.hasFlag(MaterialFlags.ORE_PROPERTIES);
+        Optional<OreProperties> oreProperties = material.queryProperty(MaterialFlags.ORE_PROPERTIES);
+        return oreProperties.isPresent() &&
+                oreProperties.get().getGeneratedVariants().contains(this);
     }
 
     public String createBlockName(String materialName) {

@@ -1,0 +1,6 @@
+{
+  "parent": "gregtech:block/cube_tinted_all",
+  "textures": {
+    "all": "gregtech:block/casing/voltage/high_voltage"
+  }
+}

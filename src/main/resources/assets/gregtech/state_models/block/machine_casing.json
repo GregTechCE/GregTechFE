@@ -1,0 +1,84 @@
+{
+  "components": [
+    {
+      "when": {
+        "voltage_tier": "ultra_low_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/ultra_low_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "low_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/low_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "medium_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/medium_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "high_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/high_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "extreme_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/extreme_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "insane_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/insane_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "ludicrous_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/ludicrous_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "zpm_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/zpm_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "ultimate_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/ultimate_voltage"
+      }
+    },
+    {
+      "when": {
+        "voltage_tier": "maximum_voltage"
+      },
+      "apply": {
+        "model": "gregtech:block/casing/voltage/maximum_voltage"
+      }
+    }
+  ]
+}

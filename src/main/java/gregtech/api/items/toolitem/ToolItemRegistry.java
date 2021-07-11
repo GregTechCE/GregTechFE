@@ -1,12 +1,10 @@
 package gregtech.api.items.toolitem;
 
 import gregtech.api.GTValues;
-import gregtech.api.render.RemappingModelResourceProvider;
 import gregtech.api.unification.material.Material;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
@@ -42,9 +40,6 @@ public class ToolItemRegistry {
 
     @Environment(EnvType.CLIENT)
     private void registerToolItemClient(ToolItem toolItem) {
-        ModelIdentifier modelIdentifier = toolItem.getModelLocation();
-
-        RemappingModelResourceProvider.INSTANCE.registerItemModel(toolItem, modelIdentifier);
         ColorProviderRegistry.ITEM.register(ToolItemColorProvider.INSTANCE, toolItem);
     }
 

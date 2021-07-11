@@ -1,0 +1,34 @@
+{
+  "components": [
+    {
+      "apply": {
+        "model": "gregtech:block/overlay",
+        "textures": {
+          "overlay": "gregtech:block/overlay/machine_output"
+        }
+      }
+    },
+    {
+      "when": {
+        "item_auto_output_enabled": true
+      },
+      "apply": {
+        "model": "gregtech:block/overlay",
+        "textures": {
+          "overlay": "gregtech:block/overlay/item_output"
+        }
+      }
+    },
+    {
+      "when": {
+        "fluid_auto_output_enabled": true
+      },
+      "apply": {
+        "model": "gregtech:block/overlay",
+        "textures": {
+          "overlay": "gregtech:block/overlay/fluid_output"
+        }
+      }
+    }
+  ]
+}

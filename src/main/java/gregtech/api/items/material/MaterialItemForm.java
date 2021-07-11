@@ -2,7 +2,7 @@ package gregtech.api.items.material;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import gregtech.api.GTCreativeTabs;
+import gregtech.api.items.GTItemGroups;
 import gregtech.api.GTValues;
 import gregtech.api.unification.forms.MaterialForm;
 import gregtech.api.unification.material.flags.MaterialFlag;
@@ -83,7 +83,7 @@ public class MaterialItemForm {
     protected FabricItemSettings createItemSettings(Material material) {
         return new FabricItemSettings()
                 .maxCount(maxStackSize)
-                .group(GTCreativeTabs.MATERIALS);
+                .group(GTItemGroups.MATERIALS);
     }
 
     public Item createItem(Material material) {

@@ -2,7 +2,6 @@ package gregtech.api.block.ore;
 
 import com.google.common.base.MoreObjects;
 import gregtech.api.unification.material.flags.MaterialFlags;
-import gregtech.api.unification.ore.OreBlockType;
 import gregtech.api.unification.ore.OreVariant;
 import gregtech.api.unification.util.MaterialIconSet;
 
@@ -18,8 +17,8 @@ public class VisualOreBlockType {
         this.materialIconSet = materialIconSet;
     }
 
-    public VisualOreBlockType(OreBlockType oreBlockType) {
-        this(oreBlockType.getVariant(), oreBlockType.getMaterial().queryPropertyChecked(MaterialFlags.ICON_SET));
+    public VisualOreBlockType(OreBlock oreBlock) {
+        this(oreBlock.getVariant(), oreBlock.getMaterial().queryPropertyChecked(MaterialFlags.ICON_SET));
     }
 
     public OreVariant getOreVariant() {

@@ -11,21 +11,15 @@ import gregtech.api.capability.item.ElectricItem;
 import gregtech.api.enchants.EnchantmentData;
 import gregtech.api.items.GTItem;
 import gregtech.api.items.GTItemSettings;
-import gregtech.api.items.util.AutoTaggedItem;
-import gregtech.api.items.util.CustomEnchantableItem;
-import gregtech.api.items.util.DynamicAttributeModifierItem;
-import gregtech.api.items.util.ExtendedRemainderItem;
+import gregtech.api.items.util.*;
 import gregtech.api.unification.forms.MaterialForm;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.flags.MaterialFlags;
 import gregtech.api.unification.material.properties.SolidForm;
 import gregtech.api.unification.material.properties.ToolProperties;
 import gregtech.api.util.ref.SimpleReference;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
@@ -50,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class ToolItem extends GTItem implements CustomDamageItem, CustomEnchantableItem, Vanishable, DynamicAttributeModifierItem, AutoTaggedItem, ExtendedRemainderItem {
+public abstract class ToolItem extends GTItem implements CustomDamageItem, CustomEnchantableItem, Vanishable, DynamicAttributeModifierItem, AutoTaggedItem, ExtendedRemainderItem, ModelProviderItem {
 
     protected final ToolItemType toolItemType;
     protected final Material material;
@@ -129,13 +123,12 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
         super.appendTooltip(stack, world, tooltip, context);
     }
 
-    @Environment(EnvType.CLIENT)
-    ModelIdentifier getModelLocation() {
+    @Override
+    public Identifier getModelLocation() {
         Identifier toolTypeName = this.toolItemType.getName();
         String modelPath = "tools/" + toolTypeName.getPath();
 
-        Identifier modelId  = new Identifier(toolTypeName.getNamespace(), modelPath);
-        return new ModelIdentifier(modelId, "inventory");
+        return new Identifier(toolTypeName.getNamespace(), modelPath);
     }
 
     @Override

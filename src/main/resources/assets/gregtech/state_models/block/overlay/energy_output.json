@@ -1,0 +1,12 @@
+{
+  "components": [
+    {
+      "apply": {
+        "model": "gregtech:block/overlay",
+        "textures": {
+          "overlay": "gregtech:block/overlay/energy_out"
+        }
+      }
+    }
+  ]
+}

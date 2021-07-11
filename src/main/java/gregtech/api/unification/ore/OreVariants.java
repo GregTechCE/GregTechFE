@@ -19,6 +19,7 @@ public class OreVariants {
     public static final OreVariant SANDSTONE;
 
     public static final OreVariant NETHERRACK;
+    public static final OreVariant BLACKSTONE;
     public static final OreVariant BASALT;
 
     public static final OreVariant END_STONE;
@@ -75,6 +76,13 @@ public class OreVariants {
             .soundGroup(BlockSoundGroup.NETHERRACK)
         ));
 
+        BLACKSTONE = register("blackstone", new OreVariant(new OreVariant.Settings()
+            .blockNameTemplate("blackstone_{material}_ore")
+            .generationRule(new BlockMatchRuleTest(Blocks.BLACKSTONE))
+            .strength(4.0f, 3.0f)
+            .modelPath(new Identifier(GTValues.MODID, "block/ore_variant/blackstone"))
+        ));
+
         BASALT = register("basalt", new OreVariant(new OreVariant.Settings()
             .blockNameTemplate("basalt_{material}_ore")
             .generationRule(new BlockMatchRuleTest(Blocks.BASALT))
@@ -83,7 +91,7 @@ public class OreVariants {
             .soundGroup(BlockSoundGroup.BASALT)
         ));
 
-        END_STONE = register("basalt", new OreVariant(new OreVariant.Settings()
+        END_STONE = register("end_stone", new OreVariant(new OreVariant.Settings()
             .blockNameTemplate("end_{material}_ore")
             .generationRule(new BlockMatchRuleTest(Blocks.END_STONE))
             .strength(4.0f, 9.0f)

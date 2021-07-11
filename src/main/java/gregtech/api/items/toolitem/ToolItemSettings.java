@@ -1,6 +1,6 @@
 package gregtech.api.items.toolitem;
 
-import gregtech.api.GTCreativeTabs;
+import gregtech.api.items.GTItemGroups;
 import gregtech.api.items.GTItemSettings;
 
 public class ToolItemSettings extends GTItemSettings {
@@ -30,7 +30,7 @@ public class ToolItemSettings extends GTItemSettings {
 
     public ToolItemSettings() {
         this.maxCount(1);
-        this.group(GTCreativeTabs.TOOLS);
+        this.group(GTItemGroups.TOOLS);
     }
 
     public ToolItemSettings miningSpeedMultiplier(float miningSpeedMultiplier) {
