@@ -3,6 +3,7 @@ package gregtech.api.worldgen.feature;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import gregtech.api.worldgen.populator.ConfiguredOreVeinPopulator;
 import net.minecraft.block.BlockState;
 import net.minecraft.structure.rule.RuleTest;
 import net.minecraft.util.collection.DataPool;
@@ -13,24 +14,35 @@ import java.util.List;
 
 public class OreVeinFeatureConfig implements FeatureConfig {
 
+    private static final int DEFAULT_MIN_BLOCKS_FOR_POPULATOR = 100;
+
     public static final Codec<OreVeinFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
                     IntProvider.createValidatingCodec(1, 32).fieldOf("first_horizontal_size").forGetter(OreVeinFeatureConfig::getFirstHorizontalSize),
                     IntProvider.createValidatingCodec(1, 32).fieldOf("second_horizontal_size").forGetter(OreVeinFeatureConfig::getSecondHorizontalSize),
                     IntProvider.createValidatingCodec(1, 32).fieldOf("vertical_size").forGetter(OreVeinFeatureConfig::getVerticalSize),
-                    GenerationLayer.CODEC.listOf().fieldOf("layers").forGetter(OreVeinFeatureConfig::getLayers)
+                    GenerationLayer.CODEC.listOf().fieldOf("layers").forGetter(OreVeinFeatureConfig::getLayers),
+                    ConfiguredOreVeinPopulator.CODEC.fieldOf("vein_populator").forGetter(OreVeinFeatureConfig::getVeinPopulator),
+                    Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("min_blocks_for_populator", DEFAULT_MIN_BLOCKS_FOR_POPULATOR).forGetter(OreVeinFeatureConfig::getMinBlocksForPopulator),
+                    Codec.floatRange(0.0f, 1.0f).optionalFieldOf("population_chance", 1.0f).forGetter(OreVeinFeatureConfig::getPopulationChance)
             ).apply(instance, OreVeinFeatureConfig::new));
 
     private final IntProvider firstHorizontalSize;
     private final IntProvider secondHorizontalSize;
     private final IntProvider verticalSize;
     private final List<GenerationLayer> layers;
+    private final ConfiguredOreVeinPopulator<?> veinPopulator;
+    private final int minBlocksForPopulator;
+    private final float populationChance;
 
-    public OreVeinFeatureConfig(IntProvider firstHorizontalSize, IntProvider secondHorizontalSize, IntProvider verticalSize, List<GenerationLayer> layers) {
+    public OreVeinFeatureConfig(IntProvider firstHorizontalSize, IntProvider secondHorizontalSize, IntProvider verticalSize, List<GenerationLayer> layers, ConfiguredOreVeinPopulator<?> veinPopulator, int minBlocksForPopulator, float populationChance) {
         this.firstHorizontalSize = firstHorizontalSize;
         this.secondHorizontalSize = secondHorizontalSize;
         this.verticalSize = verticalSize;
-        this.layers = ImmutableList.copyOf(layers);
+        this.layers = layers;
+        this.veinPopulator = veinPopulator;
+        this.minBlocksForPopulator = minBlocksForPopulator;
+        this.populationChance = populationChance;
     }
 
     public IntProvider getFirstHorizontalSize() {
@@ -47,6 +59,18 @@ public class OreVeinFeatureConfig implements FeatureConfig {
 
     public List<GenerationLayer> getLayers() {
         return layers;
+    }
+
+    public ConfiguredOreVeinPopulator<?> getVeinPopulator() {
+        return veinPopulator;
+    }
+
+    public int getMinBlocksForPopulator() {
+        return minBlocksForPopulator;
+    }
+
+    public float getPopulationChance() {
+        return populationChance;
     }
 
     public static class GenerationLayer {

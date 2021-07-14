@@ -1,71 +1,120 @@
 package gregtech.api.worldgen.populator;
 
-import com.google.gson.JsonObject;
-import gregtech.api.worldgen.config.OreDepositDefinition;
-import gregtech.api.worldgen.generator.GridEntryInfo;
-import net.minecraft.block.state.IBlockState;
+import com.mojang.serialization.Codec;
+import gregtech.api.util.ArrayUtils;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidBase;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.ServerWorldAccess;
 
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
-public class FluidSpringPopulator implements VeinBufferPopulator {
+public class FluidSpringPopulator extends OreVeinPopulator<FluidSpringPopulatorConfig> {
 
-    private IBlockState fluidState;
-    private float springGenerationChance;
-
-    public FluidSpringPopulator() {
-    }
-
-    public FluidSpringPopulator(IBlockState fluidState, float springGenerationChance) {
-        this.fluidState = fluidState;
-        this.springGenerationChance = springGenerationChance;
+    public FluidSpringPopulator(Codec<FluidSpringPopulatorConfig> configCodec) {
+        super(configCodec);
     }
 
     @Override
-    public void loadFromConfig(JsonObject object) {
-        this.springGenerationChance = object.get("chance").getAsFloat();
-    }
+    protected boolean generate(Random random, ServerWorldAccess world, BlockPos origin, FluidSpringPopulatorConfig config) {
+        int worldSurfaceY = world.getTopY(Heightmap.Type.WORLD_SURFACE_WG, origin.getX(), origin.getZ());
+        int springTopY = worldSurfaceY + config.getSpringHeight();
 
-    @Override
-    public void initializeForVein(OreDepositDefinition definition) {
-        List<IBlockState> possibleStates = definition.getBlockFiller().getAllPossibleStates().stream()
-            .flatMap(it -> it.getPossibleResults().stream())
-            .collect(Collectors.toList());
-        this.fluidState = possibleStates.stream().filter(it -> it.getPropertyKeys().contains(BlockFluidBase.LEVEL)).findFirst().orElse(null);
-        if (fluidState == null) {
-            String message = "Can't find fluid block for spring in vein %s. Blocks in vein: %s";
-            throw new IllegalArgumentException(String.format(message, definition.getDepositName(), possibleStates));
+        BlockPos.Mutable tempPos = new BlockPos.Mutable();
+
+        //place spring blocks right from the vein's origin
+        for (int y = origin.getY(); y <= springTopY; y++) {
+            placeSpringBlockAt(world, origin, config, tempPos, y, 0, 0);
+            placeSpringBlockAt(world, origin, config, tempPos, y, 1, 0);
+            placeSpringBlockAt(world, origin, config, tempPos, y, -1, 0);
+            placeSpringBlockAt(world, origin, config, tempPos, y, 0, 1);
+            placeSpringBlockAt(world, origin, config, tempPos, y, 0, -1);
         }
+        placeSpringBlockAt(world, origin, config, tempPos, springTopY + 1, 0, 0);
+
+        //generate oil cracks around the surface level of the spring
+        for (int directionIndex = 0; directionIndex < 4; directionIndex++) {
+            Direction direction = Direction.fromHorizontal(directionIndex);
+            continueCrackInDirection(random, world, origin, config, tempPos, worldSurfaceY, 0, 0, direction, 0);
+        }
+
+        return true;
     }
 
-    @Override
-    public void populateBlockBuffer(Random random, GridEntryInfo gridEntryInfo, IBlockModifierAccess modifier, OreDepositDefinition depositDefinition) {
-        if (random.nextFloat() <= springGenerationChance) {
-            int groundLevel = gridEntryInfo.getTerrainHeight();
-            int springUndergroundHeight = groundLevel - gridEntryInfo.getCenterPos(depositDefinition).getY();
-            int springHeight = springUndergroundHeight + 6 + random.nextInt(3);
-            for (int i = 1; i <= springHeight; i++) {
-                modifier.setBlock(0, i, 0, 0);
-                if (i <= springUndergroundHeight) {
-                    modifier.setBlock(1, i, 0, 0);
-                    modifier.setBlock(-1, i, 0, 0);
-                    modifier.setBlock(0, i, 1, 0);
-                    modifier.setBlock(0, i, -1, 0);
-                }
+    private static void continueCrackInDirection(Random random, ServerWorldAccess world, BlockPos origin, FluidSpringPopulatorConfig config, BlockPos.Mutable tempPos, int y, int offsetX, int offsetZ, Direction direction, int crackNesting) {
+        offsetX += direction.getOffsetX();
+        offsetZ += direction.getOffsetZ();
+
+        int squaredDistanceToOrigin = offsetX * offsetX + offsetZ * offsetZ;
+        int squaredMaxDistance = config.getCracksRadius() * config.getCracksRadius();
+        float normalizedDistance = squaredDistanceToOrigin / (squaredMaxDistance * 1.0f);
+
+        //place the fluid blocks in the crack (double depth if distance is <= 0.7 to the origin and we're the first-level crack)
+        placeSpringBlockAt(world, origin, config, tempPos, y, offsetX, offsetZ);
+        if (normalizedDistance <= 0.7 && crackNesting <= 1) {
+            placeSpringBlockAt(world, origin, config, tempPos, y - 1, offsetX, offsetZ);
+        }
+
+        //stop if we are exceeding the maximum radius of the crack
+        if (normalizedDistance >= 1.0) {
+            return;
+        }
+        //third-level cracks can never continue, they are single-block only
+        if (crackNesting >= 2) {
+            return;
+        }
+
+        //try to split up before going in the next direction
+        float splitChance = crackNesting <= 0 ? 0.30f : 0.60f;
+        if (random.nextFloat() <= splitChance) {
+            boolean checkDistance = crackNesting <= 0;
+            Direction splitDirection = getRandomDirection(random, offsetX, offsetZ, checkDistance);
+
+            continueCrackInDirection(random, world, origin, config, tempPos, y, offsetX, offsetZ, splitDirection, crackNesting + 1);
+        }
+
+        //first level cracks have the lower chance of going in the same direction
+        float sameDirectionChance = crackNesting <= 0 ? 0.50f : 0.70f;
+
+        //determine final direction to continue the crack in
+        Direction nextBlockDirection = direction;
+
+        if (random.nextFloat() >= sameDirectionChance) {
+            nextBlockDirection = getRandomDirection(random, offsetX, offsetZ, true);
+        }
+
+        continueCrackInDirection(random, world, origin, config, tempPos, y, offsetX, offsetZ, nextBlockDirection, crackNesting);
+    }
+
+    private static Direction getRandomDirection(Random random, int offsetX, int offsetZ, boolean checkDistance) {
+        int currentSquaredDistance = offsetX * offsetX + offsetZ * offsetZ;
+
+        int[] shuffledIndices = new int[] {0, 1, 2, 3};
+        ArrayUtils.shuffle(random, shuffledIndices);
+
+        for (int directionIndex : shuffledIndices) {
+            Direction direction = Direction.fromHorizontal(directionIndex);
+
+            int newOffsetX = offsetX + direction.getOffsetX();
+            int newOffsetZ = offsetZ + direction.getOffsetZ();
+            int newSquaredDistance = newOffsetX * newOffsetX + newOffsetZ * newOffsetZ;
+
+            if (newSquaredDistance >= currentSquaredDistance || !checkDistance) {
+                return direction;
             }
         }
+        throw new IllegalArgumentException();
     }
 
-    @Override
-    public IBlockState getBlockByIndex(World world, BlockPos pos, int index) {
-        return fluidState.withProperty(BlockFluidBase.LEVEL, index);
+    private static void placeSpringBlockAt(ServerWorldAccess world, BlockPos origin, FluidSpringPopulatorConfig config, BlockPos.Mutable tempPos, int y, int offsetX, int offsetZ) {
+        tempPos.set(origin.getX() + offsetX, y, origin.getZ() + offsetZ);
+        BlockState blockState = world.getBlockState(tempPos);
+        if (!blockState.isIn(BlockTags.FEATURES_CANNOT_REPLACE)) {
+            world.setBlockState(tempPos, config.getFluidState(), Block.NOTIFY_LISTENERS);
+        }
     }
 
-    public IBlockState getFluidState() {
-        return fluidState;
-    }
 }

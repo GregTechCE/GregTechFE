@@ -1,66 +1,63 @@
 package gregtech.api.worldgen.populator;
 
-import com.google.gson.JsonObject;
-import gregtech.api.worldgen.config.OreDepositDefinition;
-import gregtech.api.worldgen.config.PredicateConfigUtils;
-import gregtech.api.worldgen.generator.GridEntryInfo;
+import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Waterloggable;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.ServerWorldAccess;
 
 import java.util.Random;
 
-public class SurfaceBlockPopulator implements VeinChunkPopulator {
+public class SurfaceBlockPopulator extends OreVeinPopulator<SurfaceBlockPopulatorConfig> {
 
-    private IBlockState blockState;
-    private int minIndicatorAmount;
-    private int maxIndicatorAmount;
-
-    public SurfaceBlockPopulator() {
-    }
-
-    public SurfaceBlockPopulator(IBlockState blockState) {
-        this.blockState = blockState;
+    public SurfaceBlockPopulator(Codec<SurfaceBlockPopulatorConfig> configCodec) {
+        super(configCodec);
     }
 
     @Override
-    public void loadFromConfig(JsonObject object) {
-        this.blockState = PredicateConfigUtils.parseBlockStateDefinition(object.getAsJsonObject("block"));
-        this.minIndicatorAmount = JsonUtils.getInt(object, "min_amount", 0);
-        this.maxIndicatorAmount = JsonUtils.getInt(object, "max_amount", 2);
-    }
+    boolean generate(Random random, ServerWorldAccess world, BlockPos origin, SurfaceBlockPopulatorConfig config) {
+        int blocksCount = config.getBlockCount().get(random);
+        int radius = config.getRadius().get(random);
+        BlockPos.Mutable blockPos = new BlockPos.Mutable();
 
-    @Override
-    public void initializeForVein(OreDepositDefinition definition) {
-    }
+        for (int i = 0; i < blocksCount; i++) {
+            double randomAngle = random.nextFloat() * (Math.PI * 2);
+            int resultBlockX = origin.getX() + (int) Math.round(Math.sin(randomAngle) * radius);
+            int resultBlockZ = origin.getZ() + (int) Math.round(Math.cos(randomAngle) * radius);
 
-    @Override
-    public void populateChunk(World world, int chunkX, int chunkZ, Random random, OreDepositDefinition definition, GridEntryInfo gridEntryInfo) {
-        if (world.getWorldType() != WorldType.FLAT) {
-            int stonesCount = minIndicatorAmount + (minIndicatorAmount >= maxIndicatorAmount ? 0 : random.nextInt(maxIndicatorAmount - minIndicatorAmount));
-            for (int i = 0; i < stonesCount; i++) {
-                int randomX = chunkX * 16 + random.nextInt(16);
-                int randomZ = chunkZ * 16 + random.nextInt(16);
-                BlockPos topBlockPos = new BlockPos(randomX, 0, randomZ);
-                topBlockPos = world.getTopSolidOrLiquidBlock(topBlockPos).down();
-                IBlockState blockState = world.getBlockState(topBlockPos);
-                Block blockAtPos = blockState.getBlock();
-                if (blockState.getBlockFaceShape(world, topBlockPos, EnumFacing.UP) != BlockFaceShape.SOLID ||
-                    !blockState.isOpaqueCube() || !blockState.isFullBlock() || !(blockAtPos.isReplaceable(world, topBlockPos) &&
-                    blockState.getMaterial().isLiquid()))
-                    continue;
-                BlockPos surfaceRockPos = topBlockPos.up();
-                world.setBlockState(surfaceRockPos, this.blockState, 16);
+            blockPos.set(resultBlockX, origin.getY(), resultBlockZ);
+
+            int worldOceanFloorY = world.getTopY(Heightmap.Type.OCEAN_FLOOR_WG, resultBlockX, resultBlockZ);
+            blockPos.setY(worldOceanFloorY + 1);
+
+            BlockState existingBlockState = world.getBlockState(blockPos);
+            if (existingBlockState.isIn(BlockTags.FEATURES_CANNOT_REPLACE)) {
+                continue;
+            }
+
+            FluidState fluidState = existingBlockState.getFluidState();
+            boolean isInsideOfTheWater = fluidState.isIn(FluidTags.WATER);
+
+            if (isInsideOfTheWater && !config.shouldGenerateUnderwater()) {
+                continue;
+            }
+
+            BlockState blockState = config.getBlockState();
+            if (!world.setBlockState(blockPos, blockState, Block.NOTIFY_LISTENERS)) {
+                continue;
+            }
+
+            if (isInsideOfTheWater && blockState.getBlock() instanceof Waterloggable waterloggable) {
+                waterloggable.tryFillWithFluid(world, blockPos, blockState, Fluids.WATER.getDefaultState());
             }
         }
+        return true;
     }
 
-    public IBlockState getBlockState() {
-        return blockState;
-    }
 }

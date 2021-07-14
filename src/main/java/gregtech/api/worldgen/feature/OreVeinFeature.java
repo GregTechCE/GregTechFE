@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Random;
-import java.util.function.Function;
 
 public class OreVeinFeature extends Feature<OreVeinFeatureConfig> {
 
@@ -71,11 +70,8 @@ public class OreVeinFeature extends Feature<OreVeinFeatureConfig> {
         return getMatchingTarget(random, targetGroup.get(), existingState);
     }
 
-    private void applyVeinDecorator(FeatureContext<OreVeinFeatureConfig> context, int blocksGenerated, Function<BlockPos, Float> blockPosToVeinDistanceFunction) {
-        OreVeinFeatureConfig config = context.getConfig();
-        BlockPos originPos = context.getOrigin();
-
-        //TODO apply various ore vein decorators here
+    private void applyVeinDecorator(FeatureContext<OreVeinFeatureConfig> context) {
+        context.getConfig().getVeinPopulator().generate(context.getRandom(), context.getWorld(), context.getOrigin());
     }
 
     @Override
@@ -139,21 +135,10 @@ public class OreVeinFeature extends Feature<OreVeinFeatureConfig> {
             }
         }
 
-        if (oreBlocksGenerated > 0) {
-            Function<BlockPos, Float> blockPosToVeinDistanceFunction = (blockPos) -> {
-                int localPosX = blockPos.getX() - originPos.getX();
-                int localPosZ = blockPos.getZ() - originPos.getZ();
-
-                Vec3f localPosition = new Vec3f(localPosX + 0.5f, 0.5f, localPosZ + 0.5f);
-                localPosition.transform(invertedRotationMatrix);
-
-                float xComponent = (localPosition.getX() * localPosition.getX()) / (xRadius * xRadius);
-                float yComponent = (localPosition.getY() * localPosition.getY()) / (yRadius * yRadius);
-                float zComponent = (localPosition.getZ() * localPosition.getZ()) / (zRadius * zRadius);
-
-                return (xComponent + yComponent + zComponent);
-            };
-            applyVeinDecorator(context, oreBlocksGenerated, blockPosToVeinDistanceFunction);
+        if (oreBlocksGenerated >= config.getMinBlocksForPopulator()) {
+            if (random.nextFloat() <= config.getPopulationChance()) {
+                applyVeinDecorator(context);
+            }
         }
 
         return oreBlocksGenerated > 0;
