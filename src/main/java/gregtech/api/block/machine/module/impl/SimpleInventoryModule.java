@@ -22,6 +22,8 @@ import gregtech.api.block.machine.module.MachineModuleType;
 import gregtech.api.block.machine.module.api.AttributeProviderModule;
 import gregtech.api.block.machine.module.api.InventoryClearNotifyModule;
 import gregtech.api.block.machine.module.api.PersistentMachineModule;
+import gregtech.api.block.machine.module.impl.archetype.IOInventoryModule;
+import gregtech.api.block.machine.module.impl.config.SimpleInventoryConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SimpleInventoryModule extends MachineModule<SimpleInventoryModuleConfig> implements IOInventoryModule, PersistentMachineModule, AttributeProviderModule, InventoryClearNotifyModule {
+public class SimpleInventoryModule extends MachineModule<SimpleInventoryConfig> implements IOInventoryModule, PersistentMachineModule, AttributeProviderModule, InventoryClearNotifyModule {
 
     private final FixedItemInv itemImportInventory;
     private final FixedItemInv itemExportInventory;
@@ -42,7 +44,7 @@ public class SimpleInventoryModule extends MachineModule<SimpleInventoryModuleCo
     private FluidFilter importFluidFilter = ConstantFluidFilter.ANYTHING;
     private final List<Object> limitedInventoryViews = new ArrayList<>();
 
-    public SimpleInventoryModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, SimpleInventoryModuleConfig config) {
+    public SimpleInventoryModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, SimpleInventoryConfig config) {
         super(machine, type, config);
 
         this.itemImportInventory = config.createItemImportInventory();

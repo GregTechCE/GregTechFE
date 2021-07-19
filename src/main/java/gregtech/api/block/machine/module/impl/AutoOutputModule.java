@@ -16,6 +16,8 @@ import gregtech.api.block.machine.MachineTickType;
 import gregtech.api.block.machine.module.MachineModule;
 import gregtech.api.block.machine.module.MachineModuleType;
 import gregtech.api.block.machine.module.api.*;
+import gregtech.api.block.machine.module.impl.archetype.IOInventoryModule;
+import gregtech.api.block.machine.module.impl.config.InventoryTypeConfig;
 import gregtech.api.render.model.state.ModelState;
 import gregtech.api.render.model.state.ModelStateProperties;
 import net.minecraft.entity.LivingEntity;
@@ -26,13 +28,13 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public class AutoOutputModule extends MachineModule<InventoryModuleTypeConfig> implements PersistentMachineModule, SyncedMachineModule, ModelStateAwareModule, OrientableMachineModule, TickableMachineModule {
+public class AutoOutputModule extends MachineModule<InventoryTypeConfig> implements PersistentMachineModule, SyncedMachineModule, ModelStateAwareModule, OrientableMachineModule, TickableMachineModule {
 
     private Direction outputOrientation = Direction.SOUTH;
     private boolean autoItemOutputEnabled = false;
     private boolean autoFluidOutputEnabled = false;
 
-    public AutoOutputModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, InventoryModuleTypeConfig config) {
+    public AutoOutputModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, InventoryTypeConfig config) {
         super(machine, type, config);
     }
 

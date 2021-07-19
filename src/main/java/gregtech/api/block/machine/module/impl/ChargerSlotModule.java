@@ -12,6 +12,8 @@ import gregtech.api.block.machine.module.MachineModuleType;
 import gregtech.api.block.machine.module.api.InventoryClearNotifyModule;
 import gregtech.api.block.machine.module.api.PersistentMachineModule;
 import gregtech.api.block.machine.module.api.TickableMachineModule;
+import gregtech.api.block.machine.module.impl.archetype.EnergyContainerModule;
+import gregtech.api.block.machine.module.impl.config.EnergyContainerTypeConfig;
 import gregtech.api.capability.GTAttributes;
 import gregtech.api.capability.block.EnergyContainer;
 import gregtech.api.capability.item.DischargeMode;

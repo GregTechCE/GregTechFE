@@ -1,8 +1,9 @@
-package gregtech.api.block.machine.module.impl;
+package gregtech.api.block.machine.module.impl.config;
 
 import com.google.common.base.Preconditions;
 import gregtech.api.block.machine.module.MachineModuleConfig;
 import gregtech.api.block.machine.module.MachineModuleType;
+import gregtech.api.block.machine.module.impl.archetype.EnergyContainerModule;
 
 public class EnergyContainerTypeConfig implements MachineModuleConfig {
 

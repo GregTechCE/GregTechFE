@@ -1,4 +1,4 @@
-package gregtech.api.block.machine.module.impl;
+package gregtech.api.block.machine.module.impl.archetype;
 
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;

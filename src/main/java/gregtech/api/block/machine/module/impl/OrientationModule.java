@@ -8,6 +8,7 @@ import gregtech.api.block.machine.module.api.ModelStateAwareModule;
 import gregtech.api.block.machine.module.api.OrientableMachineModule;
 import gregtech.api.block.machine.module.api.PersistentMachineModule;
 import gregtech.api.block.machine.module.api.SyncedMachineModule;
+import gregtech.api.block.machine.module.impl.config.OrientationConfig;
 import gregtech.api.render.model.state.ModelState;
 import gregtech.api.render.model.state.ModelStateProperties;
 import net.minecraft.entity.LivingEntity;
@@ -18,11 +19,11 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public class OrientationModule extends MachineModule<OrientationModuleConfig> implements SyncedMachineModule, PersistentMachineModule, ModelStateAwareModule, OrientableMachineModule {
+public class OrientationModule extends MachineModule<OrientationConfig> implements SyncedMachineModule, PersistentMachineModule, ModelStateAwareModule, OrientableMachineModule {
 
     private Direction orientation;
 
-    public OrientationModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, OrientationModuleConfig config) {
+    public OrientationModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, OrientationConfig config) {
         super(machine, type, config);
         this.orientation = Direction.NORTH;
     }
