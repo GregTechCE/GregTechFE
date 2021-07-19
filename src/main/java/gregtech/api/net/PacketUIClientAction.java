@@ -1,7 +1,6 @@
 package gregtech.api.net;
 
 import gregtech.api.GTValues;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -11,9 +10,9 @@ public class PacketUIClientAction implements NetworkPacket {
 
     public final int windowId;
     public final int widgetId;
-    public final PacketByteBuf updateData;
+    public final byte[] updateData;
 
-    public PacketUIClientAction(int windowId, int widgetId, PacketByteBuf updateData) {
+    public PacketUIClientAction(int windowId, int widgetId, byte[] updateData) {
         this.windowId = windowId;
         this.widgetId = widgetId;
         this.updateData = updateData;
@@ -22,19 +21,14 @@ public class PacketUIClientAction implements NetworkPacket {
     public PacketUIClientAction(PacketByteBuf packet) {
         this.windowId = packet.readVarInt();
         this.widgetId = packet.readVarInt();
-
-        int readableBytes = packet.readVarInt();
-        this.updateData = PacketByteBufs.create();
-        packet.readBytes(updateData, readableBytes);
+        this.updateData = packet.readByteArray();
     }
 
     @Override
     public void writeBuffer(PacketByteBuf buffer) {
-        buffer.writeVarInt(windowId);
-        buffer.writeVarInt(widgetId);
-
-        buffer.writeVarInt(updateData.readableBytes());
-        buffer.writeBytes(updateData);
+        buffer.writeVarInt(this.windowId);
+        buffer.writeVarInt(this.widgetId);
+        buffer.writeByteArray(this.updateData);
     }
 
     @Override

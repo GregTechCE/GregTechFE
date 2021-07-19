@@ -1,6 +1,7 @@
 package gregtech.api.capability.item;
 
 import alexiil.mc.lib.attributes.Simulation;
+import gregtech.api.util.VoltageTier;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.text.Text;
 
@@ -9,45 +10,40 @@ import java.util.List;
 public interface ElectricItem {
 
     /**
-     * Charge an item with a specified amount of energy.
+     * Charge an item with a specified amount of energy
      *
-     * @param maxAmount           max amount of energy to charge in EU
-     * @param chargerTier         tier of the charging device, has to be at least as high as the item to charge
-     * @param ignoreTransferLimit ignore any transfer limits, infinite charge rate
-     * @param simulate            don't actually change the item, just determine the return value
-     * @return Energy transferred into the electric item
+     * @param maxAmount max amount of energy to charge in EU
+     * @param chargerTier tier of the charging device
+     * @param transferLimit transfer limit mode
+     * @param simulate whenever action is simulated
+     * @return amount of energy consumed by the electric item
      */
-    long charge(long maxAmount, int chargerTier, boolean ignoreTransferLimit, Simulation simulate);
+    long charge(long maxAmount, VoltageTier chargerTier, TransferLimit transferLimit, Simulation simulate);
 
     /**
      * Discharge an item by a specified amount of energy
-     * <p>
-     * The externally parameter is used to prevent non-battery-like items from providing power. For
-     * example discharge slots set externally to true, but items using energy for themselves don't.
-     * Special cases like the nano saber hitting armor will discharge with externally = false.
      *
-     * @param maxAmount           max amount of energy to discharge in EU
-     * @param dischargerTier      tier of the discharging device, has to be at least as high as the item to discharge
-     * @param ignoreTransferLimit ignore any transfer limits, infinite discharge rate
-     * @param externally          use the supplied item externally, i.e. to power something else as if it was a battery
-     * @param simulate            don't actually discharge the item, just determine the return value
+     * @param maxAmount max amount of energy to discharge in EU
+     * @param dischargerTier tier of the discharging device
+     * @param transferLimit transfer limit mode
+     * @param mode determines whenever item's charge is used externally, e.g. as a battery, or internally
+     * @param simulate whenever action is actually simulated
      * @return Energy retrieved from the electric item
      */
-    long discharge(long maxAmount, int dischargerTier, boolean ignoreTransferLimit, boolean externally, Simulation simulate);
+    long discharge(long maxAmount, VoltageTier dischargerTier, TransferLimit transferLimit, DischargeMode mode, Simulation simulate);
 
     /**
-     * Determines if item can provide external discharging capability "in general"
-     * it ensures it can be inserted into battery discharger slots & so
+     * Determines if item can provide external discharging capability in general,
+     * so it can be inserted into discharger slots and have other battery-alike behaviors
      *
      * @return true if item can be discharged externally
      */
     boolean canProvideChargeExternally();
 
     /**
-     * Determine the charge level for the specified item.
-     * <p>
-     * The item may not actually be chargeable to the returned level, e.g. if it is a
-     * non-rechargeable single use battery.
+     * Determine the charge level for the specified item
+     * The item may not actually be chargeable to the returned level, for example
+     * in the case of single-use battery
      *
      * @return maximum charge level in EU
      */
@@ -61,11 +57,34 @@ public interface ElectricItem {
     long getCharge();
 
     /**
-     * Get the tier of the specified item.
+     * Retrieves the voltage tier of the item
+     * Returned value is used to check whenever item can be inserted
+     * into the chargers of the certain tier or not
      *
-     * @return The tier of the item.
+     * @return tier of this electric item
      */
-    int getTier();
+    VoltageTier getVoltageTier();
+
+    /**
+     * Internally discharges item by the specified amount of energy, ignoring transfer limit
+     * Does not actually check whenever item had enough charge, call {@link #canUse(long)} beforehand
+     * to determine whenever energy is actually available
+     *
+     * @param amount amount of energy to discharge
+     */
+    default void use(long amount) {
+        discharge(amount, VoltageTier.MAX, TransferLimit.IGNORE, DischargeMode.INTERNAL, Simulation.ACTION);
+    }
+
+    /**
+     * Determine if the specified electric item has at least a specific amount of EU
+     *
+     * @param amount minimum amount of energy required
+     * @return true if there's enough energy
+     */
+    default boolean canUse(long amount) {
+        return discharge(amount, VoltageTier.MAX, TransferLimit.IGNORE, DischargeMode.INTERNAL, Simulation.SIMULATE) == amount;
+    }
 
     /**
      * Sets a new maximum charge on this electric item instance
@@ -73,23 +92,21 @@ public interface ElectricItem {
      * Items are free to not implement this function and just return false
      *
      * @param newMaxCharge new max charge
+     * @param simulation whenever action is simulated
      * @return true if max charge modification is successful
      */
-    boolean setMaxChargeOverride(long newMaxCharge);
-
-    void addItemTooltip(List<Text> tooltip, TooltipContext context);
-
-    default void use(long amount) {
-        discharge(amount, Integer.MAX_VALUE, true, false, Simulation.ACTION);
+    default boolean setMaxChargeOverride(long newMaxCharge, Simulation simulation) {
+        return false;
     }
 
     /**
-     * Determine if the specified electric item has at least a specific amount of EU.
+     * Adds tooltip providing statistics this electric item has,
+     * for example it's voltage tier, maximum charge and amount of energy currently stored
+     * override this to customize the behavior
      *
-     * @param amount minimum amount of energy required
-     * @return true if there's enough energy
+     * @param tooltip result tooltip
+     * @param context tooltip context (whenever advanced tooltips are enabled)
      */
-    default boolean canUse(long amount) {
-        return discharge(amount, Integer.MAX_VALUE, true, false, Simulation.SIMULATE) >= amount;
+    default void addItemTooltip(List<Text> tooltip, TooltipContext context) {
     }
 }

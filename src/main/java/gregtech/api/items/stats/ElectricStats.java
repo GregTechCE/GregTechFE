@@ -3,7 +3,7 @@ package gregtech.api.items.stats;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
 import gregtech.api.capability.item.ElectricItem;
-import gregtech.api.capability.impl.ElectricItemImpl;
+import gregtech.api.capability.impl.energy.SimpleElectricItem;
 import net.minecraft.item.ItemStack;
 
 public class ElectricStats {
@@ -24,7 +24,7 @@ public class ElectricStats {
     }
 
     public ElectricItem createImplementation(Reference<ItemStack> stack, LimitedConsumer<ItemStack> excess) {
-        return new ElectricItemImpl(stack, excess, maxCharge, tier, canRecharge, canProvideChargeExternally);
+        return new SimpleElectricItem(stack, excess, maxCharge, tier, canRecharge, canProvideChargeExternally);
     }
 
     public static ElectricStats createElectricItem(long maxCharge, long tier) {

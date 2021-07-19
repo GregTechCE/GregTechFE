@@ -2,9 +2,8 @@ package gregtech.api.net;
 
 import com.google.common.base.Preconditions;
 import gregtech.api.GTValues;
-import gregtech.api.gui.UIHolder;
 import gregtech.api.gui.UIFactory;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import gregtech.api.gui.UIHolder;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -37,10 +36,8 @@ public class PacketUIOpen<E extends UIHolder> implements NetworkPacket {
 
         this.initialWidgetUpdates = packet.readList(buf -> {
             int widgetId = buf.readVarInt();
-            int readableBytes = buf.readVarInt();
+            byte[] updateData = buf.readByteArray();
 
-            PacketByteBuf updateData = PacketByteBufs.create();
-            buf.readBytes(updateData, readableBytes);
             return new PacketUIWidgetUpdate(windowId, widgetId, updateData);
         });
     }
@@ -55,8 +52,7 @@ public class PacketUIOpen<E extends UIHolder> implements NetworkPacket {
 
         packet.writeCollection(initialWidgetUpdates, (buf, update) -> {
             buf.writeVarInt(update.widgetId);
-            buf.writeVarInt(update.updateData.readableBytes());
-            buf.writeBytes(update.updateData);
+            buf.writeByteArray(update.updateData);
         });
     }
 

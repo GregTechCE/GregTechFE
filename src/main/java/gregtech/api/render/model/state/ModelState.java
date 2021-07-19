@@ -52,6 +52,20 @@ public final class ModelState<S> {
         return comparable == null ? Optional.empty() : Optional.of(property.getType().cast(comparable));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ModelState<?> that = (ModelState<?>) o;
+        return owner.equals(that.owner) && entries.equals(that.entries);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(owner, entries);
+    }
+
+    @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(this.owner);

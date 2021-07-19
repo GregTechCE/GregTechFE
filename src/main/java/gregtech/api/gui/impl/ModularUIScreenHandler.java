@@ -7,6 +7,7 @@ import gregtech.api.gui.WidgetUIAccess;
 import gregtech.api.net.PacketUIClientAction;
 import gregtech.api.net.PacketUIWidgetUpdate;
 import gregtech.api.util.GTUtility;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -237,13 +238,48 @@ public class ModularUIScreenHandler extends ScreenHandler implements WidgetUIAcc
     @Environment(EnvType.CLIENT)
     public void writeClientAction(Widget widget, int updateId, Consumer<PacketByteBuf> payloadWriter) {
         int widgetId = modularUI.guiWidgets.inverse().get(widget);
-        PacketByteBuf packetBuffer = new PacketByteBuf(Unpooled.buffer());
-        packetBuffer.writeVarInt(updateId);
-        payloadWriter.accept(packetBuffer);
 
-        if (modularUI.entityPlayer instanceof ClientPlayerEntity) {
-            PacketUIClientAction widgetUpdate = new PacketUIClientAction(this.syncId, widgetId, packetBuffer);
-            widgetUpdate.sendToClient();
+        ByteBuf rawBuffer = Unpooled.buffer();
+        try {
+            PacketByteBuf packetBuffer = new PacketByteBuf(rawBuffer);
+            packetBuffer.writeVarInt(updateId);
+            payloadWriter.accept(packetBuffer);
+
+            if (modularUI.entityPlayer instanceof ClientPlayerEntity) {
+                byte[] updateData = new byte[rawBuffer.readableBytes()];
+                rawBuffer.readBytes(updateData);
+
+                PacketUIClientAction widgetUpdate = new PacketUIClientAction(this.syncId, widgetId, updateData);
+                widgetUpdate.sendToClient();
+            }
+        } finally {
+            rawBuffer.release();
+        }
+    }
+
+    @Override
+    public void writeUpdateInfo(Widget widget, int updateId, Consumer<PacketByteBuf> payloadWriter) {
+        int widgetId = modularUI.guiWidgets.inverse().get(widget);
+
+        ByteBuf rawBuffer = Unpooled.buffer();
+        try {
+            PacketByteBuf packetBuffer = new PacketByteBuf(rawBuffer);
+            packetBuffer.writeVarInt(updateId);
+            payloadWriter.accept(packetBuffer);
+
+            if (modularUI.entityPlayer instanceof ServerPlayerEntity playerEntity) {
+                byte[] updateData = new byte[rawBuffer.readableBytes()];
+                rawBuffer.readBytes(updateData);
+
+                var widgetUpdate = new PacketUIWidgetUpdate(this.syncId, widgetId, updateData);
+                if (accumulateWidgetUpdateData) {
+                    this.accumulatedUpdates.add(widgetUpdate);
+                } else {
+                    widgetUpdate.sendTo(playerEntity);
+                }
+            }
+        } finally {
+            rawBuffer.release();
         }
     }
 
@@ -255,9 +291,14 @@ public class ModularUIScreenHandler extends ScreenHandler implements WidgetUIAcc
                 ModularUI modularUI = handler.getModularUI();
                 Widget targetWidget = modularUI.guiWidgets.get(packet.widgetId);
 
-                PacketByteBuf payloadBuffer = packet.updateData;
-                int actionId = payloadBuffer.readVarInt();
-                targetWidget.handleClientAction(actionId, payloadBuffer);
+                ByteBuf rawBuffer = Unpooled.wrappedBuffer(packet.updateData);
+                try {
+                    PacketByteBuf packetBuffer = new PacketByteBuf(rawBuffer);
+                    int actionId = packetBuffer.readVarInt();
+                    targetWidget.handleClientAction(actionId, packetBuffer);
+                } finally {
+                    rawBuffer.release();
+                }
             }
         });
     }
@@ -267,9 +308,14 @@ public class ModularUIScreenHandler extends ScreenHandler implements WidgetUIAcc
             ModularUI modularUI = getModularUI();
             Widget targetWidget = modularUI.guiWidgets.get(packet.widgetId);
 
-            PacketByteBuf payloadBuffer = packet.updateData;
-            int updateId = payloadBuffer.readVarInt();
-            targetWidget.readUpdateInfo(updateId, payloadBuffer);
+            ByteBuf rawBuffer = Unpooled.wrappedBuffer(packet.updateData);
+            try {
+                PacketByteBuf packetByteBuf = new PacketByteBuf(rawBuffer);
+                int updateId = packetByteBuf.readVarInt();
+                targetWidget.readUpdateInfo(updateId, packetByteBuf);
+            } finally {
+                rawBuffer.release();
+            }
         }
     }
 
@@ -293,22 +339,4 @@ public class ModularUIScreenHandler extends ScreenHandler implements WidgetUIAcc
         this.accumulatedUpdates.clear();
         return updates;
     }
-
-    @Override
-    public void writeUpdateInfo(Widget widget, int updateId, Consumer<PacketByteBuf> payloadWriter) {
-        int widgetId = modularUI.guiWidgets.inverse().get(widget);
-        PacketByteBuf packetBuffer = new PacketByteBuf(Unpooled.buffer());
-        packetBuffer.writeVarInt(updateId);
-        payloadWriter.accept(packetBuffer);
-
-        if (modularUI.entityPlayer instanceof ServerPlayerEntity playerEntity) {
-            var widgetUpdate = new PacketUIWidgetUpdate(this.syncId, widgetId, packetBuffer);
-            if (accumulateWidgetUpdateData) {
-                this.accumulatedUpdates.add(widgetUpdate);
-            } else {
-                widgetUpdate.sendTo(playerEntity);
-            }
-        }
-    }
-
 }

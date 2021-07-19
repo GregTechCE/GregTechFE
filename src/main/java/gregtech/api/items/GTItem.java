@@ -12,14 +12,16 @@ import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.NullVariant;
 import alexiil.mc.lib.attributes.misc.PlayerInvUtil;
 import alexiil.mc.lib.attributes.misc.Reference;
+import gregtech.api.capability.item.DischargeMode;
 import gregtech.api.capability.item.ElectricItem;
 import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.item.TransferLimit;
 import gregtech.api.items.stats.ElectricStats;
 import gregtech.api.items.stats.FluidStats;
 import gregtech.api.items.util.CustomMaxCountItem;
 import gregtech.api.util.ElectricItemUtil;
 import gregtech.api.util.GTUtility;
-import gregtech.api.util.ref.InventorySlotReference;
+import gregtech.api.util.ref.InventorySlotRef;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -182,7 +184,7 @@ public class GTItem extends Item implements AttributeProviderItem, CustomMaxCoun
     }
 
     private ElectricItem getItemFromSlot(PlayerEntity player, Inventory inventory, int slot) {
-        Reference<ItemStack> stackRef = new InventorySlotReference(inventory, slot);
+        Reference<ItemStack> stackRef = InventorySlotRef.of(inventory, slot);
         Consumer<ItemStack> excess = PlayerInvUtil.createPlayerInsertable(player);
 
         return GTAttributes.ELECTRIC_ITEM.getFirstOrNull(stackRef, LimitedConsumer.fromConsumer(excess));
@@ -193,7 +195,7 @@ public class GTItem extends Item implements AttributeProviderItem, CustomMaxCoun
             ElectricItem targetItem = getItemFromSlot(player, inventory, i);
 
             if (targetItem != null && !targetItem.canProvideChargeExternally()) {
-                if (ElectricItemUtil.chargeElectricItem(source, targetItem, true, false) == 0L) {
+                if (ElectricItemUtil.chargeElectricItem(source, targetItem, DischargeMode.EXTERNAL, TransferLimit.RESPECT) == 0L) {
                     return;
                 }
             }

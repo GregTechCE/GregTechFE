@@ -3,6 +3,7 @@ package gregtech.api.items.toolitem;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.PlayerInvUtil;
+import alexiil.mc.lib.attributes.misc.Ref;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import gregtech.api.capability.GTAttributes;
@@ -17,7 +18,6 @@ import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.flags.MaterialFlags;
 import gregtech.api.unification.material.properties.SolidForm;
 import gregtech.api.unification.material.properties.ToolProperties;
-import gregtech.api.util.ref.SimpleReference;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
@@ -261,7 +261,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
 
     @Override
     public Pair<ItemDamageResult, ItemStack> attemptDamageItem(ItemStack itemStack, int damage, @Nullable LivingEntity entity, Simulation simulate) {
-        SimpleReference<ItemStack> stackRef = new SimpleReference<>(itemStack.copy());
+        Ref<ItemStack> stackRef = new Ref<>(itemStack.copy());
         LimitedConsumer<ItemStack> excess = LimitedConsumer.rejecting();
         Random random = new Random();
 
@@ -275,7 +275,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
             long energyToUse = energyPerDurabilityPoint * damage;
 
             if (!electricItem.canUse(energyToUse)) {
-                return Pair.of(ItemDamageResult.CANNOT_DAMAGE, stackRef.value);
+                return Pair.of(ItemDamageResult.CANNOT_DAMAGE, stackRef.obj);
             }
             if (simulate.isAction()) {
                 electricItem.use(energyToUse);
@@ -288,16 +288,15 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
         }
 
         if (simulate.isAction()) {
-            if (stackRef.value.damage(damage, random, null)) {
-                stackRef.value.decrement(1);
+            if (stackRef.obj.damage(damage, random, null)) {
+                stackRef.obj.decrement(1);
 
-                if (stackRef.value.isEmpty()) {
+                if (stackRef.obj.isEmpty()) {
                     stackRef.set(getBrokenItemRemainder(itemStack));
                 }
-                return Pair.of(ItemDamageResult.BROKEN, stackRef.value);
+                return Pair.of(ItemDamageResult.BROKEN, stackRef.obj);
             }
         }
-
-        return Pair.of(ItemDamageResult.DAMAGED, stackRef.value);
+        return Pair.of(ItemDamageResult.DAMAGED, stackRef.obj);
     }
 }

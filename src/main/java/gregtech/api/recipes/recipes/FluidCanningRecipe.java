@@ -7,6 +7,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.FixedItemInvView;
 import alexiil.mc.lib.attributes.misc.NullVariant;
+import alexiil.mc.lib.attributes.misc.Ref;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -14,7 +15,6 @@ import gregtech.api.recipes.RecipeSerializer;
 import gregtech.api.recipes.context.ElectricMachineContext;
 import gregtech.api.recipes.MachineRecipe;
 import gregtech.api.recipes.context.RecipeContext;
-import gregtech.api.util.ref.SimpleReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -80,7 +80,7 @@ public class FluidCanningRecipe<C extends ElectricMachineContext> implements Mac
             return false;
         }
 
-        SimpleReference<ItemStack> stackRef = new SimpleReference<>(containerStack);
+        Ref<ItemStack> stackRef = new Ref<>(containerStack);
         FluidVolume fluidMoved;
 
         //Try to simulate fluid movement and skip the recipe if we cannot extract or insert anything,
@@ -124,7 +124,7 @@ public class FluidCanningRecipe<C extends ElectricMachineContext> implements Mac
 
         //Decrement container stack by one, since we are filling one container
         ItemStack containerStack = itemInputInventory.extractStack(recipeTargetInfo.slotIndex, null, ItemStack.EMPTY, 1, Simulation.ACTION);
-        SimpleReference<ItemStack> stackRef = new SimpleReference<>(containerStack);
+        Ref<ItemStack> stackRef = new Ref<>(containerStack);
         FluidVolume fluidToInsert = FluidVolumeUtil.EMPTY;
 
         //Consume fluids from the input tank if we are performing insertion

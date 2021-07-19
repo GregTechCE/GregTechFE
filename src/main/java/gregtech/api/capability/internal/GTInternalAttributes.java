@@ -11,6 +11,4 @@ public class GTInternalAttributes {
     public static final Attribute<Controllable> CONTROLLABLE = Attributes.create(Controllable.class);
 
     public static final Attribute<Workable> WORKABLE = Attributes.create(Workable.class);
-
-    public static final Attribute<ActiveOutputSide> ACTIVE_OUTPUT_SIDE = Attributes.create(ActiveOutputSide.class);
 }

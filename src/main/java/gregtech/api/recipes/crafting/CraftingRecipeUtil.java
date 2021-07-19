@@ -1,12 +1,15 @@
 package gregtech.api.recipes.crafting;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
 import gregtech.api.capability.GTAttributes;
+import gregtech.api.capability.item.DischargeMode;
 import gregtech.api.capability.item.ElectricItem;
+import gregtech.api.capability.item.TransferLimit;
 import gregtech.api.items.util.ExtendedRemainderItem;
 import gregtech.api.util.ElectricItemUtil;
-import gregtech.api.util.ref.InventorySlotReference;
-import gregtech.api.util.ref.SimpleReference;
+import gregtech.api.util.ref.InventorySlotRef;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
@@ -29,7 +32,7 @@ public class CraftingRecipeUtil {
     }
 
     public static ItemStack processElectricItemOnOutput(CraftingInventory craftingInventory, ItemStack outputStack, boolean transferMaxCharge) {
-        Reference<ItemStack> result = new SimpleReference<>(outputStack.copy());
+        Ref<ItemStack> result = new Ref<>(outputStack.copy());
 
         ElectricItem resultElectricItem = GTAttributes.ELECTRIC_ITEM.getFirstOrNull(result);
         if (resultElectricItem == null) {
@@ -39,16 +42,16 @@ public class CraftingRecipeUtil {
         long newMaxCharge = resultElectricItem.getMaxCharge();
 
         for (int i = 0; i < craftingInventory.size(); i++) {
-            Reference<ItemStack> ingredientRef = new InventorySlotReference(craftingInventory, i);
+            Reference<ItemStack> ingredientRef = InventorySlotRef.of(craftingInventory, i);
             ElectricItem ingredientElectricItem = GTAttributes.ELECTRIC_ITEM.getFirstOrNull(ingredientRef);
 
             if (ingredientElectricItem != null && ingredientElectricItem.canProvideChargeExternally()) {
                 newMaxCharge += ingredientElectricItem.getMaxCharge();
 
                 if (transferMaxCharge) {
-                    resultElectricItem.setMaxChargeOverride(newMaxCharge);
+                    resultElectricItem.setMaxChargeOverride(newMaxCharge, Simulation.ACTION);
                 }
-                ElectricItemUtil.chargeElectricItem(ingredientElectricItem, resultElectricItem, true, true);
+                ElectricItemUtil.chargeElectricItem(ingredientElectricItem, resultElectricItem, DischargeMode.EXTERNAL, TransferLimit.IGNORE);
             }
         }
         return result.get();
