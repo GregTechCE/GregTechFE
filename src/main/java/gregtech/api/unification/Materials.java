@@ -6,6 +6,7 @@ import gregtech.api.unification.element.Element;
 import gregtech.api.unification.element.Elements;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.properties.*;
+import gregtech.api.util.VoltageTier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -81,7 +82,7 @@ public class Materials {
                 .element(Elements.Al)
                 .metal(2, 661)
                 .canCreateTools(10.0F,2.0F, 128)
-                .canCreateCables(GTValues.V[GTValues.EV], 1, 1)
+                .canCreateCables(VoltageTier.EV, 1, 1)
                 .smeltsInBlastFurnace(1700)
                 .baseForElectricComponents()
                 .flags(GENERATE_FOIL, GENERATE_GEAR))); //Has ore; Byproducts: Bauxite; GENERATE_FRAME
@@ -114,7 +115,7 @@ public class Materials {
                 .visual(COLOR_ORANGE, SHINY)
                 .element(Elements.Cu)
                 .metal(1, 1085)
-                .canCreateCables(GTValues.V[GTValues.MV], 1, 2)
+                .canCreateCables(VoltageTier.MV, 1, 2)
                 .canCreateFluidPipe(25, 1000, true)
                 .mortarGrindable()
                 .smeltsInArcFurnace(AnnealedCopper)
@@ -125,13 +126,13 @@ public class Materials {
                 .element(Elements.Co)
                 .metal(2, 1495)
                 .canCreateTools(10.0F, 3.0f, 256)
-                .canCreateCables(GTValues.V[GTValues.LV], 2, 2))); //Has ore; Byproducts: Cobaltite
+                .canCreateCables(VoltageTier.LV, 2, 2))); //Has ore; Byproducts: Cobaltite
 
         Gold = register("gold", new Material(new Material.Settings()
                 .visual(COLOR_YELLOW, SHINY)
                 .element(Elements.Au)
                 .metal(2, 1065)
-                .canCreateCables(GTValues.V[GTValues.HV], 2, 2)
+                .canCreateCables(VoltageTier.HV, 2, 2)
                 .mortarGrindable()
                 .flags(GENERATE_PLATE, GENERATE_FOIL))); //Has ore; Byproducts: Copper, Nickel; Foil used only in Chocolate Coin
 
@@ -145,7 +146,7 @@ public class Materials {
                 .element(Elements.Fe)
                 .metal(2, 1539)
                 .canCreateToolsWithDefaultEnchant(7.0F, 2.5F, 256, 14)
-                .canCreateCables(GTValues.V[GTValues.MV], 2, 3)
+                .canCreateCables(VoltageTier.MV, 2, 3)
                 .mortarGrindable()
                 .polarizeInto(new Supplier<>() {
                     @Override
@@ -168,7 +169,7 @@ public class Materials {
                 .visual(0xAAAAFF, METALLIC)
                 .element(Elements.Ni)
                 .metal(2, 1455)
-                .canCreateCables(GTValues.V[GTValues.MV], 3, 3)
+                .canCreateCables(VoltageTier.MV, 3, 3)
                 .mortarGrindable()
                 .plasma())); //Has ore; Byproducts: Cobalt, Platinum, Iron
 
@@ -189,7 +190,7 @@ public class Materials {
                 .visual(0xDCDCFF, SHINY)
                 .element(Elements.Ag)
                 .metal(2, 962)
-                .canCreateCables(GTValues.V[GTValues.HV], 1, 1)
+                .canCreateCables(VoltageTier.HV, 1, 1)
                 .mortarGrindable()
                 .flags(GENERATE_PLATE))); //Has ore; Byproducts: Lead, Sulfur
 
@@ -197,7 +198,7 @@ public class Materials {
                 .visual(COLOR_VERY_LIGHT_GREY, DULL)
                 .element(Elements.Sn)
                 .metal(1, 232)
-                .canCreateCables(GTValues.V[GTValues.LV], 1, 1)
+                .canCreateCables(VoltageTier.LV, 1, 1)
                 .baseForPumpComponent()
                 .mortarGrindable()
                 .flags(GENERATE_FINE_WIRE, GENERATE_FOIL))); //Has ore; Byproducts: Iron, Zinc
@@ -206,7 +207,7 @@ public class Materials {
                 .visual(0xFAF0F0, METALLIC)
                 .element(Elements.Zn)
                 .metal(1, 420)
-                .canCreateCables(GTValues.V[GTValues.LV], 1, 1)
+                .canCreateCables(VoltageTier.LV, 1, 1)
                 .mortarGrindable()
                 .flags(GENERATE_FOIL))); //Has ore; Byproducts: Tin, Gallium
 
@@ -216,7 +217,7 @@ public class Materials {
                 .visual(0xFF7814, SHINY)
                 .composition(MaterialComponent.of(Copper))
                 .metal(1, 1085)
-                .canCreateCables(GTValues.V[GTValues.MV], 1, 1)
+                .canCreateCables(VoltageTier.MV, 1, 1)
                 .mortarGrindable()
                 .flags(GENERATE_FINE_WIRE)));
 
@@ -268,7 +269,7 @@ public class Materials {
                 .visual(0xFFFF64, SHINY)
                 .composition(MaterialComponent.of(Silver), MaterialComponent.of(Gold))
                 .metal(2, 1014)
-                .canCreateCables(GTValues.V[GTValues.HV], 3, 2)
+                .canCreateCables(VoltageTier.HV, 3, 2)
                 .mortarGrindable()
                 .flags(GENERATE_ROD, GENERATE_FOIL, GENERATE_FINE_WIRE)));
 
@@ -336,7 +337,7 @@ public class Materials {
                 .visual(COLOR_DARK_RED, DULL)
                 .composition(MaterialComponent.of(Copper), MaterialComponent.of(Redstone))
                 .metal(1, FluidProperties.DEFAULT_TEMPERATURE) //Temperature?
-                .canCreateCables(GTValues.V[GTValues.ULV], 1, 0)
+                .canCreateCables(VoltageTier.ULV, 1, 0)
                 .flags(GENERATE_FINE_WIRE)));
 
         Steel = register("steel", new Material(new Material.Settings()
@@ -345,7 +346,7 @@ public class Materials {
                 .metal(2, 1400)
                 .smeltsInBlastFurnace(1000)
                 .canCreateTools(6, 3, 512)
-                .canCreateCables(GTValues.V[GTValues.EV], 2, 2)
+                .canCreateCables(VoltageTier.EV, 2, 2)
                 .canCreateFluidPipe(50, 2500, true)
                 .canCreateCell(256000)
                 .mortarGrindable()

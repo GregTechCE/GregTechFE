@@ -10,6 +10,7 @@ import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.flags.MaterialProperty;
 import gregtech.api.unification.material.properties.*;
 import gregtech.api.unification.util.MaterialIconSet;
+import gregtech.api.util.VoltageTier;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -27,7 +28,6 @@ public class Material implements Comparable<Material> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
     private static final boolean MATERIAL_ERRORS_ARE_FATAL = true;
-    private static final int CABLE_MINIMAL_VOLTAGE = GTValues.V[GTValues.ULV];
 
     public static final Registry<Material> REGISTRY = FabricRegistryBuilder
             .createSimple(Material.class, new Identifier(GTValues.MODID, "materials"))
@@ -261,12 +261,12 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
-        public Settings canCreateCables(int voltage, int amperage, int lossPerBlock) {
-            Preconditions.checkArgument(voltage >= CABLE_MINIMAL_VOLTAGE, "voltage >= " + CABLE_MINIMAL_VOLTAGE);
+        public Settings canCreateCables(VoltageTier voltageTier, int amperage, int lossPerBlock) {
+            Preconditions.checkNotNull(voltageTier);
             Preconditions.checkArgument(amperage > 0, "amperage > 0");
             Preconditions.checkArgument(lossPerBlock >= 0, "lossPerBlock >= 0");
 
-            property(CABLE_PROPERTIES, CableProperties.create(voltage, amperage, lossPerBlock));
+            property(CABLE_PROPERTIES, CableProperties.create(voltageTier, amperage, lossPerBlock));
 
             return this;
         }
