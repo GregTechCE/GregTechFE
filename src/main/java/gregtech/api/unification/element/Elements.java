@@ -8,11 +8,15 @@ public class Elements {
 
     public static final Element H;
     public static final Element Be;
+    public static final Element B;
     public static final Element C;
     public static final Element O;
+    public static final Element F;
     public static final Element Al;
     public static final Element Si;
     public static final Element Cl;
+    public static final Element Ar;
+    public static final Element Ca;
     public static final Element Cr;
     public static final Element Mn;
     public static final Element Fe;
@@ -20,10 +24,15 @@ public class Elements {
     public static final Element Ni;
     public static final Element Cu;
     public static final Element Zn;
+    public static final Element As;
     public static final Element Tc;
     public static final Element Ag;
+    public static final Element Cd;
     public static final Element Sn;
+    public static final Element Sb;
+    public static final Element Ba;
     public static final Element Au;
+    public static final Element Bi;
 
 
     static {
@@ -31,15 +40,19 @@ public class Elements {
         H = register("hydrogen", new Element(new Element.Settings().basicProperties("H", 1, 0)));
 
         Be = register("beryllium", new Element(new Element.Settings().basicProperties("Be", 4, 5)));
-
+        B = register("boron", new Element(new Element.Settings().basicProperties("B", 5, 5)));
         C = register("carbon", new Element(new Element.Settings().basicProperties("C", 6, 6)));
 
         O = register("oxygen", new Element(new Element.Settings().basicProperties("O", 8, 8)));
+        F = register("fluorine", new Element(new Element.Settings().basicProperties("F", 9, 9)));
 
         Al = register("aluminium", new Element(new Element.Settings().basicProperties("Al", 13, 13)));
         Si = register("silicon", new Element(new Element.Settings().basicProperties("Si", 14, 14)));
 
         Cl = register("chlorine", new Element(new Element.Settings().basicProperties("Cl", 17, 18)));
+        Ar = register("argon", new Element(new Element.Settings().basicProperties("Ar", 18, 22)));
+
+        Ca = register("calcium", new Element(new Element.Settings().basicProperties("Ca", 20, 20)));
 
         Cr = register("chromium", new Element(new Element.Settings().basicProperties("Cr", 24, 28)));
         Mn = register("manganese", new Element(new Element.Settings().basicProperties("Mn", 25, 30)));
@@ -49,14 +62,21 @@ public class Elements {
         Cu = register("copper", new Element(new Element.Settings().basicProperties("Cu", 29, 34)));
         Zn = register("zinc", new Element(new Element.Settings().basicProperties("Zn", 30, 35)));
 
+        As = register("arsenic", new Element(new Element.Settings().basicProperties("As", 33, 42)));
+
         Tc = register("technetium", new Element(new Element.Settings().basicProperties("Tc", 43, 55)));
 
         Ag = register("silver", new Element(new Element.Settings().basicProperties("Ag", 47, 60)));
+        Cd = register("cadmium", new Element(new Element.Settings().basicProperties("Ca", 48, 64)));
 
         Sn = register("tin", new Element(new Element.Settings().basicProperties("Sn", 50, 68)));
+        Sb = register("antimony", new Element(new Element.Settings().basicProperties("Sb", 51, 70)));
+
+        Ba = register("barium", new Element(new Element.Settings().basicProperties("Ba", 56, 81)));
 
         Au = register("gold", new Element(new Element.Settings().basicProperties("Au", 79, 117)));
 
+        Bi = register("bismuth", new Element(new Element.Settings().basicProperties("Bi", 83, 125)));
     }
 
     private Elements() {
@@ -72,23 +92,18 @@ public class Elements {
 //    He(2, 2, -1, null, "Helium", false),
 //    He_3(2, 1, -1, "H&D", "Helium-3", true),
 //    Li(3, 4, -1, null, "Lithium", false),
-//    B(5, 5, -1, null, "Boron", false),
 //    N(7, 7, -1, null, "Nitrogen", false),
-//    F(9, 9, -1, null, "Fluorine", false),
 //    Ne(10, 10, -1, null, "Neon", false),
 //    Na(11, 11, -1, null, "Sodium", false),
 //    Mg(12, 12, -1, null, "Magnesium", false),
 //    P(15, 15, -1, null, "Phosphor", false),
 //    S(16, 16, -1, null, "Sulfur", false),
-//    Ar(18, 22, -1, null, "Argon", false),
 //    K(19, 20, -1, null, "Potassium", false),
-//    Ca(20, 20, -1, null, "Calcium", false),
 //    Sc(21, 24, -1, null, "Scandium", false),
 //    Ti(22, 26, -1, null, "Titanium", false),
 //    V(23, 28, -1, null, "Vanadium", false),
 //    Ga(31, 39, -1, null, "Gallium", false),
 //    Ge(32, 40, -1, null, "Germanium", false),
-//    As(33, 42, -1, null, "Arsenic", false),
 //    Se(34, 45, -1, null, "Selenium", false),
 //    Br(35, 45, -1, null, "Bromine", false),
 //    Kr(36, 48, -1, null, "Krypton", false),
@@ -101,14 +116,11 @@ public class Elements {
 //    Ru(44, 57, -1, null, "Ruthenium", false),
 //    Rh(45, 58, -1, null, "Rhodium", false),
 //    Pd(46, 60, -1, null, "Palladium", false),
-//    Cd(48, 64, -1, null, "Cadmium", false),
 //    In(49, 65, -1, null, "Indium", false),
-//    Sb(51, 70, -1, null, "Antimony", false),
 //    Te(52, 75, -1, null, "Tellurium", false),
 //    I(53, 74, -1, null, "Iodine", false),
 //    Xe(54, 77, -1, null, "Xenon", false),
 //    Cs(55, 77, -1, null, "Caesium", false),
-//    Ba(56, 81, -1, null, "Barium", false),
 //    La(57, 81, -1, null, "Lantanium", false),
 //    Ce(58, 82, -1, null, "Cerium", false),
 //    Pr(59, 81, -1, null, "Praseodymium", false),
@@ -134,7 +146,6 @@ public class Elements {
 //    Hg(80, 120, -1, null, "Mercury", false),
 //    Tl(81, 123, -1, null, "Thallium", false),
 //    Pb(82, 125, -1, null, "Lead", false),
-//    Bi(83, 125, -1, null, "Bismuth", false),
 //    Po(84, 124, -1, null, "Polonium", false),
 //    At(85, 124, -1, null, "Astatine", false),
 //    Rn(86, 134, -1, null, "Radon", false),

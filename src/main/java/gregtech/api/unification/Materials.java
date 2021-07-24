@@ -24,12 +24,21 @@ public class Materials {
      * Direct Elements
      */
     public static final Material Aluminium;
+    public static final Material Antimony;
+    public static final Material Argon;
+    public static final Material Arsenic;
+    public static final Material Barium;
     public static final Material Beryllium;
+    public static final Material Bismuth;
+    public static final Material Boron;
+    public static final Material Calcium;
+    public static final Material Cadmium;
     public static final Material Carbon;
     public static final Material Chlorine;
     public static final Material Chrome;
     public static final Material Copper;
     public static final Material Cobalt;
+    public static final Material Fluorine;
     public static final Material Gold;
     public static final Material Hydrogen;
     public static final Material Iron;
@@ -87,11 +96,53 @@ public class Materials {
                 .baseForElectricComponents()
                 .flags(GENERATE_FOIL, GENERATE_GEAR))); //Has ore; Byproducts: Bauxite; GENERATE_FRAME
 
+        Antimony = register("antimony", new Material(new Material.Settings()
+                .visual(0xDCDCC8, SHINY)
+                .element(Elements.Sb)
+                .metal(2, 631)
+                .mortarGrindable()));
+
+        Argon = register("argon", new Material(new Material.Settings()
+                .visual(0xBBBB00)
+                .element(Elements.Ar)
+                .gas()
+                .plasma()));
+
+        Arsenic = register("arsenic", new Material(new Material.Settings()
+                .visual(0xBBBB00, SAND)
+                .element(Elements.As)
+                .dust(2)));
+
+        Barium = register("barium", new Material(new Material.Settings()
+                .visual(COLOR_WHITE, SHINY)
+                .element(Elements.Ba)
+                .metal(2, 730)));
+
         Beryllium = register("beryllium", new Material(new Material.Settings()
                 .visual(0x64B464, METALLIC)
                 .element(Elements.Be)
                 .metal(2, 1287)
                 .flags(GENERATE_PLATE))); //Has ore; Byproducts: Emerald
+
+        Bismuth = register("bismuth", new Material(new Material.Settings()
+                .visual(0x64A0A0, METALLIC)
+                .element(Elements.Bi)
+                .metal(1, 272)));//Has ore
+
+        Boron = register("boron", new Material(new Material.Settings()
+                .visual(0xD2F0D2, SAND)
+                .element(Elements.B)
+                .dust(2)));
+
+        Calcium = register("calcium", new Material(new Material.Settings()
+                .visual(0xDDDDAA, METALLIC)
+                .element(Elements.Ca)
+                .metal(2, 842)));
+
+        Cadmium = register("cadmium", new Material(new Material.Settings()
+                .visual(0x505060, SHINY)
+                .element(Elements.Cd)
+                .metal(2, 322)));
 
         Carbon = register("carbon", new Material(new Material.Settings()
                 .visual(0x333333, DULL)
@@ -127,6 +178,11 @@ public class Materials {
                 .metal(2, 1495)
                 .canCreateTools(10.0F, 3.0f, 256)
                 .canCreateCables(VoltageTier.LV, 2, 2))); //Has ore; Byproducts: Cobaltite
+
+        Fluorine = register("fluorine", new Material(new Material.Settings()
+                .visual(0xFFFFAA)
+                .element(Elements.F)
+                .gas()));//Temperature 253
 
         Gold = register("gold", new Material(new Material.Settings()
                 .visual(COLOR_YELLOW, SHINY)
@@ -387,18 +443,9 @@ public class Materials {
     /**
      * Direct Elements
      */
-    public static IngotMaterial Antimony = new IngotMaterial(3, "antimony", 0xDCDCC8, SHINY, 2, of(), EXT_METAL | MORTAR_GRINDABLE, Element.Sb);
-    public static FluidMaterial Argon = new FluidMaterial(4, "argon", 0xBBBB00, FLUID, of(), STATE_GAS | GENERATE_PLASMA, Element.Ar);
-    public static DustMaterial Arsenic = new DustMaterial(5, "arsenic", 0xDDDDDD, SAND, 2, of(), 0, Element.As);
-    public static IngotMaterial Barium = new IngotMaterial(6, "barium", 0xFFFFFF, SHINY, 2, of(), 0, Element.Ba);
-    public static IngotMaterial Bismuth = new IngotMaterial(8, "bismuth", 0x64A0A0, METALLIC, 1, of(), GENERATE_ORE, Element.Bi);
-    public static DustMaterial Boron = new DustMaterial(9, "boron", 0xD2F0D2, SAND, 2, of(), 0, Element.B);
-    public static IngotMaterial Caesium = new IngotMaterial(10, "caesium", 0xFFFFFC, DULL, 2, of(), 0, Element.Cs);
-    public static IngotMaterial Calcium = new IngotMaterial(11, "calcium", 0xDDDDAA, METALLIC, 2, of(), 0, Element.Ca);
-    public static IngotMaterial Cadmium = new IngotMaterial(13, "cadmium", 0x505060, SHINY, 2, of(), 0, Element.Cd);
-    public static IngotMaterial Cerium = new IngotMaterial(14, "cerium", 0xEEEEEE, METALLIC, 2, of(), 0, Element.Ce, 1068);
-    public static FluidMaterial Deuterium = new FluidMaterial(19, "deuterium", 0xEEEE00, FLUID, of(), STATE_GAS, Element.D);
-    public static FluidMaterial Fluorine = new FluidMaterial(23, "fluorine", 0xFFFFAA, GAS, of(), STATE_GAS, Element.F).setFluidTemperature(253);
+    public static IngotMaterial Caesium = new IngotMaterial(10, "caesium", 0xFFFFFC, DULL, 2, of(), 0, Element.Cs); //Only available as byproduct; No usage
+    public static IngotMaterial Cerium = new IngotMaterial(14, "cerium", 0xEEEEEE, METALLIC, 2, of(), 0, Element.Ce, 1068); //Only available via electrolyzing; No usage
+    public static FluidMaterial Deuterium = new FluidMaterial(19, "deuterium", 0xEEEE00, FLUID, of(), STATE_GAS, Element.D); //Only used to obtain Tritium
     public static IngotMaterial Gallium = new IngotMaterial(25, "gallium", 0xEEEEFF, SHINY, 2, of(), GENERATE_PLATE, Element.Ga);
     public static FluidMaterial Helium = new FluidMaterial(29, "helium", 0xDDDD00, GAS, of(), STATE_GAS | GENERATE_PLASMA, Element.He);
     public static FluidMaterial Helium3 = new FluidMaterial(30, "helium3", 0xDDDD00, GAS, of(), STATE_GAS, Element.He_3);
@@ -758,7 +805,7 @@ public class Materials {
     public static IngotMaterial NaquadahAlloy = new IngotMaterial(308, "naquadah_alloy", 0x282828, METALLIC, 5, of(new MaterialComponent(Naquadah, 1), new MaterialComponent(Osmiridium, 1)), EXT2_METAL, null, 8.0F, 5.0f, 5120, 7200);
     public static IngotMaterial NaquadahEnriched = new IngotMaterial(309, "naquadah_enriched", 0x282828, METALLIC, 4, of(), EXT_METAL | GENERATE_ORE, null, 6.0F, 4.0f, 1280, 4500);
     public static IngotMaterial Naquadria = new IngotMaterial(310, "naquadria", 0x1E1E1E, SHINY, 3, of(), EXT_METAL, Element.Nq, 9000);
-    public static IngotMaterial Tritanium = new IngotMaterial(311, "tritanium", 0xFFFFFF, METALLIC, 6, of(), EXT_METAL, Element.Tr, 20.0F, 6.0f, 10240);
+    public static IngotMaterial Tritanium = new IngotMaterial(311, "tritanium", 0xFFFFFF, METALLIC, 6, of(), EXT_METAL, Element.Tr, 20.0F, 6.0f, 10240);//No usage
     public static IngotMaterial Duranium = new IngotMaterial(312, "duranium", 0xFFFFFF, METALLIC, 5, of(), EXT_METAL, Element.Dr, 16.0F, 5.0f, 5120);
 
     /**
@@ -913,7 +960,6 @@ public class Materials {
         Glowstone.addOreByProducts(Redstone, Gold);
         Tungsten.addOreByProducts(Manganese, Molybdenum);
         Lepidolite.addOreByProducts(Lithium, Caesium);
-        Antimony.addOreByProducts(Zinc, Iron);
         Lead.addOreByProducts(Silver, Sulfur);
         Thorium.addOreByProducts(Uranium, Lead);
         Plutonium.addOreByProducts(Uranium, Lead);
