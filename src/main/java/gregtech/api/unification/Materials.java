@@ -9,6 +9,8 @@ import gregtech.api.unification.material.properties.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.function.Supplier;
+
 import static com.google.common.collect.ImmutableList.of; //TODO: switch to java.util.list.of();
 import static net.minecraft.enchantment.Enchantments.*;
 import static gregtech.api.unification.util.MaterialIconSets.*;
@@ -145,7 +147,12 @@ public class Materials {
                 .canCreateToolsWithDefaultEnchant(7.0F, 2.5F, 256, 14)
                 .canCreateCables(GTValues.V[GTValues.MV], 2, 3)
                 .mortarGrindable()
-                .polarizeInto(() -> MagneticIron)
+                .polarizeInto(new Supplier<>() {
+                    @Override
+                    public Material get() {
+                        return MagneticIron;
+                    }
+                })
                 .smeltsInArcFurnace(WroughtIron)
                 .plasma()
                 .flags(GENERATE_PLATE, GENERATE_ROD, GENERATE_RING))); //Has ore; Ring used only for Tripwire Hook; GENERATE_FRAME
