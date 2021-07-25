@@ -1,22 +1,11 @@
 package gregtech.api.capability.internal;
 
+import java.util.Optional;
+
 /**
  * For machines which have progress and can work
  */
-public interface Workable extends Controllable {
+public interface Workable {
 
-    /**
-     * @return current progress of machine
-     */
-    int getProgress();
-
-    /**
-     * @return progress machine need to complete it's stuff
-     */
-    int getMaxProgress();
-
-    /**
-     * @return true is machine is active
-     */
-    boolean isActive();
+    Optional<WorkStatus> getWorkStatus();
 }

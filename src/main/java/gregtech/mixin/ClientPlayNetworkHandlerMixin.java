@@ -1,7 +1,7 @@
 package gregtech.mixin;
 
 import com.mojang.authlib.GameProfile;
-import gregtech.api.recipes.GTRecipeManager;
+import gregtech.api.recipe.GTRecipeManager;
 import gregtech.mixin.impl.GTClientPlayNetworkHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;

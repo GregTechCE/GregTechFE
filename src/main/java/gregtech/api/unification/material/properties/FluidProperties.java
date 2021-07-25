@@ -1,7 +1,7 @@
 package gregtech.api.unification.material.properties;
 
-import gregtech.api.fluids.MaterialFluidProperties;
-import gregtech.api.fluids.MaterialFluidTexture;
+import gregtech.api.fluid.properties.MaterialFluidProperties;
+import gregtech.api.fluid.render.MaterialFluidTexture;
 
 public class FluidProperties {
 

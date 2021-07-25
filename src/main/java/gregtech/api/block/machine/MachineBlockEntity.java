@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.*;
 import gregtech.api.block.machine.module.MachineModule;
 import gregtech.api.block.machine.module.MachineModuleContainer;
 import gregtech.api.block.machine.module.MachineModuleType;
+import gregtech.api.block.machine.module.api.OrientationKind;
 import gregtech.api.render.model.state.ModelState;
 import gregtech.api.render.model.state.ModelStateManager;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -16,6 +17,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, AttributeProviderBlockEntity, RenderAttachmentBlockEntity {
@@ -31,6 +34,7 @@ public class MachineBlockEntity extends BlockEntity implements BlockEntityClient
     private final ModelStateManager<Block> modelStateManager;
     private final int worldTimeOffset;
     private ModelState<Block> currentModelState;
+    private final Random random = new Random();
 
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -44,9 +48,17 @@ public class MachineBlockEntity extends BlockEntity implements BlockEntityClient
         refreshModelState();
     }
 
-    @Nullable
-    public <T extends MachineModule<?>> T getModule(MachineModuleType<?, T> machineModuleType) {
-        return this.moduleContainer.getModule(machineModuleType);
+    public Random getRandom() {
+        return random;
+    }
+
+    public <T extends MachineModule<?>> Optional<T> getModule(MachineModuleType<?, T> moduleType) {
+        return this.moduleContainer.getModule(moduleType);
+    }
+
+    @NotNull
+    public <T extends MachineModule<?>> T getModuleChecked(MachineModuleType<?, T> moduleType) {
+        return getModule(moduleType).orElseThrow(() -> new RuntimeException("Module not found in the machine: " + moduleType));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -70,8 +82,12 @@ public class MachineBlockEntity extends BlockEntity implements BlockEntityClient
         machineBlockEntity.moduleContainer.tickModules(tickType);
     }
 
-    public boolean attemptSetOrientation(Direction newOrientation, @Nullable LivingEntity player, Simulation simulation) {
+    public ActionResult attemptSetOrientation(Direction newOrientation, @NotNull LivingEntity player, Simulation simulation) {
         return this.moduleContainer.attemptSetOrientation(newOrientation, player, simulation);
+    }
+
+    public Optional<Direction> getOrientation(OrientationKind orientationKind) {
+        return this.moduleContainer.getOrientation(orientationKind);
     }
 
     public void clearInventory(List<ItemStack> droppedStacks, Simulation simulation) {

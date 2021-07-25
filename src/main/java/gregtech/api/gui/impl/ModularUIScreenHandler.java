@@ -4,8 +4,8 @@ import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.NativeWidget;
 import gregtech.api.gui.Widget;
 import gregtech.api.gui.WidgetUIAccess;
-import gregtech.api.net.PacketUIClientAction;
-import gregtech.api.net.PacketUIWidgetUpdate;
+import gregtech.api.network.PacketUIClientAction;
+import gregtech.api.network.PacketUIWidgetUpdate;
 import gregtech.api.util.GTUtility;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -319,6 +319,7 @@ public class ModularUIScreenHandler extends ScreenHandler implements WidgetUIAcc
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void handleWidgetUpdate(MinecraftClient client, PacketUIWidgetUpdate packet) {
         client.submit(() -> {
             PlayerEntity playerEntity = Objects.requireNonNull(client.player);

@@ -1,6 +1,6 @@
 package gregtech.api.block.ore;
 
-import gregtech.api.items.util.AutoTaggedItem;
+import gregtech.api.item.util.AutoTaggedItem;
 import gregtech.api.unification.forms.MaterialForms;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;

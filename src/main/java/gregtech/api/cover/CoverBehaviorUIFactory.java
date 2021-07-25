@@ -3,7 +3,6 @@ package gregtech.api.cover;
 import gregtech.api.capability.internal.GTInternalAttributes;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.UIFactory;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -18,14 +17,9 @@ public class CoverBehaviorUIFactory extends UIFactory<CoverBehavior> {
     }
 
     @Override
-    public CoverBehavior readHolderFromSyncData(PacketByteBuf syncData) {
+    public CoverBehavior readHolderFromSyncData(World world, PacketByteBuf syncData) {
         BlockPos blockPos = syncData.readBlockPos();
         Direction attachedSide = syncData.readEnumConstant(Direction.class);
-
-        World world = MinecraftClient.getInstance().world;
-        if (world == null) {
-            throw new IllegalStateException("readHolderFromSyncData called outside of world context");
-        }
 
         Coverable coverable = GTInternalAttributes.COVERABLE.getFirstOrNull(world, blockPos);
         if (coverable == null) {

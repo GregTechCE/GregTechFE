@@ -25,17 +25,23 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.Direction;
-import org.jetbrains.annotations.Nullable;
 
 public class AutoOutputModule extends MachineModule<InventoryTypeConfig> implements PersistentMachineModule, SyncedMachineModule, ModelStateAwareModule, OrientableMachineModule, TickableMachineModule {
 
+    private IOInventoryModule inventoryModule;
     private Direction outputOrientation = Direction.SOUTH;
     private boolean autoItemOutputEnabled = false;
     private boolean autoFluidOutputEnabled = false;
 
     public AutoOutputModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, InventoryTypeConfig config) {
         super(machine, type, config);
+    }
+
+    @Override
+    public void onModulesReady() {
+        this.inventoryModule = getMachine().getModuleChecked(this.getConfig().getInventoryModuleType());
     }
 
     public Direction getOutputOrientation() {
@@ -51,6 +57,7 @@ public class AutoOutputModule extends MachineModule<InventoryTypeConfig> impleme
     }
 
     public void setOutputOrientation(Direction outputOrientation) {
+        Preconditions.checkNotNull(outputOrientation, "outputOrientation");
         this.outputOrientation = outputOrientation;
         markDirtyAndSync();
     }
@@ -75,9 +82,6 @@ public class AutoOutputModule extends MachineModule<InventoryTypeConfig> impleme
     }
 
     protected void pushExportIntoOutputInventory() {
-        IOInventoryModule inventoryModule = getMachine().getModule(this.getConfig().getInventoryModuleType());
-        Preconditions.checkNotNull(inventoryModule);
-
         ItemExtractable itemExtractable = inventoryModule.getItemExportInventory().getExtractable();
         FluidExtractable fluidExtractable = inventoryModule.getFluidExportInventory().getExtractable();
 
@@ -99,21 +103,27 @@ public class AutoOutputModule extends MachineModule<InventoryTypeConfig> impleme
     }
 
     @Override
-    public boolean supportsOrientation(Direction orientation) {
-        return true;
+    public OrientationKind getOrientationKind() {
+        return StandardOrientationKind.AUTO_OUTPUT_SIDE;
     }
 
     @Override
-    public boolean attemptSetOrientation(Direction newOrientation, @Nullable LivingEntity player, Simulation simulation) {
-        if (player != null && player.isSneaking()) {
-            if (supportsOrientation(newOrientation) && newOrientation != getOutputOrientation()) {
+    public Direction getOrientation() {
+        return getOutputOrientation();
+    }
+
+    @Override
+    public ActionResult attemptSetOrientation(Direction newOrientation, LivingEntity player, Simulation simulation) {
+        if (player.isSneaking()) {
+            if (newOrientation != getOutputOrientation()) {
                 if (simulation.isAction()) {
                     setOutputOrientation(newOrientation);
                 }
-                return true;
+                return ActionResult.SUCCESS;
             }
+            return ActionResult.FAIL;
         }
-        return false;
+        return ActionResult.PASS;
     }
 
     @Override
@@ -126,18 +136,15 @@ public class AutoOutputModule extends MachineModule<InventoryTypeConfig> impleme
 
     @Override
     public void writePersistenceData(NbtCompound nbt) {
-        nbt.putString("OutputOrientation", this.outputOrientation.getName());
+        nbt.putInt("OutputOrientation", this.outputOrientation.getId());
         nbt.putBoolean("AutoItemOutput", this.autoItemOutputEnabled);
         nbt.putBoolean("AutoFluidOutput", this.autoFluidOutputEnabled);
     }
 
     @Override
     public void readPersistenceData(NbtCompound nbt) {
-        if (nbt.contains("OutputOrientation", NbtElement.STRING_TYPE)) {
-            Direction outputOrientation = Direction.byName(nbt.getString("OutputOrientation"));
-            if (outputOrientation != null) {
-                this.outputOrientation = outputOrientation;
-            }
+        if (nbt.contains("OutputOrientation", NbtElement.NUMBER_TYPE)) {
+            this.outputOrientation = Direction.byId(nbt.getInt("OutputOrientation"));
         }
         if (nbt.contains("AutoItemOutput", NbtElement.NUMBER_TYPE)) {
             this.autoItemOutputEnabled = nbt.getBoolean("AutoItemOutput");

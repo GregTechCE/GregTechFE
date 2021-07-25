@@ -1,7 +1,7 @@
 package gregtech.api.unification.ore;
 
 import com.google.common.base.Preconditions;
-import gregtech.api.items.GTItemGroups;
+import gregtech.api.item.GTItemGroups;
 import gregtech.api.GTValues;
 import gregtech.api.block.ore.OreBlock;
 import gregtech.api.block.ore.OreBlockItem;

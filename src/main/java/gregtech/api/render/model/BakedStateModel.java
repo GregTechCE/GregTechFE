@@ -2,7 +2,7 @@ package gregtech.api.render.model;
 
 import com.google.common.collect.ImmutableList;
 import gregtech.api.block.util.ModelStateProviderBlock;
-import gregtech.api.items.util.ModelStateProviderItem;
+import gregtech.api.item.util.ModelStateProviderItem;
 import gregtech.api.render.model.state.ModelState;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;

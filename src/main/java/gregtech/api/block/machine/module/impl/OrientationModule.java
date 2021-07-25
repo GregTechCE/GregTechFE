@@ -1,13 +1,11 @@
 package gregtech.api.block.machine.module.impl;
 
 import alexiil.mc.lib.attributes.Simulation;
+import com.google.common.base.Preconditions;
 import gregtech.api.block.machine.MachineBlockEntity;
 import gregtech.api.block.machine.module.MachineModule;
 import gregtech.api.block.machine.module.MachineModuleType;
-import gregtech.api.block.machine.module.api.ModelStateAwareModule;
-import gregtech.api.block.machine.module.api.OrientableMachineModule;
-import gregtech.api.block.machine.module.api.PersistentMachineModule;
-import gregtech.api.block.machine.module.api.SyncedMachineModule;
+import gregtech.api.block.machine.module.api.*;
 import gregtech.api.block.machine.module.impl.config.OrientationConfig;
 import gregtech.api.render.model.state.ModelState;
 import gregtech.api.render.model.state.ModelStateProperties;
@@ -16,8 +14,8 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.Direction;
-import org.jetbrains.annotations.Nullable;
 
 public class OrientationModule extends MachineModule<OrientationConfig> implements SyncedMachineModule, PersistentMachineModule, ModelStateAwareModule, OrientableMachineModule {
 
@@ -28,31 +26,38 @@ public class OrientationModule extends MachineModule<OrientationConfig> implemen
         this.orientation = Direction.NORTH;
     }
 
+    @Override
     public Direction getOrientation() {
         return orientation;
     }
 
     public void setOrientation(Direction orientation) {
+        Preconditions.checkNotNull(orientation, "orientation");
         this.orientation = orientation;
         markDirtyAndSync();
     }
 
-    @Override
-    public boolean supportsOrientation(Direction orientation) {
+    protected boolean supportsOrientation(Direction orientation) {
         return orientation.getAxis().isHorizontal() || this.config.supportsVerticalOrientation();
     }
 
     @Override
-    public boolean attemptSetOrientation(Direction newOrientation, @Nullable LivingEntity player, Simulation simulation) {
-        if (player == null || !player.isSneaking()) {
+    public OrientationKind getOrientationKind() {
+        return StandardOrientationKind.FRONT_FACING;
+    }
+
+    @Override
+    public ActionResult attemptSetOrientation(Direction newOrientation, LivingEntity player, Simulation simulation) {
+        if (!player.isSneaking()) {
             if (supportsOrientation(newOrientation) && newOrientation != getOrientation()) {
                 if (simulation.isAction()) {
                     setOrientation(newOrientation);
                 }
-                return true;
+                return ActionResult.SUCCESS;
             }
+            return ActionResult.FAIL;
         }
-        return false;
+        return ActionResult.PASS;
     }
 
     @Override
@@ -62,17 +67,13 @@ public class OrientationModule extends MachineModule<OrientationConfig> implemen
 
     @Override
     public void writePersistenceData(NbtCompound nbt) {
-        nbt.putString("Orientation", this.orientation.getName());
+        nbt.putInt("Orientation", this.orientation.getId());
     }
 
     @Override
     public void readPersistenceData(NbtCompound nbt) {
-        if (nbt.contains("Orientation", NbtElement.STRING_TYPE)) {
-            Direction loadedDirection = Direction.byName(nbt.getString("Orientation"));
-
-            if (loadedDirection != null) {
-                this.orientation = loadedDirection;
-            }
+        if (nbt.contains("Orientation", NbtElement.NUMBER_TYPE)) {
+            this.orientation = Direction.byId(nbt.getInt("Orientation"));
         }
     }
 

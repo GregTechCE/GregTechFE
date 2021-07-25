@@ -2,6 +2,10 @@ package gregtech.api.util;
 
 import gregtech.api.GTValues;
 import net.minecraft.util.StringIdentifiable;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum VoltageTier implements StringIdentifiable {
 
@@ -42,8 +46,31 @@ public enum VoltageTier implements StringIdentifiable {
         return voltageColor;
     }
 
+    public VoltageTier getPreviousTier() {
+        VoltageTier[] values = values();
+        return values[Math.max(0, ordinal() - 1)];
+    }
+
+    public VoltageTier getNextTier() {
+        VoltageTier[] values = values();
+        return values[Math.min(ordinal() + 1, values.length - 1)];
+    }
+
     @Override
     public String asString() {
         return this.name;
+    }
+
+    @Nullable
+    public static VoltageTier byName(String name) {
+        return TIER_BY_NAME.get(name);
+    }
+
+    private static final Map<String, VoltageTier> TIER_BY_NAME = new HashMap<>();
+
+    static {
+        for (VoltageTier voltageTier : values()) {
+            TIER_BY_NAME.put(voltageTier.getName(), voltageTier);
+        }
     }
 }

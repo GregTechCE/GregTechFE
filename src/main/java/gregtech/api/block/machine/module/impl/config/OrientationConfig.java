@@ -6,7 +6,7 @@ public class OrientationConfig implements MachineModuleConfig {
 
     private final boolean supportsVerticalOrientation;
 
-    private OrientationConfig(boolean supportsVerticalOrientation) {
+    protected OrientationConfig(boolean supportsVerticalOrientation) {
         this.supportsVerticalOrientation = supportsVerticalOrientation;
     }
 
@@ -14,11 +14,36 @@ public class OrientationConfig implements MachineModuleConfig {
         return supportsVerticalOrientation;
     }
 
-    public static OrientationConfig horizontalOnly() {
-        return new OrientationConfig(false);
-    }
+    public static class Builder extends ConfigurationBuilder {
 
-    public static OrientationConfig horizontalAndVertical() {
-        return new OrientationConfig(true);
+        private boolean supportsVerticalOrientation;
+
+        public Builder start() {
+            return new Builder();
+        }
+
+        public Builder supportsVerticalOrientation() {
+            this.supportsVerticalOrientation = true;
+            return this;
+        }
+
+        @Override
+        protected void copyPropertiesFrom(ConfigurationBuilder builder) {
+            if (builder instanceof Builder other) {
+                this.supportsVerticalOrientation = other.supportsVerticalOrientation;
+            }
+        }
+
+        @Override
+        public Builder copy() {
+            Builder builder = new Builder();
+            builder.copyPropertiesFrom(this);
+            return builder;
+        }
+
+        @Override
+        public OrientationConfig build() {
+            return new OrientationConfig(this.supportsVerticalOrientation);
+        }
     }
 }

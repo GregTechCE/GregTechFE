@@ -12,6 +12,10 @@ public interface IOInventoryModule {
 
     void setImportFluidFilter(FluidFilter filter);
 
+    void addInputChangeListener(InventoryChangeListener listener);
+
+    void addOutputChangeListener(InventoryChangeListener listener);
+
     @NotNull
     FixedItemInv getItemImportInventory();
 
@@ -23,4 +27,9 @@ public interface IOInventoryModule {
 
     @NotNull
     FixedFluidInv getFluidExportInventory();
+
+    @FunctionalInterface
+    interface InventoryChangeListener {
+        void onChanged();
+    }
 }

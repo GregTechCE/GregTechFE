@@ -1,7 +1,7 @@
 package gregtech.api.unification.material.properties;
 
 import com.google.common.collect.ImmutableList;
-import gregtech.api.enchants.EnchantmentData;
+import gregtech.api.enchantment.EnchantmentData;
 
 import java.util.Arrays;
 import java.util.List;

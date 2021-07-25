@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import gregtech.api.block.util.ModelStateProviderBlock;
-import gregtech.api.items.util.ModelStateProviderItem;
+import gregtech.api.item.util.ModelStateProviderItem;
 import gregtech.api.render.model.StateModel;
 import gregtech.api.render.model.StateModelDeserializer;
 import gregtech.api.render.model.StateModelManager;

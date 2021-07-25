@@ -2,8 +2,8 @@ package gregtech.common.tools;
 
 import alexiil.mc.lib.attributes.Simulation;
 import gregtech.api.capability.item.CustomDamageItem;
-import gregtech.api.items.toolitem.ToolItemSettings;
-import gregtech.api.items.toolitem.ToolItemType;
+import gregtech.api.item.toolitem.ToolItemSettings;
+import gregtech.api.item.toolitem.ToolItemType;
 import gregtech.api.unification.material.Material;
 import gregtech.mixin.accessor.ShovelItemAccessor;
 import net.minecraft.block.Block;

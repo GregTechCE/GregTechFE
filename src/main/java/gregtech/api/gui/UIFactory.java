@@ -4,11 +4,12 @@ import com.google.common.base.Preconditions;
 import gregtech.api.GTValues;
 import gregtech.api.gui.impl.ModularUIScreen;
 import gregtech.api.gui.impl.ModularUIScreenHandler;
-import gregtech.api.net.NetworkPacket;
-import gregtech.api.net.PacketUIOpen;
-import gregtech.api.net.PacketUIWidgetUpdate;
-import gregtech.api.util.GTUtility;
+import gregtech.api.network.NetworkPacket;
+import gregtech.api.network.PacketUIOpen;
+import gregtech.api.network.PacketUIWidgetUpdate;
 import gregtech.mixin.accessor.ServerPlayerEntityAccessor;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -20,6 +21,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -39,9 +41,6 @@ public abstract class UIFactory<E extends UIHolder> {
             .buildAndRegister();
 
     public final void openUI(E holder, ServerPlayerEntity player) {
-        if (GTUtility.isFakePlayer(player)) {
-            return;
-        }
         ModularUI uiTemplate = createUITemplate(holder, player);
         uiTemplate.initWidgets();
 
@@ -70,7 +69,16 @@ public abstract class UIFactory<E extends UIHolder> {
             ClientPlayerEntity entityPlayer = client.player;
             Preconditions.checkNotNull(entityPlayer);
 
-            ModularUI uiTemplate = createUITemplate(packet.uiHolder, entityPlayer);
+            ByteBuf rawBuffer = Unpooled.wrappedBuffer(packet.uiHolderData);
+            E uiHolder;
+            try {
+                PacketByteBuf packetBuffer = new PacketByteBuf(rawBuffer);
+                uiHolder = readHolderFromSyncData(entityPlayer.world, packetBuffer);
+            } finally {
+                rawBuffer.release();
+            }
+
+            ModularUI uiTemplate = createUITemplate(uiHolder, entityPlayer);
             uiTemplate.initWidgets();
 
             ModularUIScreen modularUIScreen = new ModularUIScreen(packet.windowId, entityPlayer.getInventory(), uiTemplate);
@@ -87,7 +95,7 @@ public abstract class UIFactory<E extends UIHolder> {
 
     protected abstract ModularUI createUITemplate(E holder, PlayerEntity entityPlayer);
 
-    public abstract E readHolderFromSyncData(PacketByteBuf syncData);
+    public abstract E readHolderFromSyncData(World world, PacketByteBuf syncData);
 
     public abstract void writeHolderToSyncData(PacketByteBuf syncData, E holder);
 

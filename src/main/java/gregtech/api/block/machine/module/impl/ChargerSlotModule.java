@@ -4,7 +4,6 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.impl.DirectFixedItemInv;
 import alexiil.mc.lib.attributes.misc.NullVariant;
 import alexiil.mc.lib.attributes.misc.Reference;
-import com.google.common.base.Preconditions;
 import gregtech.api.block.machine.MachineBlockEntity;
 import gregtech.api.block.machine.MachineTickType;
 import gregtech.api.block.machine.module.MachineModule;
@@ -29,6 +28,7 @@ import java.util.List;
 
 public class ChargerSlotModule extends MachineModule<EnergyContainerTypeConfig> implements PersistentMachineModule, TickableMachineModule, InventoryClearNotifyModule {
 
+    private EnergyContainerModule energyContainerModule;
     private final DirectFixedItemInv chargerInventory;
 
     public ChargerSlotModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, EnergyContainerTypeConfig config) {
@@ -42,19 +42,17 @@ public class ChargerSlotModule extends MachineModule<EnergyContainerTypeConfig> 
     }
 
     @Override
+    public void onModulesReady() {
+        this.energyContainerModule = this.machine.getModuleChecked(this.config.getEnergyContainerModuleType());
+    }
+
+    @Override
     public void clearInventory(List<ItemStack> droppedItems, Simulation simulation) {
         InventoryClearNotifyModule.clearInventory(this.chargerInventory, droppedItems, simulation);
     }
 
-    protected EnergyContainer getEnergyContainer() {
-        EnergyContainerModule energyContainerModule = this.machine.getModule(this.config.getEnergyContainerModuleType());
-        Preconditions.checkNotNull(energyContainerModule);
-
-        return energyContainerModule.getEnergyContainer();
-    }
-
     protected boolean isItemValidForChargerSlot(ItemStack stack) {
-        EnergyContainer energyContainer = getEnergyContainer();
+        EnergyContainer energyContainer = this.energyContainerModule.getEnergyContainer();
         ElectricItem electricItem = GTAttributes.ELECTRIC_ITEM.get(stack);
 
         return !(electricItem instanceof NullVariant) &&
@@ -82,7 +80,7 @@ public class ChargerSlotModule extends MachineModule<EnergyContainerTypeConfig> 
     }
 
     private void processServerTick() {
-        EnergyContainer energyContainer = getEnergyContainer();
+        EnergyContainer energyContainer = this.energyContainerModule.getEnergyContainer();
         Reference<ItemStack> itemStackRef = FixedInvSlotRef.of(chargerInventory, 0);
 
         ElectricItem electricItem = GTAttributes.ELECTRIC_ITEM.get(itemStackRef);

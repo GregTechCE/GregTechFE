@@ -1,6 +1,7 @@
 package gregtech.api.capability.block;
 
 import alexiil.mc.lib.attributes.Simulation;
+import gregtech.api.util.VoltageTier;
 
 public interface EnergySource {
 
@@ -11,7 +12,7 @@ public interface EnergySource {
      *
      * @return maximum voltage supported by this receiver
      */
-    int getVoltage();
+    VoltageTier getVoltageTier();
 
     /**
      * Pulls energy from this energy source into the network

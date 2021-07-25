@@ -1,5 +1,8 @@
 package gregtech.api.capability.block;
 
+import alexiil.mc.lib.attributes.Simulation;
+import gregtech.api.util.VoltageTier;
+
 public interface EnergySink {
 
     /**
@@ -8,13 +11,13 @@ public interface EnergySink {
      *
      * @return maximum voltage supported by this energy sink
      */
-    int getVoltage();
+    VoltageTier getVoltageTier();
 
     /**
      * Called to accept energy from the network with the provided voltage and maximum amperage
-     * @param voltage voltage in the network
+     * @param voltage voltage in the network (may be lower than getVoltage() due to cable loss)
      * @param amperage maximum amperage available in the network
      * @return number of amperes accepted from the network
      */
-    int acceptEnergyFromNetwork(int voltage, int amperage);
+    int acceptEnergyFromNetwork(int voltage, int amperage, Simulation simulation);
 }

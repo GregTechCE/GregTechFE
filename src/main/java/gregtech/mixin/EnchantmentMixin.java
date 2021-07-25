@@ -1,6 +1,6 @@
 package gregtech.mixin;
 
-import gregtech.api.items.util.CustomEnchantableItem;
+import gregtech.api.item.util.CustomEnchantableItem;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

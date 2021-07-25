@@ -5,7 +5,14 @@ import alexiil.mc.lib.attributes.CombinableAttribute;
 import gregtech.api.capability.block.EnergyContainer;
 import gregtech.api.capability.block.EnergySink;
 import gregtech.api.capability.block.EnergySource;
-import gregtech.api.capability.impl.energy.*;
+import gregtech.api.capability.impl.energy.combined.CombinedElectricItem;
+import gregtech.api.capability.impl.energy.combined.CombinedEnergyContainer;
+import gregtech.api.capability.impl.energy.combined.CombinedEnergySink;
+import gregtech.api.capability.impl.energy.combined.CombinedEnergySource;
+import gregtech.api.capability.impl.energy.empty.EmptyElectricItem;
+import gregtech.api.capability.impl.energy.empty.EmptyEnergyContainer;
+import gregtech.api.capability.impl.energy.empty.EmptyEnergySink;
+import gregtech.api.capability.impl.energy.empty.EmptyEnergySource;
 import gregtech.api.capability.item.ElectricItem;
 
 public class GTAttributes {

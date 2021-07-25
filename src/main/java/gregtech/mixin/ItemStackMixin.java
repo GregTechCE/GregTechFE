@@ -1,8 +1,8 @@
 package gregtech.mixin;
 
 import com.google.common.collect.Multimap;
-import gregtech.api.items.util.CustomMaxCountItem;
-import gregtech.api.items.util.DynamicAttributeModifierItem;
+import gregtech.api.item.util.CustomMaxCountItem;
+import gregtech.api.item.util.DynamicAttributeModifierItem;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;

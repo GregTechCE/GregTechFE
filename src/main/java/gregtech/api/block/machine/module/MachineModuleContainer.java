@@ -2,6 +2,7 @@ package gregtech.api.block.machine.module;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.Simulation;
+import com.google.common.base.Preconditions;
 import gregtech.api.block.machine.MachineBlockEntity;
 import gregtech.api.block.machine.MachineTickType;
 import gregtech.api.block.machine.module.api.*;
@@ -10,14 +11,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MachineModuleContainer {
 
@@ -29,38 +28,50 @@ public class MachineModuleContainer {
         for (ConfiguredModule<?> machineModule : modules) {
             this.modules.put(machineModule.getModuleType(), machineModule.createModule(machine));
         }
+        for (MachineModule<?> machineModule : this.modules.values()) {
+            machineModule.onModulesReady();
+        }
     }
 
     public MachineBlockEntity getMachine() {
         return machine;
     }
 
-    public <T extends MachineModule<?>> T getModule(MachineModuleType<?, T> type) {
+    public <T extends MachineModule<?>> Optional<T> getModule(MachineModuleType<?, T> type) {
         MachineModule<?> machineModule = this.modules.get(type);
-        return type.cast(machineModule);
+        if (machineModule == null) {
+            return Optional.empty();
+        }
+        return Optional.of(type.cast(machineModule));
     }
 
-    public boolean attemptSetOrientation(Direction newOrientation, @Nullable LivingEntity player, Simulation simulation) {
-        boolean orientationSet = false;
+    public Optional<Direction> getOrientation(OrientationKind orientationKind) {
+        Preconditions.checkNotNull(orientationKind, "orientationKind");
 
         for (MachineModule<?> machineModule : this.modules.values()) {
             if (machineModule instanceof OrientableMachineModule orientableMachineModule) {
-                if (orientableMachineModule.supportsOrientation(newOrientation)) {
-
-                    orientationSet = orientableMachineModule.attemptSetOrientation(newOrientation, player, simulation);
-                    if (orientationSet) { break; }
+                if (orientableMachineModule.getOrientationKind() == orientationKind) {
+                    return Optional.of(orientableMachineModule.getOrientation());
                 }
             }
         }
+        return Optional.empty();
+    }
 
-        if (orientationSet && simulation.isAction()) {
-            for (MachineModule<?> machineModule : this.modules.values()) {
-                if (machineModule instanceof OrientableMachineModule orientableMachineModule) {
-                    orientableMachineModule.onOrientationSet(newOrientation);
+    public ActionResult attemptSetOrientation(Direction newOrientation, @NotNull LivingEntity player, Simulation simulation) {
+        Preconditions.checkNotNull(newOrientation, "newOrientation");
+        Preconditions.checkNotNull(player, "player");
+
+        for (MachineModule<?> machineModule : this.modules.values()) {
+            if (machineModule instanceof OrientableMachineModule orientableMachineModule) {
+                ActionResult actionResult = orientableMachineModule.attemptSetOrientation(newOrientation, player, simulation);
+
+                if (actionResult != ActionResult.PASS) {
+                    return actionResult;
                 }
             }
         }
-        return orientationSet;
+        return ActionResult.PASS;
     }
 
     public void clearInventory(List<ItemStack> droppedStacks, Simulation simulation) {

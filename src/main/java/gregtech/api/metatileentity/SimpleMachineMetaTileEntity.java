@@ -21,7 +21,7 @@ import gregtech.api.gui.widgets.DischargerSlotWidget;
 import gregtech.api.gui.widgets.ImageWidget;
 import gregtech.api.gui.widgets.LabelWidget;
 import gregtech.api.gui.widgets.ToggleButtonWidget;
-import gregtech.api.recipes.RecipeMap;
+import gregtech.api.recipe.RecipeMap;
 import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,6 +1,7 @@
 package gregtech.api.block.machine.module.impl;
 
 import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.ListenerRemovalToken;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.LimitedFixedFluidInv;
@@ -43,6 +44,8 @@ public class SimpleInventoryModule extends MachineModule<SimpleInventoryConfig> 
     private ItemFilter importItemFilter = ConstantItemFilter.ANYTHING;
     private FluidFilter importFluidFilter = ConstantFluidFilter.ANYTHING;
     private final List<Object> limitedInventoryViews = new ArrayList<>();
+    private final List<InventoryChangeListener> inputListeners = new ArrayList<>();
+    private final List<InventoryChangeListener> outputListeners = new ArrayList<>();
 
     public SimpleInventoryModule(MachineBlockEntity machine, MachineModuleType<?, ?> type, SimpleInventoryConfig config) {
         super(machine, type, config);
@@ -52,6 +55,28 @@ public class SimpleInventoryModule extends MachineModule<SimpleInventoryConfig> 
         this.fluidImportInventory = config.createFluidImportInventory();
         this.fluidExportInventory = config.createFluidExportInventory();
         configureLimitedViews();
+        attachListeners();
+    }
+
+    private void attachListeners() {
+        ListenerRemovalToken removalToken = () -> {};
+        this.itemImportInventory.addListener(inv -> fireInputChangeListeners(), removalToken);
+        this.fluidImportInventory.addListener((inv, tank, previous, current) -> fireInputChangeListeners(), removalToken);
+
+        this.itemExportInventory.addListener(inv -> fireOutputChangeListeners(), removalToken);
+        this.fluidExportInventory.addListener((inv, tank, previous, current) -> fireOutputChangeListeners(), removalToken);
+    }
+
+    private void fireInputChangeListeners() {
+        for (InventoryChangeListener listener : this.inputListeners) {
+            listener.onChanged();
+        }
+    }
+
+    private void fireOutputChangeListeners() {
+        for (InventoryChangeListener listener : this.outputListeners) {
+            listener.onChanged();
+        }
     }
 
     @SuppressWarnings("Convert2MethodRef")
@@ -110,6 +135,18 @@ public class SimpleInventoryModule extends MachineModule<SimpleInventoryConfig> 
     public void setImportFluidFilter(FluidFilter filter) {
         Preconditions.checkNotNull(filter);
         this.importFluidFilter = filter;
+    }
+
+    @Override
+    public void addInputChangeListener(InventoryChangeListener listener) {
+        Preconditions.checkNotNull(listener);
+        this.inputListeners.add(listener);
+    }
+
+    @Override
+    public void addOutputChangeListener(InventoryChangeListener listener) {
+        Preconditions.checkNotNull(listener);
+        this.outputListeners.add(listener);
     }
 
     @Override

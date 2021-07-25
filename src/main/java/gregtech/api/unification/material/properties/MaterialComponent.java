@@ -1,5 +1,6 @@
 package gregtech.api.unification.material.properties;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import gregtech.api.unification.material.Material;
 
@@ -32,7 +33,9 @@ public class MaterialComponent {
 
     @Override
     public String toString() {
-        return String.format("%dx%s", amount, material);
+        return MoreObjects.toStringHelper(this)
+                .add("material", material)
+                .add("amount", amount)
+                .toString();
     }
-
 }

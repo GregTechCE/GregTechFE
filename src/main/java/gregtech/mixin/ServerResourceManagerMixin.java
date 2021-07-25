@@ -1,6 +1,6 @@
 package gregtech.mixin;
 
-import gregtech.api.recipes.GTRecipeManager;
+import gregtech.api.recipe.GTRecipeManager;
 import gregtech.mixin.impl.GTServerResourceManager;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.resource.ReloadableResourceManager;

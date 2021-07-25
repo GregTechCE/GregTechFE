@@ -1,7 +1,7 @@
 package gregtech.mixin;
 
-import gregtech.api.net.PacketMachineRecipesSynchronize;
-import gregtech.api.recipes.GTRecipeManager;
+import gregtech.api.network.PacketMachineRecipesSynchronize;
+import gregtech.api.recipe.GTRecipeManager;
 import gregtech.mixin.accessor.MinecraftServerAccessor;
 import gregtech.mixin.impl.GTServerResourceManager;
 import net.minecraft.network.ClientConnection;

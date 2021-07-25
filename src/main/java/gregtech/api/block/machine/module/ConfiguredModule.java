@@ -3,7 +3,11 @@ package gregtech.api.block.machine.module;
 import gregtech.api.block.machine.MachineBlockEntity;
 import gregtech.api.block.machine.MachineTickType;
 import gregtech.api.render.model.state.ModelStateManager;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 
+import java.util.List;
 import java.util.Objects;
 
 public class ConfiguredModule<C extends MachineModuleConfig> {
@@ -26,6 +30,10 @@ public class ConfiguredModule<C extends MachineModuleConfig> {
 
     public static <C extends MachineModuleConfig> ConfiguredModule<C> of(MachineModuleType<C, ?> type, C config) {
         return new ConfiguredModule<>(type, config);
+    }
+
+    public void appendTooltip(ItemStack stack, List<Text> tooltip, TooltipContext options) {
+        this.moduleType.appendTooltip(stack, tooltip, options, this.config);
     }
 
     public void appendModelProperties(ModelStateManager.Builder<?> stateManager) {

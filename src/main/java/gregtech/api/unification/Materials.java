@@ -1,7 +1,7 @@
 package gregtech.api.unification;
 
 import gregtech.api.GTValues;
-import gregtech.api.enchants.EnchantmentData;
+import gregtech.api.enchantment.EnchantmentData;
 import gregtech.api.unification.element.Element;
 import gregtech.api.unification.element.Elements;
 import gregtech.api.unification.material.Material;
@@ -495,7 +495,7 @@ public class Materials {
     public static FluidMaterial SodiumPersulfate = new FluidMaterial(162, "sodium_persulfate", 0xFFFFFF, FLUID, of(new MaterialComponent(Sodium, 2), new MaterialComponent(Sulfur, 2), new MaterialComponent(Oxygen, 8)), 0);
     public static DustMaterial SodiumSulfide = new DustMaterial(163, "sodium_sulfide", 0xAAAA00, DULL, 1, of(new MaterialComponent(Sodium, 2), new MaterialComponent(Sulfur, 1)), 0);
     public static FluidMaterial HydrogenSulfide = new FluidMaterial(164, "hydrogen_sulfide", 0xFFFFFF, FLUID, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Sulfur, 1)), 0);
-    public static FluidMaterial Steam = new FluidMaterial(346, "steam", 0xFFFFFF, GAS, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 1)), NO_RECYCLING | GENERATE_FLUID_BLOCK | DISABLE_DECOMPOSITION).setFluidTemperature(380);
+    public static Material Steam = new FluidMaterial(346, "steam", 0xFFFFFF, GAS, of(new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 1)), NO_RECYCLING | GENERATE_FLUID_BLOCK | DISABLE_DECOMPOSITION).setFluidTemperature(380);
     public static FluidMaterial Epichlorhydrin = new FluidMaterial(349, "epichlorhydrin", 0xFFFFFF, FLUID, of(new MaterialComponent(Carbon, 3), new MaterialComponent(Hydrogen, 5), new MaterialComponent(Chlorine, 1), new MaterialComponent(Oxygen, 1)), 0);
     public static FluidMaterial NitricAcid = new FluidMaterial(351, "nitric_acid", 0xCCCC00, FLUID, of(new MaterialComponent(Hydrogen, 1), new MaterialComponent(Nitrogen, 1), new MaterialComponent(Oxygen, 3)), 0);
     public static GemMaterial Coke = new GemMaterial(357, "coke", 0x666666, LIGNITE, 1, of(new MaterialComponent(Carbon, 1)), FLAMMABLE | NO_SMELTING | NO_SMASHING | MORTAR_GRINDABLE);

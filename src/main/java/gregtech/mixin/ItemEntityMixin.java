@@ -1,11 +1,8 @@
 package gregtech.mixin;
 
-import gregtech.api.items.util.ItemEntityAwareItem;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
+import gregtech.api.item.util.ItemEntityAwareItem;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

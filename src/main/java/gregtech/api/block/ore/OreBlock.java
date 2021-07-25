@@ -2,10 +2,10 @@ package gregtech.api.block.ore;
 
 import gregtech.api.block.util.AutoTaggedBlock;
 import gregtech.api.block.util.LootTableAwareBlock;
-import gregtech.api.items.material.MaterialItemForms;
-import gregtech.api.items.material.MaterialItemId;
-import gregtech.api.items.material.MaterialItemRegistry;
-import gregtech.api.items.toolitem.MiningLevelHelper;
+import gregtech.api.item.material.MaterialItemForms;
+import gregtech.api.item.material.MaterialItemId;
+import gregtech.api.item.material.MaterialItemRegistry;
+import gregtech.api.item.toolitem.MiningLevelHelper;
 import gregtech.api.unification.forms.MaterialForms;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.flags.MaterialFlags;

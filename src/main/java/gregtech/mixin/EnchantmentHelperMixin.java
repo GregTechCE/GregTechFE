@@ -1,7 +1,7 @@
 package gregtech.mixin;
 
 import com.google.common.base.Preconditions;
-import gregtech.api.items.util.CustomEnchantableItem;
+import gregtech.api.item.util.CustomEnchantableItem;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentTarget;

@@ -15,7 +15,7 @@ import gregtech.api.gui.widgets.FluidContainerSlotWidget;
 import gregtech.api.gui.widgets.ImageWidget;
 import gregtech.api.gui.widgets.slot.SlotWidget;
 import gregtech.api.gui.widgets.TankWidget;
-import gregtech.api.recipes.machines.FuelRecipeMap;
+import gregtech.api.recipe.machines.FuelRecipeMap;
 import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.api.util.PipelineUtil;

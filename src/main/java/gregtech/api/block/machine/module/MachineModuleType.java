@@ -9,7 +9,10 @@ import gregtech.api.block.machine.MachineTickType;
 import gregtech.api.render.model.state.ModelStateManager;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -44,6 +47,12 @@ public class MachineModuleType<C extends MachineModuleConfig, T extends MachineM
         return Preconditions.checkNotNull(REGISTRY.getId(this), "MachineModuleType not registered");
     }
 
+    @Override
+    public String toString() {
+        Identifier identifier = REGISTRY.getId(this);
+        return identifier != null ? identifier.toString() : super.toString();
+    }
+
     @SuppressWarnings("unchecked")
     public T cast(MachineModule<?> machineModule) {
         Preconditions.checkArgument(machineModule.getType() == this);
@@ -52,6 +61,9 @@ public class MachineModuleType<C extends MachineModuleConfig, T extends MachineM
 
     public C castConfig(MachineModuleConfig config) {
         return this.configClass.cast(config);
+    }
+
+    public void appendTooltip(ItemStack stack, List<Text> tooltip, TooltipContext options, C config) {
     }
 
     public void appendModelProperties(ModelStateManager.Builder<?> stateManager, C config) {

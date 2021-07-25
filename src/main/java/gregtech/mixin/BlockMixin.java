@@ -1,6 +1,6 @@
 package gregtech.mixin;
 
-import gregtech.api.items.util.DropConversionTool;
+import gregtech.api.item.util.DropConversionTool;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

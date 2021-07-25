@@ -19,8 +19,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
@@ -28,6 +28,7 @@ import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
+import net.minecraft.text.Text;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -35,8 +36,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 public abstract class MachineBlock extends Block implements ModelStateProviderBlock, BlockEntityProvider, AutoTaggedBlock, LootTableAwareBlock, WrenchableBlock {
@@ -97,6 +100,12 @@ public abstract class MachineBlock extends Block implements ModelStateProviderBl
     }
 
     @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+        this.moduleCollection.appendTooltip(stack, tooltip, options);
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
@@ -115,11 +124,11 @@ public abstract class MachineBlock extends Block implements ModelStateProviderBl
     }
 
     @Override
-    public boolean attemptWrench(BlockView world, BlockPos pos, BlockState state, @Nullable PlayerEntity player, Direction wrenchSide, Simulation simulation) {
+    public boolean attemptWrench(BlockView world, BlockPos pos, BlockState state, @NotNull LivingEntity player, Direction wrenchSide, Simulation simulation) {
         MachineBlockEntity blockEntity = getMachineAt(world, pos);
 
         if (blockEntity != null) {
-            return blockEntity.attemptSetOrientation(wrenchSide, player, simulation);
+            return blockEntity.attemptSetOrientation(wrenchSide, player, simulation).isAccepted();
         }
         return false;
     }

@@ -1,6 +1,6 @@
 package gregtech.mixin.impl;
 
-import gregtech.api.recipes.GTRecipeManager;
+import gregtech.api.recipe.GTRecipeManager;
 
 public interface GTServerResourceManager {
 

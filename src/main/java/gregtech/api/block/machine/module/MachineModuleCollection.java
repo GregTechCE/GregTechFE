@@ -6,11 +6,11 @@ import gregtech.api.block.machine.MachineBlockEntity;
 import gregtech.api.block.machine.MachineTickType;
 import gregtech.api.render.model.state.ModelStateManager;
 import net.minecraft.block.Block;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MachineModuleCollection {
 
@@ -22,6 +22,10 @@ public class MachineModuleCollection {
 
     public boolean needsTicking(MachineTickType tickType) {
         return this.modules.stream().anyMatch(module -> module.needsTicking(tickType));
+    }
+
+    public void appendTooltip(ItemStack stack, List<Text> tooltip, TooltipContext options) {
+        this.modules.forEach(module -> module.appendTooltip(stack, tooltip, options));
     }
 
     public void appendModelStateProperties(ModelStateManager.Builder<Block> stateManager) {

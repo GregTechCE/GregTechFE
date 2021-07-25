@@ -14,6 +14,9 @@ public class MachineModule<C extends MachineModuleConfig> {
         this.config = config;
     }
 
+    public void onModulesReady() {
+    }
+
     public MachineBlockEntity getMachine() {
         return machine;
     }

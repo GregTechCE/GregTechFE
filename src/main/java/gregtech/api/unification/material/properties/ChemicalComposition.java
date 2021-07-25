@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import gregtech.api.unification.element.Element;
 import gregtech.api.unification.element.Elements;
 import gregtech.api.unification.material.flags.MaterialFlags;
+import gregtech.api.util.SmallDigits;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -94,6 +95,22 @@ public class ChemicalComposition {
         return properties;
     }
 
+    private static String computeComponentFormula(MaterialComponent component) {
+        ChemicalComposition composition = component.getMaterial().queryPropertyChecked(MaterialFlags.CHEMICAL_COMPOSITION);
+
+        String componentFormula;
+        if (composition.isElement()) {
+            componentFormula = composition.getChemicalFormula();
+        } else if (composition.isCompound()) {
+            componentFormula = String.format("(%s)", composition.getChemicalFormula());
+        } else {
+            componentFormula = "(?)";
+        }
+
+        String amountString = SmallDigits.toSmallDownNumbers(Integer.toString(component.getAmount()));
+        return String.format("%s%s", componentFormula, amountString);
+    }
+
     private String computeChemicalFormula() {
         if (element != null) {
             return element.getChemicalSymbol();
@@ -103,7 +120,7 @@ public class ChemicalComposition {
             StringBuilder builder = new StringBuilder();
 
             for (MaterialComponent component : components) {
-                builder.append(component.toString());
+                builder.append(computeComponentFormula(component));
             }
             return builder.toString();
         }

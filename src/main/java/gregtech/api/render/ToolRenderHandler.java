@@ -1,6 +1,6 @@
 package gregtech.api.render;
 
-import gregtech.api.items.util.AOEBreakItem;
+import gregtech.api.item.util.AOEBreakItem;
 import gregtech.mixin.accessor.WorldRendererAccessor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.fabricmc.api.EnvType;

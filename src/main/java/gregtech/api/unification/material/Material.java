@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import gregtech.api.GTValues;
-import gregtech.api.enchants.EnchantmentData;
+import gregtech.api.enchantment.EnchantmentData;
 import gregtech.api.unification.element.Element;
 import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.flags.MaterialProperty;

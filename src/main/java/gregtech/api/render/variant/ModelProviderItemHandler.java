@@ -1,6 +1,6 @@
 package gregtech.api.render.variant;
 
-import gregtech.api.items.util.ModelProviderItem;
+import gregtech.api.item.util.ModelProviderItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;

@@ -8,16 +8,15 @@ import org.jetbrains.annotations.Nullable;
 
 public interface BlockWorldState {
 
-    public World getWorld();
+    World getWorld();
 
-    public BlockPos getPos();
+    BlockPos getPos();
 
-    public BlockState getBlockState();
+    BlockState getBlockState();
 
-    @Nullable
-    public BlockEntity getBlockEntity();
+    @Nullable BlockEntity getBlockEntity();
 
-    public PatternMatchContext getMatchContext();
+    PatternMatchContext getMatchContext();
 
-    public PatternMatchContext getLayerContext();
+    PatternMatchContext getLayerContext();
 }
