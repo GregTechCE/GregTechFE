@@ -41,11 +41,24 @@ public class Materials {
     public static final Material Copper;
     public static final Material Cobalt;
     public static final Material Fluorine;
+    public static final Material Gallium;
     public static final Material Gold;
+    public static final Material Helium;
     public static final Material Hydrogen;
+    public static final Material Indium;
+    public static final Material Iridium;
     public static final Material Iron;
+    public static final Material Lead;
+    public static final Material Lithium;
+    public static final Material Magnesium;
     public static final Material Manganese;
+    public static final Material Mercury;
+    public static final Material Molybdenum;
+    public static final Material Neodymium;
     public static final Material Nickel;
+    public static final Material Niobium;
+    public static final Material Nitrogen;
+    public static final Material Osmium;
     public static final Material Oxygen;
     public static final Material Silicon;
     public static final Material Silver;
@@ -68,6 +81,7 @@ public class Materials {
     public static final Material Graphite;
     public static final Material Invar;
     public static final Material MagneticIron;
+    public static final Material MagneticNeodymium;
     public static final Material MagneticSteel;
     public static final Material NetherQuartz;
     public static final Material Paper;
@@ -162,7 +176,7 @@ public class Materials {
                 .metal(3)
                 .smeltsInBlastFurnace(1700)
                 .canCreateTools(12.0f, 3.0f, 512)
-                .flags(GENERATE_GEAR))); //Byproducts: Iron, Magnesium - byproducts even though it does not have ore or is composite of them?
+                .flags(GENERATE_GEAR)));
 
         Copper = register("copper", new Material(new Material.Settings()
                 .visual(COLOR_ORANGE, SHINY)
@@ -186,6 +200,12 @@ public class Materials {
                 .element(Elements.F)
                 .gas()));//Temperature 253
 
+        Gallium = register("gallium", new Material(new Material.Settings()
+                .visual(0xEEEEFF, SHINY)
+                .element(Elements.Ga)
+                .metal(2)
+                .flags(GENERATE_PLATE)));
+
         Gold = register("gold", new Material(new Material.Settings()
                 .visual(COLOR_YELLOW, SHINY)
                 .element(Elements.Au)
@@ -194,10 +214,28 @@ public class Materials {
                 .mortarGrindable()
                 .flags(GENERATE_PLATE, GENERATE_FOIL))); //Has ore; Byproducts: Copper, Nickel; Foil used only in Chocolate Coin
 
+        Helium = register("helium", new Material(new Material.Settings()
+                .visual(0xDDDD00)
+                .element(Elements.He)
+                .gas()
+                .plasma()));
+
         Hydrogen = register("hydrogen", new Material(new Material.Settings()
                 .visual(0x00FFAA)
                 .element(Elements.H)
                 .gas()));
+
+        Indium = register("indium", new Material(new Material.Settings()
+                .visual(0x6600BB, METALLIC)
+                .element(Elements.In)
+                .metal(2)));
+
+        Iridium = register("iridium", new Material(new Material.Settings()
+                .visual(0x6600BB, DULL)
+                .element(Elements.Ir)
+                .metal(3)
+                .canCreateTools(7.0F, 3.0f, 2560)
+                .smeltsInBlastFurnace(2719)));//Has ore; Byproducts: Platinum, Osmium
 
         Iron = register("iron", new Material(new Material.Settings()
                 .visual(0xAAAAAA, METALLIC)
@@ -216,12 +254,54 @@ public class Materials {
                 .plasma()
                 .flags(GENERATE_PLATE, GENERATE_ROD, GENERATE_RING))); //Has ore; Ring used only for Tripwire Hook; GENERATE_FRAME
 
+        Lead = register("lead", new Material(new Material.Settings()
+                .visual(0x8C648C, DULL)
+                .element(Elements.Pb)
+                .metal(1)
+                .canCreateCables(VoltageTier.ULV, 2,1)
+                .mortarGrindable()
+                .flags(GENERATE_PLATE))); //Has ore; Byproducts: Silver, Sulfur
+
+        Lithium = register("lithium", new Material(new Material.Settings()
+                .visual(0xCBCBCB, DULL)
+                .element(Elements.Li)
+                .metal(2))); //Has ore
+
+        Magnesium = register("magnesium", new Material(new Material.Settings()
+                .visual(0xFFBBBB, METALLIC)
+                .element(Elements.Mg)
+                .metal(2)));
+
         Manganese = register("manganese", new Material(new Material.Settings()
                 .visual(0xEEEEEE, DULL)
                 .element(Elements.Mn)
                 .metal(2)
                 .canCreateTools(7.0F, 2.0f, 512)
-                .flags(GENERATE_FOIL))); //Byproducts: Chrome, Iron - byproducts even though it does not have ore or is composite of them?
+                .flags(GENERATE_FOIL)));
+
+        Mercury = register("mercury", new Material(new Material.Settings()
+                .visual(0xFFDDDD)
+                .element(Elements.Hg)
+                .fluid())); //TODO: create unique fluid, something metallic (like molten)
+
+        Molybdenum = register("molybdenum", new Material(new Material.Settings()
+                .visual(0xAAAADD, DULL)
+                .element(Elements.Mo)
+                .metal(2)
+                .canCreateTools(7.0F, 2.0f, 512))); //Has ore - but it is not spawned (as this is obtained from Molybdenite)
+
+        Neodymium = register("neodymium", new Material(new Material.Settings()
+                .visual(0x777777, METALLIC)
+                .element(Elements.Nd)
+                .metal(2)
+                .canCreateTools(7.0F, 2.0f, 512)
+                .smeltsInBlastFurnace(1297)
+                .polarizeInto(new Supplier<>() {
+                    @Override
+                    public Material get() {
+                        return MagneticNeodymium;
+                    }
+                }))); //Has ore; Byproducts: Monazite, RareEarth
 
         Nickel = register("nickel", new Material(new Material.Settings()
                 .visual(0xAAAAFF, METALLIC)
@@ -230,6 +310,26 @@ public class Materials {
                 .canCreateCables(VoltageTier.MV, 3, 3)
                 .mortarGrindable()
                 .plasma())); //Has ore; Byproducts: Cobalt, Platinum, Iron
+
+        Niobium = register("niobium", new Material(new Material.Settings()
+                .visual(0x9486AA, METALLIC)
+                .element(Elements.Nb)
+                .metal(2)
+                .smeltsInBlastFurnace(2750))); //Has ore - but it is not spawned (as this is obtained from Tantalite)
+
+        Nitrogen = register("nitrogen", new Material(new Material.Settings()
+                .visual(0x7090AF)
+                .element(Elements.N)
+                .gas()
+                .plasma()));
+
+        Osmium = register("osmium", new Material(new Material.Settings()
+                .visual(0x5050FF, METALLIC)
+                .element(Elements.Os)
+                .metal(4)
+                .canCreateTools(16.0F, 4.0f, 1280)
+                .canCreateCables(VoltageTier.IV, 4, 2)
+                .smeltsInBlastFurnace(3306))); //Has ore; Byproducts: Iridium
 
         Oxygen = register("oxygen", new Material(new Material.Settings()
                 .visual(0x90AAEE)
@@ -242,7 +342,7 @@ public class Materials {
                 .element(Elements.Si)
                 .metal(2)
                 .smeltsInBlastFurnace(1687)
-                .flags(GENERATE_PLATE, GENERATE_FOIL))); //Byproducts: SiliconDioxide - byproducts even though it does not have ore or is composite of them?
+                .flags(GENERATE_PLATE, GENERATE_FOIL)));
 
         Silver = register("silver", new Material(new Material.Settings()
                 .visual(0xDCDCFF, SHINY)
@@ -359,6 +459,13 @@ public class Materials {
                 .smeltsInArcFurnace(WroughtIron)
                 .flags(GENERATE_ROD)));
 
+        MagneticNeodymium = register("magnetic_neodymium", new Material(new Material.Settings()
+                .visual(COLOR_VERY_DARK_GREY, MAGNETIC)
+                .composition(MaterialComponent.of(Neodymium))
+                .metal(2)
+                .demagnetizeInto(()-> Neodymium)
+                .flags(GENERATE_ROD)));
+
         MagneticSteel = register("magnetic_steel", new Material(new Material.Settings()
                 .visual(COLOR_DARK_GREY, MAGNETIC)
                 .composition(MaterialComponent.of(Steel))
@@ -448,21 +555,8 @@ public class Materials {
     public static IngotMaterial Caesium = new IngotMaterial(10, "caesium", 0xFFFFFC, DULL, 2, of(), 0, Element.Cs); //Only available as byproduct; No usage
     public static IngotMaterial Cerium = new IngotMaterial(14, "cerium", 0xEEEEEE, METALLIC, 2, of(), 0, Element.Ce, 1068); //Only available via electrolyzing; No usage
     public static FluidMaterial Deuterium = new FluidMaterial(19, "deuterium", 0xEEEE00, FLUID, of(), STATE_GAS, Element.D); //Only used to obtain Tritium
-    public static IngotMaterial Gallium = new IngotMaterial(25, "gallium", 0xEEEEFF, SHINY, 2, of(), GENERATE_PLATE, Element.Ga);
-    public static FluidMaterial Helium = new FluidMaterial(29, "helium", 0xDDDD00, GAS, of(), STATE_GAS | GENERATE_PLASMA, Element.He);
-    public static FluidMaterial Helium3 = new FluidMaterial(30, "helium3", 0xDDDD00, GAS, of(), STATE_GAS, Element.He_3);
-    public static IngotMaterial Indium = new IngotMaterial(31, "indium", 0x6600BB, METALLIC, 2, of(), 0, Element.In);
-    public static IngotMaterial Iridium = new IngotMaterial(32, "iridium", 0xFFFFFF, DULL, 3, of(), GENERATE_ORE | EXT2_METAL | GENERATE_ORE | GENERATE_RING | GENERATE_ROTOR, Element.Ir, 7.0F, 3.0f, 2560, 2719);
-    public static Material Lead = new IngotMaterial(35, "lead", 0x8C648C, DULL, 1, of(), EXT2_METAL | GENERATE_ORE | MORTAR_GRINDABLE | GENERATE_DENSE, Element.Pb);
-    public static IngotMaterial Lithium = new IngotMaterial(36, "lithium", 0xCBCBCB, DULL, 2, of(), STD_METAL | GENERATE_ORE, Element.Li);
-    public static IngotMaterial Magnesium = new IngotMaterial(38, "magnesium", 0xFFBBBB, METALLIC, 2, of(), 0, Element.Mg);
-    public static FluidMaterial Mercury = new FluidMaterial(40, "mercury", 0xFFDDDD, FLUID, of(), SMELT_INTO_FLUID, Element.Hg);
-    public static IngotMaterial Molybdenum = new IngotMaterial(41, "molybdenum", 0xAAAADD, DULL, 2, of(), GENERATE_ORE, Element.Mo, 7.0F, 2.0f, 512);
-    public static IngotMaterial Neodymium = new IngotMaterial(42, "neodymium", 0x777777, METALLIC, 2, of(), STD_METAL | GENERATE_ROD | GENERATE_ORE, Element.Nd, 7.0F, 2.0f, 512, 1297);
-    public static IngotMaterial Darmstadtium = new IngotMaterial(43, "darmstadtium", 0xAAAAAA, METALLIC, 6, of(), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_ROD_LONG | GENERATE_FRAME, Element.Ds, 24.0F, 6.0f, 155360);
-    public static IngotMaterial Niobium = new IngotMaterial(45, "niobium", 0x9486AA, METALLIC, 2, of(), STD_METAL | GENERATE_ORE, Element.Nb, 2750);
-    public static FluidMaterial Nitrogen = new FluidMaterial(46, "nitrogen", 0x7090AF, FLUID, of(), STATE_GAS | GENERATE_PLASMA, Element.N);
-    public static IngotMaterial Osmium = new IngotMaterial(47, "osmium", 0x5050FF, METALLIC, 4, of(), GENERATE_ORE | EXT2_METAL | GENERATE_RING | GENERATE_ROTOR, Element.Os, 16.0F, 4.0f, 1280, 3306);
+    public static FluidMaterial Helium3 = new FluidMaterial(30, "helium3", 0xDDDD00, GAS, of(), STATE_GAS, Element.He_3); //No usage
+    public static IngotMaterial Darmstadtium = new IngotMaterial(43, "darmstadtium", 0xAAAAAA, METALLIC, 6, of(), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_ROD_LONG | GENERATE_FRAME, Element.Ds, 24.0F, 6.0f, 155360); //Unobtainable; Used only for JEI default tools
     public static IngotMaterial Palladium = new IngotMaterial(49, "palladium", 0xCED0DD, METALLIC, 2, of(), EXT2_METAL | GENERATE_ORE | GENERATE_FLUID_BLOCK, Element.Pd, 8.0f, 2.0f, 512, 1228);
     public static DustMaterial Phosphorus = new DustMaterial(50, "phosphorus", 0xC8C800, SAND, 2, of(), 0, Element.P);
     public static IngotMaterial Platinum = new IngotMaterial(51, "platinum", 0xFFFF99, SHINY, 2, of(), EXT2_METAL | GENERATE_ORE | GENERATE_FLUID_BLOCK, Element.Pt);
@@ -535,7 +629,7 @@ public class Materials {
     public static IngotMaterial Epoxid = new IngotMaterial(142, "epoxid", 0xC88C14, DULL, 1, of(new MaterialComponent(Carbon, 2), new MaterialComponent(Hydrogen, 4), new MaterialComponent(Oxygen, 1)), EXT2_METAL | DISABLE_DECOMPOSITION);
     public static DustMaterial Silicone = new DustMaterial(143, "silicone", COLOR_VERY_LIGHT_GREY, DULL, 1, of(new MaterialComponent(Carbon, 1), new MaterialComponent(Hydrogen, 1), new MaterialComponent(Silicon, 2), new MaterialComponent(Oxygen, 1)), GENERATE_PLATE | FLAMMABLE | NO_SMASHING | SMELT_INTO_FLUID | DISABLE_DECOMPOSITION);
     public static IngotMaterial Polycaprolactam = new IngotMaterial(144, "polycaprolactam", 0x323232, DULL, 1, of(new MaterialComponent(Carbon, 6), new MaterialComponent(Hydrogen, 11), new MaterialComponent(Nitrogen, 1), new MaterialComponent(Oxygen, 1)), GENERATE_PLATE | DISABLE_DECOMPOSITION); //Created from Naptha and Saltpeter Used only to produce Strings
-    public static IngotMaterial Polytetrafluoroethylene = new IngotMaterial(145, "polytetrafluoroethylene", 0x646464, DULL, 1, of(new MaterialComponent(Carbon, 2), new MaterialComponent(Fluorine, 4)), GENERATE_PLATE | SMELT_INTO_FLUID | NO_WORKING | DISABLE_DECOMPOSITION);
+    public static IngotMaterial Polytetrafluoroethylene = new IngotMaterial(145, "polytetrafluoroethylene", COLOR_VERY_DARK_GREY, DULL, 1, of(new MaterialComponent(Carbon, 2), new MaterialComponent(Fluorine, 4)), GENERATE_PLATE | SMELT_INTO_FLUID | NO_WORKING | DISABLE_DECOMPOSITION);
     public static DustMaterial Powellite = new DustMaterial(146, "powellite", COLOR_YELLOW, ROUGH, 2, of(new MaterialComponent(Calcium, 1), new MaterialComponent(Molybdenum, 1), new MaterialComponent(Oxygen, 4)), GENERATE_ORE); //Spawns in world; Only used for electrolyzing
     public static DustMaterial Pyrite = new DustMaterial(148, "pyrite", 0x967828, ROUGH, 1, of(new MaterialComponent(Iron, 1), new MaterialComponent(Sulfur, 2)), GENERATE_ORE | INDUCTION_SMELTING_LOW_OUTPUT);
     public static DustMaterial Pyrolusite = new DustMaterial(149, "pyrolusite", 0x9696AA, ROUGH, 2, of(new MaterialComponent(Manganese, 1), new MaterialComponent(Oxygen, 2)), GENERATE_ORE);
@@ -753,7 +847,7 @@ public class Materials {
     public static IngotMaterial RoseGold = new IngotMaterial(228, "rose_gold", 0xFFE61E, SHINY, 2, of(new MaterialComponent(Copper, 1), new MaterialComponent(Gold, 4)), EXT2_METAL, null, 14.0F, 2.0f, 152, 1600);
     public static IngotMaterial BlackBronze = new IngotMaterial(229, "black_bronze", 0x64327D, DULL, 2, of(new MaterialComponent(Gold, 1), new MaterialComponent(Silver, 1), new MaterialComponent(Copper, 3)), EXT2_METAL, null, 12.0F, 2.0f, 256, 2000);
     public static IngotMaterial BismuthBronze = new IngotMaterial(230, "bismuth_bronze", 0x647D7D, DULL, 2, of(new MaterialComponent(Bismuth, 1), new MaterialComponent(Zinc, 1), new MaterialComponent(Copper, 3)), EXT2_METAL, null, 8.0F, 3.0f, 256, 1100);
-    public static IngotMaterial BlackSteel = new IngotMaterial(231, "black_steel", 0x646464, DULL, 2, of(new MaterialComponent(Nickel, 1), new MaterialComponent(BlackBronze, 1), new MaterialComponent(Steel, 3)), EXT_METAL, null, 6.5F, 6.5f, 768, 1200);
+    public static IngotMaterial BlackSteel = new IngotMaterial(231, "black_steel", COLOR_VERY_DARK_GREY, DULL, 2, of(new MaterialComponent(Nickel, 1), new MaterialComponent(BlackBronze, 1), new MaterialComponent(Steel, 3)), EXT_METAL, null, 6.5F, 6.5f, 768, 1200);
     public static IngotMaterial RedSteel = new IngotMaterial(232, "red_steel", 0x8C6464, DULL, 2, of(new MaterialComponent(SterlingSilver, 1), new MaterialComponent(BismuthBronze, 1), new MaterialComponent(Steel, 2), new MaterialComponent(BlackSteel, 4)), EXT_METAL, null, 7.0F, 4.5f, 896, 1300);
     public static IngotMaterial BlueSteel = new IngotMaterial(233, "blue_steel", 0x64648C, DULL, 2, of(new MaterialComponent(RoseGold, 1), new MaterialComponent(Brass, 1), new MaterialComponent(Steel, 2), new MaterialComponent(BlackSteel, 4)), EXT_METAL | GENERATE_FRAME, null, 7.5F, 5.0f, 1024, 1400);
     public static IngotMaterial DamascusSteel = new IngotMaterial(234, "damascus_steel", 0x6E6E6E, METALLIC, 2, of(new MaterialComponent(Steel, 1)), EXT_METAL, null, 8.0F, 5.0f, 1280, 1500);
@@ -787,8 +881,7 @@ public class Materials {
     public static DustMaterial Barite = new DustMaterial(286, "barite", 0xE6EBFF, DULL, 2, of(new MaterialComponent(Barium, 1), new MaterialComponent(Sulfur, 1), new MaterialComponent(Oxygen, 4)), GENERATE_ORE); //Spawns in world; Used only for electrolyzing
     public static DustMaterial Talc = new DustMaterial(294, "talc", 0x5AB45A, FINE, 2, of(new MaterialComponent(Magnesium, 3), new MaterialComponent(Silicon, 4), new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 12)), GENERATE_ORE);
     public static DustMaterial Soapstone = new DustMaterial(295, "soapstone", 0x5F915F, ROUGH, 1, of(new MaterialComponent(Magnesium, 3), new MaterialComponent(Silicon, 4), new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 12)), GENERATE_ORE);
-    public static DustMaterial Concrete = new DustMaterial(296, "concrete", 0x646464, ROUGH, 1, of(new MaterialComponent(Stone, 1)), NO_SMASHING | SMELT_INTO_FLUID);
-    public static IngotMaterial NeodymiumMagnetic = new IngotMaterial(299, "neodymium_magnetic", 0x646464, MAGNETIC, 2, of(new MaterialComponent(Neodymium, 1)), EXT2_METAL | GENERATE_ROD_LONG, null, 1297);
+    public static DustMaterial Concrete = new DustMaterial(296, "concrete", COLOR_VERY_DARK_GREY, ROUGH, 1, of(new MaterialComponent(Stone, 1)), NO_SMASHING | SMELT_INTO_FLUID);
     public static IngotMaterial TungstenCarbide = new IngotMaterial(300, "tungsten_carbide", 0x330066, METALLIC, 4, of(new MaterialComponent(Tungsten, 1), new MaterialComponent(Carbon, 1)), EXT2_METAL, null, 12.0F, 4.0f, 1280, 2460);
     public static IngotMaterial VanadiumSteel = new IngotMaterial(301, "vanadium_steel", 0xC0C0C0, METALLIC, 3, of(new MaterialComponent(Vanadium, 1), new MaterialComponent(Chrome, 1), new MaterialComponent(Steel, 7)), EXT2_METAL, null, 7.0F, 3.0f, 1920, 1453);
     public static IngotMaterial HSSG = new IngotMaterial(302, "hssg", 0x999900, METALLIC, 3, of(new MaterialComponent(TungstenSteel, 5), new MaterialComponent(Chrome, 1), new MaterialComponent(Molybdenum, 2), new MaterialComponent(Vanadium, 1)), EXT2_METAL | GENERATE_RING | GENERATE_ROTOR | GENERATE_GEAR_SMALL | GENERATE_ROD_LONG | GENERATE_FRAME, null, 10.0F, 5.5f, 4000, 4500);
@@ -841,12 +934,6 @@ public class Materials {
         for (DustMaterial dustMaterial : new DustMaterial[]{Zinc, Nickel, Copper, Cobalt, Cobaltite, Tetrahedrite, Sphalerite}) {
             dustMaterial.washedIn = SodiumPersulfate;
         }
-
-        Neodymium.magneticMaterial = NeodymiumMagnetic;
-
-        NeodymiumMagnetic.setSmeltingInto(Neodymium);
-        NeodymiumMagnetic.setArcSmeltingInto(Neodymium);
-        NeodymiumMagnetic.setMaceratingInto(Neodymium);
 
         Tetrahedrite.setDirectSmelting(Copper);
         Malachite.setDirectSmelting(Copper);
@@ -957,12 +1044,10 @@ public class Materials {
         Malachite.addOreByProducts(Copper, BrownLimonite, Calcite);
         YellowLimonite.addOreByProducts(Nickel, BrownLimonite, Cobalt);
         BrownLimonite.addOreByProducts(Malachite, YellowLimonite);
-        Neodymium.addOreByProducts(Monazite, RareEarth);
         Bastnasite.addOreByProducts(Neodymium, RareEarth);
         Glowstone.addOreByProducts(Redstone, Gold);
         Tungsten.addOreByProducts(Manganese, Molybdenum);
         Lepidolite.addOreByProducts(Lithium, Caesium);
-        Lead.addOreByProducts(Silver, Sulfur);
         Thorium.addOreByProducts(Uranium, Lead);
         Plutonium.addOreByProducts(Uranium, Lead);
         Ilmenite.addOreByProducts(Iron, Rutile);
@@ -980,7 +1065,6 @@ public class Materials {
         Spodumene.addOreByProducts(Aluminium, Lithium);
         Ruby.addOreByProducts(Chrome, GarnetRed);
         Phosphor.addOreByProducts(Apatite, Phosphate);
-        Iridium.addOreByProducts(Platinum, Osmium);
         Pyrope.addOreByProducts(GarnetRed, Magnesium);
         Almandine.addOreByProducts(GarnetRed, Aluminium);
         Spessartine.addOreByProducts(GarnetRed, Manganese);
@@ -1004,8 +1088,6 @@ public class Materials {
         Sulfur.addOreByProducts(Sulfur);
         Saltpeter.addOreByProducts(Saltpeter);
         Endstone.addOreByProducts(Helium3);
-        Osmium.addOreByProducts(Iridium);
-        Magnesium.addOreByProducts(Olivine);
         Titanium.addOreByProducts(Almandine);
         Obsidian.addOreByProducts(Olivine);
         Ash.addOreByProducts(Carbon);
@@ -1024,7 +1106,6 @@ public class Materials {
         Topaz.addOreByProducts(BlueTopaz);
         BlueTopaz.addOreByProducts(Topaz);
         Vinteum.addOreByProducts(Vinteum);
-        Lithium.addOreByProducts(Lithium);
         Salt.addOreByProducts(RockSalt, Borax);
         RockSalt.addOreByProducts(Salt, Borax);
         Andesite.addOreByProducts(Basalt);
@@ -1036,7 +1117,6 @@ public class Materials {
         RoseGold.addEnchantmentForTools(SMITE, 4);
         BismuthBronze.addEnchantmentForTools(BANE_OF_ARTHROPODS, 5);
 
-        Lead.setCableProperties(GTValues.V[1], 2, 2);
         SolderingAlloy.setCableProperties(GTValues.V[1], 1, 1);
 
         Cupronickel.setCableProperties(GTValues.V[2], 2, 3);
@@ -1048,7 +1128,6 @@ public class Materials {
         Titanium.setCableProperties(GTValues.V[4], 4, 2);
 
         Graphene.setCableProperties(GTValues.V[5], 1, 1);
-        Osmium.setCableProperties(GTValues.V[5], 4, 2);
         Platinum.setCableProperties(GTValues.V[5], 2, 1);
         Palladium.setCableProperties(GTValues.V[5], 2, 1);
         TungstenSteel.setCableProperties(GTValues.V[5], 3, 2);
