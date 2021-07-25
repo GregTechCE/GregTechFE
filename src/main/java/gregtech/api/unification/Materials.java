@@ -2,6 +2,8 @@ package gregtech.api.unification;
 
 import gregtech.api.GTValues;
 import gregtech.api.enchants.EnchantmentData;
+import gregtech.api.fluids.MaterialFluidProperties;
+import gregtech.api.fluids.MaterialFluidTexture;
 import gregtech.api.unification.element.Element;
 import gregtech.api.unification.element.Elements;
 import gregtech.api.unification.material.Material;
@@ -89,7 +91,7 @@ public class Materials {
         Aluminium = register("aluminium", new Material(new Material.Settings()
                 .visual(0x80C8F0, DULL)
                 .element(Elements.Al)
-                .metal(2, 661)
+                .metal(2)
                 .canCreateTools(10.0F,2.0F, 128)
                 .canCreateCables(VoltageTier.EV, 1, 1)
                 .smeltsInBlastFurnace(1700)
@@ -99,7 +101,7 @@ public class Materials {
         Antimony = register("antimony", new Material(new Material.Settings()
                 .visual(0xDCDCC8, SHINY)
                 .element(Elements.Sb)
-                .metal(2, 631)
+                .metal(2)
                 .mortarGrindable()));
 
         Argon = register("argon", new Material(new Material.Settings()
@@ -116,18 +118,18 @@ public class Materials {
         Barium = register("barium", new Material(new Material.Settings()
                 .visual(COLOR_WHITE, SHINY)
                 .element(Elements.Ba)
-                .metal(2, 730)));
+                .metal(2)));
 
         Beryllium = register("beryllium", new Material(new Material.Settings()
                 .visual(0x64B464, METALLIC)
                 .element(Elements.Be)
-                .metal(2, 1287)
+                .metal(2)
                 .flags(GENERATE_PLATE))); //Has ore; Byproducts: Emerald
 
         Bismuth = register("bismuth", new Material(new Material.Settings()
                 .visual(0x64A0A0, METALLIC)
                 .element(Elements.Bi)
-                .metal(1, 272)));//Has ore
+                .metal(1)));//Has ore
 
         Boron = register("boron", new Material(new Material.Settings()
                 .visual(0xD2F0D2, SAND)
@@ -137,12 +139,12 @@ public class Materials {
         Calcium = register("calcium", new Material(new Material.Settings()
                 .visual(0xDDDDAA, METALLIC)
                 .element(Elements.Ca)
-                .metal(2, 842)));
+                .metal(2)));
 
         Cadmium = register("cadmium", new Material(new Material.Settings()
                 .visual(0x505060, SHINY)
                 .element(Elements.Cd)
-                .metal(2, 322)));
+                .metal(2)));
 
         Carbon = register("carbon", new Material(new Material.Settings()
                 .visual(0x333333, DULL)
@@ -157,7 +159,7 @@ public class Materials {
         Chrome = register("chrome", new Material(new Material.Settings()
                 .visual(0xFFAAAB, SHINY)
                 .element(Elements.Cr)
-                .metal(3, 1907)
+                .metal(3)
                 .smeltsInBlastFurnace(1700)
                 .canCreateTools(12.0f, 3.0f, 512)
                 .flags(GENERATE_GEAR))); //Byproducts: Iron, Magnesium - byproducts even though it does not have ore or is composite of them?
@@ -165,7 +167,7 @@ public class Materials {
         Copper = register("copper", new Material(new Material.Settings()
                 .visual(COLOR_ORANGE, SHINY)
                 .element(Elements.Cu)
-                .metal(1, 1085)
+                .metal(1)
                 .canCreateCables(VoltageTier.MV, 1, 2)
                 .canCreateFluidPipe(25, 1000, true)
                 .mortarGrindable()
@@ -175,7 +177,7 @@ public class Materials {
         Cobalt = register("cobalt", new Material(new Material.Settings()
                 .visual(0x2929BC, METALLIC)
                 .element(Elements.Co)
-                .metal(2, 1495)
+                .metal(2)
                 .canCreateTools(10.0F, 3.0f, 256)
                 .canCreateCables(VoltageTier.LV, 2, 2))); //Has ore; Byproducts: Cobaltite
 
@@ -187,7 +189,7 @@ public class Materials {
         Gold = register("gold", new Material(new Material.Settings()
                 .visual(COLOR_YELLOW, SHINY)
                 .element(Elements.Au)
-                .metal(2, 1065)
+                .metal(2)
                 .canCreateCables(VoltageTier.HV, 2, 2)
                 .mortarGrindable()
                 .flags(GENERATE_PLATE, GENERATE_FOIL))); //Has ore; Byproducts: Copper, Nickel; Foil used only in Chocolate Coin
@@ -200,7 +202,7 @@ public class Materials {
         Iron = register("iron", new Material(new Material.Settings()
                 .visual(0xAAAAAA, METALLIC)
                 .element(Elements.Fe)
-                .metal(2, 1539)
+                .metal(2)
                 .canCreateToolsWithDefaultEnchant(7.0F, 2.5F, 256, 14)
                 .canCreateCables(VoltageTier.MV, 2, 3)
                 .mortarGrindable()
@@ -217,14 +219,14 @@ public class Materials {
         Manganese = register("manganese", new Material(new Material.Settings()
                 .visual(0xEEEEEE, DULL)
                 .element(Elements.Mn)
-                .metal(2, 1246)
+                .metal(2)
                 .canCreateTools(7.0F, 2.0f, 512)
                 .flags(GENERATE_FOIL))); //Byproducts: Chrome, Iron - byproducts even though it does not have ore or is composite of them?
 
         Nickel = register("nickel", new Material(new Material.Settings()
                 .visual(0xAAAAFF, METALLIC)
                 .element(Elements.Ni)
-                .metal(2, 1455)
+                .metal(2)
                 .canCreateCables(VoltageTier.MV, 3, 3)
                 .mortarGrindable()
                 .plasma())); //Has ore; Byproducts: Cobalt, Platinum, Iron
@@ -238,14 +240,14 @@ public class Materials {
         Silicon = register("silicon", new Material(new Material.Settings()
                 .visual(0x3C3C50, METALLIC)
                 .element(Elements.Si)
-                .metal(2, 1414)
+                .metal(2)
                 .smeltsInBlastFurnace(1687)
                 .flags(GENERATE_PLATE, GENERATE_FOIL))); //Byproducts: SiliconDioxide - byproducts even though it does not have ore or is composite of them?
 
         Silver = register("silver", new Material(new Material.Settings()
                 .visual(0xDCDCFF, SHINY)
                 .element(Elements.Ag)
-                .metal(2, 962)
+                .metal(2)
                 .canCreateCables(VoltageTier.HV, 1, 1)
                 .mortarGrindable()
                 .flags(GENERATE_PLATE))); //Has ore; Byproducts: Lead, Sulfur
@@ -253,7 +255,7 @@ public class Materials {
         Tin = register("tin", new Material(new Material.Settings()
                 .visual(COLOR_VERY_LIGHT_GREY, DULL)
                 .element(Elements.Sn)
-                .metal(1, 232)
+                .metal(1)
                 .canCreateCables(VoltageTier.LV, 1, 1)
                 .baseForPumpComponent()
                 .mortarGrindable()
@@ -262,7 +264,7 @@ public class Materials {
         Zinc = register("zinc", new Material(new Material.Settings()
                 .visual(0xFAF0F0, METALLIC)
                 .element(Elements.Zn)
-                .metal(1, 420)
+                .metal(1)
                 .canCreateCables(VoltageTier.LV, 1, 1)
                 .mortarGrindable()
                 .flags(GENERATE_FOIL))); //Has ore; Byproducts: Tin, Gallium
@@ -272,7 +274,7 @@ public class Materials {
         AnnealedCopper = register("annealed_copper", new Material(new Material.Settings()
                 .visual(0xFF7814, SHINY)
                 .composition(MaterialComponent.of(Copper))
-                .metal(1, 1085)
+                .metal(1)
                 .canCreateCables(VoltageTier.MV, 1, 1)
                 .mortarGrindable()
                 .flags(GENERATE_FINE_WIRE)));
@@ -280,14 +282,14 @@ public class Materials {
         Brass = register("brass", new Material(new Material.Settings()
                 .visual(0xFFB400, METALLIC)
                 .composition(MaterialComponent.of(Zinc), MaterialComponent.of(Copper))
-                .metal(1, 919)
+                .metal(1)
                 .canCreateTools(8.0F, 3.0f, 152)
                 .mortarGrindable()));
 
         Bronze = register("bronze", new Material(new Material.Settings()
                 .visual(COLOR_ORANGE, DULL)
                 .composition(MaterialComponent.of(Tin), MaterialComponent.of(Copper, 3))
-                .metal(2, 872)
+                .metal(2)
                 .canCreateTools(6.0F, 2.5f, 192)
                 .canCreateFluidPipe(35, 2000, true)
                 .mortarGrindable()
@@ -310,7 +312,7 @@ public class Materials {
         CobaltBrass = register("cobalt_brass", new Material(new Material.Settings()
                 .visual(0xB4B4A0, METALLIC)
                 .composition(MaterialComponent.of(Brass, 7), MaterialComponent.of(Aluminium), MaterialComponent.of(Cobalt))
-                .metal(2, 955)
+                .metal(2)
                 .canCreateTools(8.0F, 2.0f, 256)
                 .flags(GENERATE_GEAR)));
 
@@ -324,7 +326,7 @@ public class Materials {
         Electrum = register("electrum", new Material(new Material.Settings()
                 .visual(0xFFFF64, SHINY)
                 .composition(MaterialComponent.of(Silver), MaterialComponent.of(Gold))
-                .metal(2, 1014)
+                .metal(2)
                 .canCreateCables(VoltageTier.HV, 3, 2)
                 .mortarGrindable()
                 .flags(GENERATE_ROD, GENERATE_FOIL, GENERATE_FINE_WIRE)));
@@ -339,20 +341,20 @@ public class Materials {
         Graphite = register("graphite", new Material(new Material.Settings()
                 .visual(COLOR_DARK_GREY, DULL)
                 .composition(MaterialComponent.of(Carbon))
-                .metal(2, 3600)
+                .metal(2)
                 .flammable())); //Has ore; Byproducts: Carbon
 
         Invar = register("invar", new Material(new Material.Settings()
                 .visual(0xB4B478, METALLIC)
                 .composition(MaterialComponent.of(Iron, 2), MaterialComponent.of(Nickel))
-                .metal(2, 1511)
+                .metal(2)
                 .canCreateToolsWithDefaultEnchant(7.0F, 3.0f, 512, 14, new EnchantmentData(BANE_OF_ARTHROPODS, 3))
                 .mortarGrindable())); //GENERATE_FRAME
 
         MagneticIron = register("magnetic_iron", new Material(new Material.Settings()
                 .visual(COLOR_LIGHT_GREY, MAGNETIC)
                 .composition(MaterialComponent.of(Iron))
-                .metal(2, 1539)
+                .metal(2)
                 .demagnetizeInto(()-> Iron)
                 .smeltsInArcFurnace(WroughtIron)
                 .flags(GENERATE_ROD)));
@@ -360,7 +362,7 @@ public class Materials {
         MagneticSteel = register("magnetic_steel", new Material(new Material.Settings()
                 .visual(COLOR_DARK_GREY, MAGNETIC)
                 .composition(MaterialComponent.of(Steel))
-                .metal(2, 1400)
+                .metal(2)
                 .smeltsInBlastFurnace(1000)
                 .demagnetizeInto(() -> Steel)
                 .flags(GENERATE_ROD)));
@@ -385,21 +387,21 @@ public class Materials {
                 .visual(0x151515, ROUGH)
                 .composition(MaterialComponent.of(Carbon, 5), MaterialComponent.of(Hydrogen, 8))
                 .polymer(1)
-                .property(FLUID_PROPERTIES, FluidProperties.fluid(FluidProperties.DEFAULT_TEMPERATURE))
+                .property(FLUID_PROPERTIES, FluidProperties.create(new MaterialFluidProperties(new MaterialFluidProperties.Settings().temperature(200)), MaterialFluidTexture.DEFAULT_FLUID)) //TODO: create texture for rubber, tweak values
                 .flammable()
                 .flags(GENERATE_PLATE, GENERATE_RING)));
 
         RedAlloy = register("red_alloy", new Material(new Material.Settings()
                 .visual(COLOR_DARK_RED, DULL)
                 .composition(MaterialComponent.of(Copper), MaterialComponent.of(Redstone))
-                .metal(1, FluidProperties.DEFAULT_TEMPERATURE) //Temperature?
+                .metal(1)
                 .canCreateCables(VoltageTier.ULV, 1, 0)
                 .flags(GENERATE_FINE_WIRE)));
 
         Steel = register("steel", new Material(new Material.Settings()
                 .visual(0x505050, DULL)
                 .composition(MaterialComponent.of(Iron))
-                .metal(2, 1400)
+                .metal(2)
                 .smeltsInBlastFurnace(1000)
                 .canCreateTools(6, 3, 512)
                 .canCreateCables(VoltageTier.EV, 2, 2)
@@ -414,7 +416,7 @@ public class Materials {
         StainlessSteel = register("stainless_steel", new Material(new Material.Settings()
                 .visual(0xC8C8DC, SHINY)
                 .composition(MaterialComponent.of(Iron, 6), MaterialComponent.of(Chrome), MaterialComponent.of(Manganese), MaterialComponent.of(Nickel))
-                .metal(2, 1538)
+                .metal(2)
                 .smeltsInBlastFurnace(1700)
                 .canCreateTools(7.0F, 4.0f, 480)
                 .canCreateFluidPipe(100, 3000, true)
@@ -434,7 +436,7 @@ public class Materials {
         WroughtIron = register("wrought_iron", new Material(new Material.Settings()
                 .visual(0xC8B4B4, METALLIC)
                 .composition(MaterialComponent.of(Iron))
-                .metal(2, 1539)
+                .metal(2)
                 .canCreateTools(6.0F, 3.5f, 384)
                 .mortarGrindable()
                 .flags(GENERATE_RING))); //Ring used only for Tripwire Hook

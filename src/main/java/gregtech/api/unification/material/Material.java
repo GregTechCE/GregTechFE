@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import gregtech.api.GTValues;
 import gregtech.api.enchants.EnchantmentData;
+import gregtech.api.fluids.MaterialFluidTexture;
+import gregtech.api.fluids.StandardMaterialFluidProperties;
 import gregtech.api.unification.element.Element;
 import gregtech.api.unification.material.flags.MaterialFlag;
 import gregtech.api.unification.material.flags.MaterialProperty;
@@ -192,26 +194,28 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
-        public Settings metal(int harvestLevel, int moltenTemperature) {
+        public Settings metal(int harvestLevel) {
             Preconditions.checkArgument(harvestLevel >= 0, "harvestLevel >= 0");
-            Preconditions.checkArgument(moltenTemperature >= 0, "moltenTemperature >= 0");
 
             flag(GENERATE_DUST);
             property(SOLID_FORM, SolidForm.METAL);
             property(HARVEST_LEVEL, harvestLevel);
-            property(FLUID_PROPERTIES, FluidProperties.fluid(moltenTemperature));
+            property(FLUID_PROPERTIES, FluidProperties.create(
+                    StandardMaterialFluidProperties.MOLTEN_FLUID, MaterialFluidTexture.MOLTEN_FLUID));
 
             return this;
         }
 
         public Settings fluid() {
-            property(FLUID_PROPERTIES, FluidProperties.fluid(FluidProperties.DEFAULT_TEMPERATURE));
+            property(FLUID_PROPERTIES, FluidProperties.create(
+                    StandardMaterialFluidProperties.DEFAULT_FLUID, MaterialFluidTexture.DEFAULT_FLUID));
 
             return this;
         }
 
         public Settings gas() {
-            property(FLUID_PROPERTIES, FluidProperties.gas(FluidProperties.DEFAULT_TEMPERATURE));
+            property(FLUID_PROPERTIES, FluidProperties.create(
+                    StandardMaterialFluidProperties.DEFAULT_GAS, MaterialFluidTexture.DEFAULT_GAS));
 
             return this;
         }
