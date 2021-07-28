@@ -9,7 +9,9 @@ public class Colors {
     public static final int COLOR_VERY_DARK_GREY = 0x646464;
     public static final int COLOR_DARK_RED = 0xC80000;
     public static final int COLOR_YELLOW = 0xFFFF00;
+    public static final int COLOR_DARK_YELLOW = 0xC8C800;
     public static final int COLOR_WHITE = 0xFFFFFF;
+    public static final int COLOR_LIGHT_BLACK = 0x323232;
 
     private Colors() {
     }
