@@ -198,7 +198,12 @@ public class Materials {
                 .canCreateCables(VoltageTier.MV, 1, 2)
                 .canCreateFluidPipe(25, 1000, true)
                 .mortarGrindable()
-                .smeltsInArcFurnace(AnnealedCopper)
+                .smeltsInArcFurnace(new Supplier<>() {
+                    @Override
+                    public Material get() {
+                        return AnnealedCopper;
+                    }
+                })
                 .flags(GENERATE_FOIL, GENERATE_FINE_WIRE))); //Has ore; Byproducts: Cobalt, Gold, Nickel
 
         Cobalt = register("cobalt", new Material(new Material.Settings()
@@ -263,7 +268,12 @@ public class Materials {
                         return MagneticIron;
                     }
                 })
-                .smeltsInArcFurnace(WroughtIron)
+                .smeltsInArcFurnace(new Supplier<>() {
+                    @Override
+                    public Material get() {
+                        return WroughtIron;
+                    }
+                })
                 .plasma()
                 .flags(GENERATE_PLATE, GENERATE_ROD, GENERATE_RING))); //Has ore; Ring used only for Tripwire Hook; GENERATE_FRAME
 
@@ -552,7 +562,12 @@ public class Materials {
                 .composition(MaterialComponent.of(Iron))
                 .metal(2)
                 .demagnetizeInto(()-> Iron)
-                .smeltsInArcFurnace(WroughtIron)
+                .smeltsInArcFurnace(new Supplier<>() {
+                    @Override
+                    public Material get() {
+                        return WroughtIron;
+                    }
+                })
                 .flags(GENERATE_ROD)));
 
         MagneticNeodymium = register("magnetic_neodymium", new Material(new Material.Settings()

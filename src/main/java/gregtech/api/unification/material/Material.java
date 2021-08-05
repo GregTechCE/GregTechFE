@@ -322,7 +322,7 @@ public class Material implements Comparable<Material> {
             return this;
         }
 
-        public Settings smeltsInArcFurnace(Material material) {
+        public Settings smeltsInArcFurnace(Supplier<Material> material) {
             property(ARC_SMELT_PROPERTY, ArcSmeltProperty.arcSmeltInto(material));
 
             return this;
