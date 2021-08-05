@@ -92,10 +92,15 @@ public class Materials {
     //Compounds (first degree)
     public static final Material Brass;
     public static final Material Bronze;
+    public static final Material Calcite;
+    public static final Material Cassiterite;
+    public static final Material Chalcopyrite;
+    public static final Material CarbonDioxide;
     public static final Material CobaltBrass;
     public static final Material Electrum;
     public static final Material Emerald;
     public static final Material Invar;
+    public static final Material Methane;
     public static final Material RawRubber;
     public static final Material Rubber;
     public static final Material StainlessSteel;
@@ -589,6 +594,26 @@ public class Materials {
                 .mortarGrindable()
                 .baseForPumpComponent()));
 
+        Calcite = register("calcite", new Material(new Material.Settings()
+                .visual(0xFAE6DC, DULL)
+                .composition(MaterialComponent.of(Calcium), MaterialComponent.of(Carbon), MaterialComponent.of(Oxygen, 3))
+                .dust(1))); //Has ore; Byproducts: Andradite, Malachite
+
+        Cassiterite = register("cassiterite", new Material(new Material.Settings()
+                .visual(COLOR_VERY_LIGHT_GREY, METALLIC)
+                .composition(MaterialComponent.of(Tin), MaterialComponent.of(Oxygen, 2))
+                .dust(1))); //Has ore; Byproducts: Tin, Bismuth; Ore multiplier: 2x; Direct smelting: Tin
+
+        Chalcopyrite = register("chalcopyrite", new Material(new Material.Settings()
+                .visual(0xA07828, DULL)
+                .composition(MaterialComponent.of(Copper), MaterialComponent.of(Iron), MaterialComponent.of(Sulfur, 2))
+                .dust(1))); //Has ore; Byproducts: Pyrite, Cobalt, Cadmium, Gold; Direct smelting: Copper
+
+        CarbonDioxide = register("carbon_dioxide", new Material(new Material.Settings()
+                .visual(COLOR_AIR_BLUE)
+                .composition(MaterialComponent.of(Carbon), MaterialComponent.of(Oxygen, 2))
+                .gas()));
+
         CobaltBrass = register("cobalt_brass", new Material(new Material.Settings()
                 .visual(0xB4B4A0, METALLIC)
                 .composition(MaterialComponent.of(Brass, 7), MaterialComponent.of(Aluminium), MaterialComponent.of(Cobalt))
@@ -617,6 +642,11 @@ public class Materials {
                 .metal(2)
                 .canCreateToolsWithDefaultEnchant(7.0F, 3.0f, 512, 14, new EnchantmentData(BANE_OF_ARTHROPODS, 3))
                 .mortarGrindable())); //GENERATE_FRAME
+
+        Methane = register("methane", new Material(new Material.Settings()
+                .visual(COLOR_WHITE)
+                .composition(MaterialComponent.of(Carbon), MaterialComponent.of(Hydrogen, 4))
+                .fluid()));
 
         RawRubber = register("raw_rubber", new Material(new Material.Settings()
                 .visual(0xCCC789, SAND)
@@ -687,23 +717,19 @@ public class Materials {
     /**
      * First Degree Compounds
      */
-    public static FluidMaterial Methane = new FluidMaterial(80, "methane", 0xFFFFFF, FLUID, of(new MaterialComponent(Carbon, 1), new MaterialComponent(Hydrogen, 4)), 0);
-    public static FluidMaterial CarbonDioxide = new FluidMaterial(81, "carbon_dioxide", 0xA9D0F5, FLUID, of(new MaterialComponent(Carbon, 1), new MaterialComponent(Oxygen, 2)), 0);
-    public static FluidMaterial NobleGases = new FluidMaterial(82, "noble_gases", 0xA9D0F5, FLUID, of(new MaterialComponent(CarbonDioxide, 25), new MaterialComponent(Helium, 11), new MaterialComponent(Methane, 4), new MaterialComponent(Deuterium, 2), new MaterialComponent(Radon, 1)), DISABLE_DECOMPOSITION);
-    public static FluidMaterial Air = new FluidMaterial(83, "air", 0xA9D0F5, FLUID, of(new MaterialComponent(Nitrogen, 40), new MaterialComponent(Oxygen, 11), new MaterialComponent(Argon, 1), new MaterialComponent(NobleGases, 1)), STATE_GAS | DISABLE_DECOMPOSITION);
-    public static FluidMaterial LiquidAir = new FluidMaterial(84, "liquid_air", 0xA9D0F5, FLUID, of(new MaterialComponent(Nitrogen, 40), new MaterialComponent(Oxygen, 11), new MaterialComponent(Argon, 1), new MaterialComponent(NobleGases, 1)), STATE_GAS | DISABLE_DECOMPOSITION);
+    //Composition of air is quite problematic as many components in small amount - let's skip it and have only manual recipes for decomposition?
+    public static FluidMaterial NobleGases = new FluidMaterial(82, "noble_gases", COLOR_AIR_BLUE, FLUID, of(new MaterialComponent(CarbonDioxide, 25), new MaterialComponent(Helium, 11), new MaterialComponent(Methane, 4), new MaterialComponent(Deuterium, 2), new MaterialComponent(Radon, 1)), DISABLE_DECOMPOSITION);
+    public static FluidMaterial Air = new FluidMaterial(83, "air", COLOR_AIR_BLUE, FLUID, of(new MaterialComponent(Nitrogen, 40), new MaterialComponent(Oxygen, 11), new MaterialComponent(Argon, 1), new MaterialComponent(NobleGases, 1)), STATE_GAS | DISABLE_DECOMPOSITION);
+    public static FluidMaterial LiquidAir = new FluidMaterial(84, "liquid_air", COLOR_AIR_BLUE, FLUID, of(new MaterialComponent(Nitrogen, 40), new MaterialComponent(Oxygen, 11), new MaterialComponent(Argon, 1), new MaterialComponent(NobleGases, 1)), STATE_GAS | DISABLE_DECOMPOSITION);
+
     public static GemMaterial Almandine = new GemMaterial(85, "almandine", 0xFF0000, GEM_VERTICAL, 1, of(new MaterialComponent(Aluminium, 2), new MaterialComponent(Iron, 3), new MaterialComponent(Silicon, 3), new MaterialComponent(Oxygen, 12)), STD_GEM);
     public static DustMaterial Andradite = new DustMaterial(86, "andradite", 0x967800, GEM_VERTICAL, 1, of(new MaterialComponent(Calcium, 3), new MaterialComponent(Iron, 2), new MaterialComponent(Silicon, 3), new MaterialComponent(Oxygen, 12)), 0); //Only available as byproduct; Only used for electrolyzing
-    public static DustMaterial Asbestos = new DustMaterial(88, "asbestos", 0xE6E6E6, SAND, 1, of(new MaterialComponent(Magnesium, 3), new MaterialComponent(Silicon, 2), new MaterialComponent(Hydrogen, 4), new MaterialComponent(Oxygen, 9)), 0); //Only available after electrolyzing; Only used for electrolyzing
     public static DustMaterial Ash = new DustMaterial(89, "ash", 0x969696, SAND, 1, of(new MaterialComponent(Carbon, 1)), DISABLE_DECOMPOSITION);
     public static DustMaterial BandedIron = new DustMaterial(90, "banded_iron", 0x915A5A, DULL, 2, of(new MaterialComponent(Iron, 2), new MaterialComponent(Oxygen, 3)), GENERATE_ORE);
     public static IngotMaterial BatteryAlloy = new IngotMaterial(91, "battery_alloy", 0x9C7CA0, DULL, 1, of(new MaterialComponent(Lead, 4), new MaterialComponent(Antimony, 1)), EXT_METAL);
     public static GemMaterial BlueTopaz = new GemMaterial(92, "blue_topaz", COLOR_BLUE, GEM_HORIZONTAL, 3, of(new MaterialComponent(Aluminium, 2), new MaterialComponent(Silicon, 1), new MaterialComponent(Fluorine, 2), new MaterialComponent(Hydrogen, 2), new MaterialComponent(Oxygen, 6)), STD_GEM | NO_SMASHING | NO_SMELTING | HIGH_SIFTER_OUTPUT, 7.0F, 3.0f, 256);
     public static DustMaterial Bone = new DustMaterial(93, "bone", 0xFFFFFF, ROUGH, 1, of(new MaterialComponent(Calcium, 1)), MORTAR_GRINDABLE | EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES);
     public static DustMaterial BrownLimonite = new DustMaterial(96, "brown_limonite", 0xC86400, METALLIC, 1, of(new MaterialComponent(Iron, 1), new MaterialComponent(Hydrogen, 1), new MaterialComponent(Oxygen, 2)), GENERATE_ORE);
-    public static DustMaterial Calcite = new DustMaterial(97, "calcite", 0xFAE6DC, DULL, 1, of(new MaterialComponent(Calcium, 1), new MaterialComponent(Carbon, 1), new MaterialComponent(Oxygen, 3)), GENERATE_ORE);
-    public static DustMaterial Cassiterite = new DustMaterial(98, "cassiterite", COLOR_VERY_LIGHT_GREY, METALLIC, 1, of(new MaterialComponent(Tin, 1), new MaterialComponent(Oxygen, 2)), GENERATE_ORE);
-    public static DustMaterial Chalcopyrite = new DustMaterial(100, "chalcopyrite", 0xA07828, DULL, 1, of(new MaterialComponent(Copper, 1), new MaterialComponent(Iron, 1), new MaterialComponent(Sulfur, 2)), GENERATE_ORE | INDUCTION_SMELTING_LOW_OUTPUT);
     public static DustMaterial Chromite = new DustMaterial(102, "chromite", 0x23140F, METALLIC, 1, of(new MaterialComponent(Iron, 1), new MaterialComponent(Chrome, 2), new MaterialComponent(Oxygen, 4)), GENERATE_ORE, null);
     public static GemMaterial Cinnabar = new GemMaterial(103, "cinnabar", 0x960000, EMERALD, 1, of(new MaterialComponent(Mercury, 1), new MaterialComponent(Sulfur, 1)), GENERATE_ORE | CRYSTALLISABLE);
     public static DustMaterial Clay = new DustMaterial(105, "clay", 0xC8C8DC, ROUGH, 1, of(new MaterialComponent(Sodium, 2), new MaterialComponent(Lithium, 1), new MaterialComponent(Aluminium, 2), new MaterialComponent(Silicon, 2), new MaterialComponent(Water, 6)), MORTAR_GRINDABLE);
@@ -1047,7 +1073,6 @@ public class Materials {
 
         Tetrahedrite.setDirectSmelting(Copper);
         Malachite.setDirectSmelting(Copper);
-        Chalcopyrite.setDirectSmelting(Copper);
         Tenorite.setDirectSmelting(Copper);
         Bornite.setDirectSmelting(Copper);
         Chalcocite.setDirectSmelting(Copper);
@@ -1059,7 +1084,6 @@ public class Materials {
         YellowLimonite.setDirectSmelting(Iron);
         BrownLimonite.setDirectSmelting(Iron);
         BandedIron.setDirectSmelting(Iron);
-        Cassiterite.setDirectSmelting(Tin);
         Garnierite.setDirectSmelting(Nickel);
         Cobaltite.setDirectSmelting(Cobalt);
         Stibnite.setDirectSmelting(Antimony);
@@ -1099,7 +1123,6 @@ public class Materials {
         Bauxite.setOreMultiplier(3);
         Rutile.setOreMultiplier(3);
 
-        Cassiterite.setOreMultiplier(2);
         CertusQuartz.setOreMultiplier(2);
 
         Phosphor.setOreMultiplier(3);
@@ -1128,7 +1151,6 @@ public class Materials {
         Enargite.addOreByProducts(Pyrite, Zinc, Quartzite);
         Tennantite.addOreByProducts(Iron, Antimony, Zinc);
 
-        Chalcopyrite.addOreByProducts(Pyrite, Cobalt, Cadmium, Gold);
         Sphalerite.addOreByProducts(GarnetYellow, Cadmium, Gallium, Zinc);
         Glauconite.addOreByProducts(Sodium, Aluminium, Iron);
         Bentonite.addOreByProducts(Aluminium, Calcium, Magnesium);
@@ -1142,7 +1164,6 @@ public class Materials {
         Cooperite.addOreByProducts(Palladium, Nickel, Iridium);
         Cinnabar.addOreByProducts(Redstone, Sulfur, Glowstone);
         Tantalite.addOreByProducts(Manganese, Niobium, Tantalum);
-        Asbestos.addOreByProducts(Asbestos, Silicon, Magnesium);
         Pentlandite.addOreByProducts(Iron, Sulfur, Cobalt);
         Uranium.addOreByProducts(Lead, Uranium235, Thorium);
         Scheelite.addOreByProducts(Manganese, Molybdenum, Calcium);
@@ -1177,7 +1198,6 @@ public class Materials {
         Andradite.addOreByProducts(GarnetYellow, Iron);
         Grossular.addOreByProducts(GarnetYellow, Calcium);
         Uvarovite.addOreByProducts(GarnetYellow, Chrome);
-        Calcite.addOreByProducts(Andradite, Malachite);
         NaquadahEnriched.addOreByProducts(Naquadah, Naquadria);
         Naquadah.addOreByProducts(NaquadahEnriched);
         Pyrolusite.addOreByProducts(Manganese);
@@ -1199,7 +1219,6 @@ public class Materials {
         Redrock.addOreByProducts(Clay);
         Marble.addOreByProducts(Calcite);
         Clay.addOreByProducts(Clay);
-        Cassiterite.addOreByProducts(Tin, Bismuth);
         GraniteBlack.addOreByProducts(Biotite);
         GraniteRed.addOreByProducts(PotassiumFeldspar);
         Phosphate.addOreByProducts(Phosphorus);
