@@ -22,9 +22,7 @@ import static gregtech.api.util.Colors.*;
 
 public class Materials {
 
-    /**
-     * Direct Elements
-     */
+    //Direct Elements
     public static final Material Aluminium;
     public static final Material Antimony;
     public static final Material Argon;
@@ -78,34 +76,35 @@ public class Materials {
     public static final Material Yttrium;
     public static final Material Zinc;
 
-    /**
-     * Compounds
-     */
-
+    //Compounds (one element)
     public static final Material AnnealedCopper;
-    public static final Material Brass;
-    public static final Material Bronze;
     public static final Material Charcoal;
     public static final Material Coal;
-    public static final Material CobaltBrass;
     public static final Material Diamond;
-    public static final Material Electrum;
-    public static final Material Emerald;
     public static final Material Graphite;
-    public static final Material Invar;
+    public static final Material Steel;
+    public static final Material WroughtIron;
+
     public static final Material MagneticIron;
     public static final Material MagneticNeodymium;
     public static final Material MagneticSteel;
-    public static final Material NetherQuartz;
-    public static final Material Paper;
+
+    //Compounds (first degree)
+    public static final Material Brass;
+    public static final Material Bronze;
+    public static final Material CobaltBrass;
+    public static final Material Electrum;
+    public static final Material Emerald;
+    public static final Material Invar;
     public static final Material RawRubber;
     public static final Material Rubber;
-    public static final Material RedAlloy;
-    public static final Material Steel;
     public static final Material StainlessSteel;
-    public static final Material Quartzite;
     public static final Material Water;
-    public static final Material WroughtIron;
+
+    public static final Material NetherQuartz;
+    public static final Material Paper;
+    public static final Material RedAlloy;
+    public static final Material Quartzite;
 
     private Materials(){
     }
@@ -114,12 +113,13 @@ public class Materials {
         return Registry.register(Material.REGISTRY, new Identifier(GTValues.MODID, name), material);
     }
 
+    //Direct Elements
     static {
         Aluminium = register("aluminium", new Material(new Material.Settings()
                 .visual(0x80C8F0, DULL)
                 .element(Elements.Al)
                 .metal(2)
-                .canCreateTools(10.0F,2.0F, 128)
+                .canCreateTools(10.0F, 2.0F, 128)
                 .canCreateCables(VoltageTier.EV, 1, 1)
                 .smeltsInBlastFurnace(1700)
                 .baseForElectricComponents()
@@ -281,7 +281,7 @@ public class Materials {
                 .visual(0x8C648C, DULL)
                 .element(Elements.Pb)
                 .metal(1)
-                .canCreateCables(VoltageTier.ULV, 2,1)
+                .canCreateCables(VoltageTier.ULV, 2, 1)
                 .mortarGrindable()
                 .flags(GENERATE_PLATE))); //Has ore; Byproducts: Silver, Sulfur
 
@@ -475,8 +475,10 @@ public class Materials {
                 .mortarGrindable()
                 .flags(GENERATE_FOIL))); //Has ore; Byproducts: Tin, Gallium
 
-        //Compounds
+    }
 
+    //Compounds (one element)
+    static {
         AnnealedCopper = register("annealed_copper", new Material(new Material.Settings()
                 .visual(0xFF7814, SHINY)
                 .composition(MaterialComponent.of(Copper))
@@ -485,6 +487,92 @@ public class Materials {
                 .mortarGrindable()
                 .flags(GENERATE_FINE_WIRE)));
 
+        Charcoal = register("charcoal", new Material(new Material.Settings()
+                .visual(0x644646, LIGNITE)
+                .composition(MaterialComponent.of(Carbon))
+                .gem(1, false, false)
+                .flammable(1600)
+                .mortarGrindable()));
+
+        Coal = register("coal", new Material(new Material.Settings()
+                .visual(0x464646, LIGNITE)
+                .composition(MaterialComponent.of(Carbon))
+                .gem(1, false, false)
+                .flammable(1600)
+                .mortarGrindable()));//Has Ore; Byproducts: Lignite, Thorium
+
+        Diamond = register("diamond", new Material(new Material.Settings()
+                .visual(0xC8FFFF, DIAMOND)
+                .composition(MaterialComponent.of(Carbon))
+                .gem(3, false, true)
+                .canCreateToolsWithDefaultEnchant(8.0F, 3.0f, 1280, 10)
+                .flags(GENERATE_LENS))); //Has ore; Byproducts: Graphite
+
+        Graphite = register("graphite", new Material(new Material.Settings()
+                .visual(COLOR_DARK_GREY, DULL)
+                .composition(MaterialComponent.of(Carbon))
+                .metal(2)
+                .flammable())); //Has ore; Byproducts: Carbon
+
+        Steel = register("steel", new Material(new Material.Settings()
+                .visual(0x505050, DULL)
+                .composition(MaterialComponent.of(Iron))
+                .metal(2)
+                .smeltsInBlastFurnace(1000)
+                .canCreateTools(6, 3, 512)
+                .canCreateCables(VoltageTier.EV, 2, 2)
+                .canCreateFluidPipe(50, 2500, true)
+                .canCreateCell(256000)
+                .mortarGrindable()
+                .baseForPumpComponent()
+                .baseForElectricComponents()
+                .baseForElectricToolHeads()
+                .polarizeInto(new Supplier<>() {
+                    @Override
+                    public Material get() {
+                        return MagneticSteel;
+                    }
+                })));
+
+        WroughtIron = register("wrought_iron", new Material(new Material.Settings()
+                .visual(0xC8B4B4, METALLIC)
+                .composition(MaterialComponent.of(Iron))
+                .metal(2)
+                .canCreateTools(6.0F, 3.5f, 384)
+                .mortarGrindable()
+                .flags(GENERATE_RING))); //Ring used only for Tripwire Hook
+
+        MagneticIron = register("magnetic_iron", new Material(new Material.Settings()
+                .visual(COLOR_LIGHT_GREY, MAGNETIC)
+                .composition(MaterialComponent.of(Iron))
+                .metal(2)
+                .demagnetizeInto(() -> Iron)
+                .smeltsInArcFurnace(new Supplier<>() {
+                    @Override
+                    public Material get() {
+                        return WroughtIron;
+                    }
+                })
+                .flags(GENERATE_ROD)));
+
+        MagneticNeodymium = register("magnetic_neodymium", new Material(new Material.Settings()
+                .visual(COLOR_VERY_DARK_GREY, MAGNETIC)
+                .composition(MaterialComponent.of(Neodymium))
+                .metal(2)
+                .demagnetizeInto(() -> Neodymium)
+                .flags(GENERATE_ROD)));
+
+        MagneticSteel = register("magnetic_steel", new Material(new Material.Settings()
+                .visual(COLOR_DARK_GREY, MAGNETIC)
+                .composition(MaterialComponent.of(Steel))
+                .metal(2)
+                .smeltsInBlastFurnace(1000)
+                .demagnetizeInto(() -> Steel)
+                .flags(GENERATE_ROD)));
+    }
+
+    //Compounds (first degree)
+    static {
         Brass = register("brass", new Material(new Material.Settings()
                 .visual(0xFFB400, METALLIC)
                 .composition(MaterialComponent.of(Zinc), MaterialComponent.of(Copper))
@@ -501,33 +589,12 @@ public class Materials {
                 .mortarGrindable()
                 .baseForPumpComponent()));
 
-        Charcoal = register("charcoal", new Material(new Material.Settings()
-                .visual(0x644646, LIGNITE)
-                .composition(MaterialComponent.of(Carbon))
-                .gem(1, false, false)
-                .flammable(1600)
-                .mortarGrindable()));
-
-        Coal = register("coal", new Material(new Material.Settings()
-                .visual(0x464646, LIGNITE)
-                .composition(MaterialComponent.of(Carbon))
-                .gem(1, false, false)
-                .flammable(1600)
-                .mortarGrindable()));//Has Ore; Byproducts: Lignite, Thorium
-
         CobaltBrass = register("cobalt_brass", new Material(new Material.Settings()
                 .visual(0xB4B4A0, METALLIC)
                 .composition(MaterialComponent.of(Brass, 7), MaterialComponent.of(Aluminium), MaterialComponent.of(Cobalt))
                 .metal(2)
                 .canCreateTools(8.0F, 2.0f, 256)
                 .flags(GENERATE_GEAR)));
-
-        Diamond = register("diamond", new Material(new Material.Settings()
-                .visual(0xC8FFFF, DIAMOND)
-                .composition(MaterialComponent.of(Carbon))
-                .gem(3, false, true)
-                .canCreateToolsWithDefaultEnchant(8.0F, 3.0f, 1280, 10)
-                .flags(GENERATE_LENS))); //Has ore; Byproducts: Graphite
 
         Electrum = register("electrum", new Material(new Material.Settings()
                 .visual(0xFFFF64, SHINY)
@@ -544,57 +611,12 @@ public class Materials {
                 .canCreateTools(10.0F, 2.0f, 368)
                 .flags(GENERATE_LENS)));// Has ore; Byproducts: Beryllium, Aluminium
 
-        Graphite = register("graphite", new Material(new Material.Settings()
-                .visual(COLOR_DARK_GREY, DULL)
-                .composition(MaterialComponent.of(Carbon))
-                .metal(2)
-                .flammable())); //Has ore; Byproducts: Carbon
-
         Invar = register("invar", new Material(new Material.Settings()
                 .visual(0xB4B478, METALLIC)
                 .composition(MaterialComponent.of(Iron, 2), MaterialComponent.of(Nickel))
                 .metal(2)
                 .canCreateToolsWithDefaultEnchant(7.0F, 3.0f, 512, 14, new EnchantmentData(BANE_OF_ARTHROPODS, 3))
                 .mortarGrindable())); //GENERATE_FRAME
-
-        MagneticIron = register("magnetic_iron", new Material(new Material.Settings()
-                .visual(COLOR_LIGHT_GREY, MAGNETIC)
-                .composition(MaterialComponent.of(Iron))
-                .metal(2)
-                .demagnetizeInto(()-> Iron)
-                .smeltsInArcFurnace(new Supplier<>() {
-                    @Override
-                    public Material get() {
-                        return WroughtIron;
-                    }
-                })
-                .flags(GENERATE_ROD)));
-
-        MagneticNeodymium = register("magnetic_neodymium", new Material(new Material.Settings()
-                .visual(COLOR_VERY_DARK_GREY, MAGNETIC)
-                .composition(MaterialComponent.of(Neodymium))
-                .metal(2)
-                .demagnetizeInto(()-> Neodymium)
-                .flags(GENERATE_ROD)));
-
-        MagneticSteel = register("magnetic_steel", new Material(new Material.Settings()
-                .visual(COLOR_DARK_GREY, MAGNETIC)
-                .composition(MaterialComponent.of(Steel))
-                .metal(2)
-                .smeltsInBlastFurnace(1000)
-                .demagnetizeInto(() -> Steel)
-                .flags(GENERATE_ROD)));
-
-        NetherQuartz = register("nether_quartz", new Material(new Material.Settings()
-                .visual(0xE6D2D2, QUARTZ)
-                .gem(1, true, false))); //Has ore; OreMultiplier=2; Byproducts: Netherrack
-
-        Paper = register("paper", new Material(new Material.Settings()
-                .visual(COLOR_WHITE, PAPER)
-                .polymer(1)
-                .mortarGrindable()
-                .flammable()
-                .flags(GENERATE_PLATE, GENERATE_RING)));
 
         RawRubber = register("raw_rubber", new Material(new Material.Settings()
                 .visual(0xCCC789, SAND)
@@ -609,28 +631,6 @@ public class Materials {
                 .flammable()
                 .flags(GENERATE_PLATE, GENERATE_RING)));
 
-        RedAlloy = register("red_alloy", new Material(new Material.Settings()
-                .visual(COLOR_DARK_RED, DULL)
-                .composition(MaterialComponent.of(Copper), MaterialComponent.of(Redstone))
-                .metal(1)
-                .canCreateCables(VoltageTier.ULV, 1, 0)
-                .flags(GENERATE_FINE_WIRE)));
-
-        Steel = register("steel", new Material(new Material.Settings()
-                .visual(0x505050, DULL)
-                .composition(MaterialComponent.of(Iron))
-                .metal(2)
-                .smeltsInBlastFurnace(1000)
-                .canCreateTools(6, 3, 512)
-                .canCreateCables(VoltageTier.EV, 2, 2)
-                .canCreateFluidPipe(50, 2500, true)
-                .canCreateCell(256000)
-                .mortarGrindable()
-                .baseForPumpComponent()
-                .baseForElectricComponents()
-                .baseForElectricToolHeads()
-                .polarizeInto(() ->MagneticSteel)));
-
         StainlessSteel = register("stainless_steel", new Material(new Material.Settings()
                 .visual(0xC8C8DC, SHINY)
                 .composition(MaterialComponent.of(Iron, 6), MaterialComponent.of(Chrome), MaterialComponent.of(Manganese), MaterialComponent.of(Nickel))
@@ -642,22 +642,34 @@ public class Materials {
                 .baseForPumpComponent()
                 .flags(GENERATE_GEAR)));
 
-        Quartzite = register("quartzite", new Material(new Material.Settings()
-                .visual(0xD2E6D2, QUARTZ)
-                .gem(1, true, false))); //Has ore; OreMultiplier=2; Byproducts: CertusQuartz, Barite
-
         Water = register("water", new Material(new Material.Settings()
                 .visual(COLOR_BLUE)
                 .composition(MaterialComponent.of(Hydrogen, 2), MaterialComponent.of(Oxygen))
                 .fluid())); //DISABLE_DECOMPOSITION, NO_RECYCLING
+    }
 
-        WroughtIron = register("wrought_iron", new Material(new Material.Settings()
-                .visual(0xC8B4B4, METALLIC)
-                .composition(MaterialComponent.of(Iron))
-                .metal(2)
-                .canCreateTools(6.0F, 3.5f, 384)
+    static {
+        NetherQuartz = register("nether_quartz", new Material(new Material.Settings()
+                .visual(0xE6D2D2, QUARTZ)
+                .gem(1, true, false))); //Has ore; OreMultiplier=2; Byproducts: Netherrack
+
+        Paper = register("paper", new Material(new Material.Settings()
+                .visual(COLOR_WHITE, PAPER)
+                .polymer(1)
                 .mortarGrindable()
-                .flags(GENERATE_RING))); //Ring used only for Tripwire Hook
+                .flammable()
+                .flags(GENERATE_PLATE, GENERATE_RING)));
+
+        RedAlloy = register("red_alloy", new Material(new Material.Settings()
+                .visual(COLOR_DARK_RED, DULL)
+                .composition(MaterialComponent.of(Copper), MaterialComponent.of(Redstone))
+                .metal(1)
+                .canCreateCables(VoltageTier.ULV, 1, 0)
+                .flags(GENERATE_FINE_WIRE)));
+
+        Quartzite = register("quartzite", new Material(new Material.Settings()
+                .visual(0xD2E6D2, QUARTZ)
+                .gem(1, true, false))); //Has ore; OreMultiplier=2; Byproducts: CertusQuartz, Barite
     }
 
     /**
