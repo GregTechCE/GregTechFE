@@ -55,11 +55,11 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
     private final float attackDamageMultiplier;
 
     protected final int damagePerSpecialAction;
-    private final int damagePerBlockBreak;
+    protected final int damagePerBlockBreak;
     private final int damagePerEntityAttack;
     private final int damagePerCraft;
 
-    private final long energyPerDurabilityPoint;
+    protected final long energyPerDurabilityPoint;
     private final int itemDamageChance;
 
     private final String translationKey;
@@ -98,6 +98,10 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
 
     public Material getMaterial() {
         return material;
+    }
+
+    public int getDamagePerBlockBreak(){
+        return damagePerBlockBreak;
     }
 
     @Override
@@ -175,8 +179,7 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
 
     @Override
     public final boolean isSuitableFor(BlockState state) {
-        int miningLevel = getMiningLevel();
-        return MiningLevelHelper.checkHarvestLevelRequirements(state, miningLevel) &&
+        return MiningLevelHelper.checkHarvestLevelRequirements(state, getMiningLevel()) &&
                 isCorrectToolForBlock(state);
     }
 
@@ -261,15 +264,10 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
 
     @Override
     public Pair<ItemDamageResult, ItemStack> attemptDamageItem(ItemStack itemStack, int damage, @Nullable LivingEntity entity, Simulation simulate) {
-        Ref<ItemStack> stackRef = new Ref<>(itemStack.copy());
-        LimitedConsumer<ItemStack> excess = LimitedConsumer.rejecting();
         Random random = new Random();
 
-        if (entity instanceof PlayerEntity playerEntity) {
-            excess = LimitedConsumer.fromConsumer(PlayerInvUtil.createPlayerInsertable(playerEntity));
-        }
-
-        ElectricItem electricItem = GTAttributes.ELECTRIC_ITEM.getFirstOrNull(stackRef, excess);
+        Ref<ItemStack> stackRef = new Ref<>(itemStack.copy());
+        ElectricItem electricItem = getElectricItem(stackRef, entity);
 
         if (electricItem != null) {
             long energyToUse = energyPerDurabilityPoint * damage;
@@ -298,5 +296,15 @@ public abstract class ToolItem extends GTItem implements CustomDamageItem, Custo
             }
         }
         return Pair.of(ItemDamageResult.DAMAGED, stackRef.obj);
+    }
+
+    @Nullable
+    public ElectricItem getElectricItem(Ref<ItemStack> stackRef, @Nullable LivingEntity entity) {
+        LimitedConsumer<ItemStack> excess = LimitedConsumer.rejecting();
+
+        if (entity instanceof PlayerEntity playerEntity) {
+            excess = LimitedConsumer.fromConsumer(PlayerInvUtil.createPlayerInsertable(playerEntity));
+        }
+        return GTAttributes.ELECTRIC_ITEM.getFirstOrNull(stackRef, excess);
     }
 }
