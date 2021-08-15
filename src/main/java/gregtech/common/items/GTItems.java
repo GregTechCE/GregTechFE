@@ -447,8 +447,8 @@ public class GTItems {
 
         SPRAY_EMPTY = register("spray_empty");
 
-        LARGE_FLUID_CELL_STEEL = register("large_fluid_cell_steel", new GTItem(new GTItemSettings().fluidStats(new FluidStats(FluidAmount.ofWhole(64000), true)).setMaxStackSize(16)));
-        LARGE_FLUID_CELL_TUNGSTEN_STEEL = register("large_fluid_cell_tungstensteel", new GTItem(new GTItemSettings().fluidStats(new FluidStats(FluidAmount.ofWhole(256000), true)).setMaxStackSize(16)));
+        LARGE_FLUID_CELL_STEEL = register("large_fluid_cell_steel", new GTItem(new GTItemSettings().fluidStats(new FluidStats(FluidAmount.ofWhole(64), true)).setMaxStackSize(16)));
+        LARGE_FLUID_CELL_TUNGSTEN_STEEL = register("large_fluid_cell_tungstensteel", new GTItem(new GTItemSettings().fluidStats(new FluidStats(FluidAmount.ofWhole(256), true)).setMaxStackSize(16)));
 
         /*
         for (int i = 0; i < EnumDyeColor.values().length; i++) {
