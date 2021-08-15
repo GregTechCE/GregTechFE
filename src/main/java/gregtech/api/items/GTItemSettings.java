@@ -22,4 +22,9 @@ public class GTItemSettings extends FabricItemSettings {
         this.electricStats = electricStats;
         return this;
     }
+
+    public GTItemSettings setMaxStackSize(int maxStackSize) {
+        this.maxCount(maxStackSize);
+        return this;
+    }
 }
