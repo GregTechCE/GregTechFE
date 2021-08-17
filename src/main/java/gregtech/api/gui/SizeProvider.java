@@ -1,7 +1,5 @@
 package gregtech.api.gui;
 
-import java.awt.*;
-
 /**
  * Provides GUI and screen sizes for aligning of widgets
  * according to the screen configuration and relative coordinates
@@ -32,15 +30,7 @@ public interface SizeProvider {
      */
     int getHeight();
 
-    default int getGuiLeft() {
-        return (getScreenWidth() - getWidth()) / 2;
-    }
+    int getGuiLeft();
 
-    default int getGuiTop() {
-        return (getScreenHeight() - getHeight()) / 2;
-    }
-
-    default Rectangle toScreenCoords(Rectangle widgetRect) {
-        return new Rectangle(getGuiLeft() + widgetRect.x, getGuiTop() + widgetRect.y, widgetRect.width, widgetRect.height);
-    }
+    int getGuiTop();
 }

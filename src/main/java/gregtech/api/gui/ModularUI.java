@@ -13,6 +13,7 @@ import gregtech.api.gui.util.Position;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -123,6 +124,16 @@ public final class ModularUI implements SizeProvider {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public int getGuiLeft() {
+        return (this.screenWidth - this.width) / 2;
+    }
+
+    @Override
+    public int getGuiTop() {
+        return (this.screenHeight - this.height) / 2;
     }
 
     /**

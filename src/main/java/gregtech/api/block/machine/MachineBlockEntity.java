@@ -1,10 +1,10 @@
 package gregtech.api.block.machine;
 
 import alexiil.mc.lib.attributes.*;
-import gregtech.api.block.machine.module.MachineModule;
-import gregtech.api.block.machine.module.MachineModuleContainer;
-import gregtech.api.block.machine.module.MachineModuleType;
-import gregtech.api.block.machine.module.api.OrientationKind;
+import gregtech.api.module.MachineModule;
+import gregtech.api.module.MachineModuleContainer;
+import gregtech.api.module.MachineModuleType;
+import gregtech.api.module.api.OrientationKind;
 import gregtech.api.render.model.state.ModelState;
 import gregtech.api.render.model.state.ModelStateManager;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;

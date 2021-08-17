@@ -17,10 +17,10 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
 
     protected int totalListHeight;
     protected int slotHeight;
-    protected int scrollOffset;
+    protected double scrollOffset;
     protected int scrollPaneWidth = 10;
-    protected int lastMouseX;
-    protected int lastMouseY;
+    protected double lastMouseX;
+    protected double lastMouseY;
     protected boolean draggedOnScrollBar;
 
     public ScrollableListWidget(int xPosition, int yPosition, int width, int height) {
@@ -38,12 +38,12 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
         return false;
     }
 
-    private void addScrollOffset(int offset) {
+    private void addScrollOffset(double offset) {
         this.scrollOffset = MathHelper.clamp(scrollOffset + offset, 0, totalListHeight - getSize().height);
         updateElementPositions();
     }
 
-    private boolean isOnScrollPane(int mouseX, int mouseY) {
+    private boolean isOnScrollPane(double mouseX, double mouseY) {
         Position pos = getPosition();
         Size size = getSize();
         return isMouseOver(pos.x + size.width - scrollPaneWidth, pos.y, scrollPaneWidth, size.height, mouseX, mouseY);
@@ -56,7 +56,7 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
 
     private void updateElementPositions() {
         Position position = getPosition();
-        int currentPosY = position.y - scrollOffset;
+        int currentPosY = position.y - (int) scrollOffset;
         int totalListHeight = 0;
         for (Widget widget : widgets) {
             Position childPosition = new Position(position.x, currentPosY);
@@ -101,11 +101,11 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
         GuiUtils.drawSolidRect(matrices, scrollX + 1, position.y + 1, paneSize - 2, size.height - 2, 0xFF888888, 0);
 
         int maxScrollOffset = totalListHeight - getSize().height;
-        float scrollPercent = maxScrollOffset == 0 ? 0 : scrollOffset / (maxScrollOffset * 1.0f);
+        double scrollPercent = maxScrollOffset == 0 ? 0 : scrollOffset / (maxScrollOffset * 1.0f);
         int scrollSliderHeight = 14;
-        int scrollSliderY = Math.round(position.y + (size.height - scrollSliderHeight) * scrollPercent);
+        int scrollSliderY = (int) Math.round(position.y + (size.height - scrollSliderHeight) * scrollPercent);
 
-        GuiUtils.drawGradientRect(matrices, scrollX + 1, scrollSliderY, paneSize - 2, scrollSliderHeight, 0xFF555555, 0xFF454545, 0);
+        GuiUtils.drawGradientRect(matrices, scrollX + 1,  scrollSliderY, paneSize - 2, scrollSliderHeight, 0xFF555555, 0xFF454545, 0);
 
         ScissorStack.useScissor(position.x, position.y, size.width - paneSize, size.height, () ->
             super.drawInBackground(matrices, finalMouseX, finalMouseY, deltaTicks, renderContext));
@@ -119,7 +119,7 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
         return isWidgetOverlapsScissor(widget);
     }
 
-    private boolean isPositionInsideScissor(int mouseX, int mouseY) {
+    private boolean isPositionInsideScissor(double mouseX, double mouseY) {
         return isMouseOverElement(mouseX, mouseY) && !isOnScrollPane(mouseX, mouseY);
     }
 
@@ -144,8 +144,8 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (isMouseOverElement(mouseX, mouseY, true)) {
-            int direction = -MathHelper.clamp(amount, -1, 1);
-            int moveDelta = direction * (slotHeight / 2);
+            double direction = -MathHelper.clamp(amount, -1, 1);
+            double moveDelta = direction * (slotHeight / 2.0);
             addScrollOffset(moveDelta);
             return true;
         }
@@ -167,7 +167,7 @@ public class ScrollableListWidget extends AbstractWidgetGroup {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        int mouseDelta = (mouseY - lastMouseY);
+        double mouseDelta = (mouseY - lastMouseY);
         this.lastMouseX = mouseX;
         this.lastMouseY = mouseY;
         if (draggedOnScrollBar) {

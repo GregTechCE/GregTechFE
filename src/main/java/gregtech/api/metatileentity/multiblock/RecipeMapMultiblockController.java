@@ -11,6 +11,7 @@ import gregtech.api.capability.impl.EnergyContainerList;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.capability.impl.MultiblockRecipeLogic;
+import gregtech.api.capability.internal.MultiblockAbility;
 import gregtech.api.multiblock.PatternMatchContext;
 import gregtech.api.recipe.Recipe;
 import gregtech.api.recipe.RecipeMap;

@@ -37,6 +37,16 @@ public abstract class Widget {
         this.position = this.parentPosition.add(selfPosition);
     }
 
+    public abstract Size getPreferredSize();
+
+    public abstract Size getActualSize();
+
+    public abstract void setActualSize(Size actualSize);
+
+    public abstract void setPosition(Position position);
+
+    public abstract void onWidgetLayoutChanged();
+
     public void setGui(ModularUI gui) {
         this.gui = gui;
     }

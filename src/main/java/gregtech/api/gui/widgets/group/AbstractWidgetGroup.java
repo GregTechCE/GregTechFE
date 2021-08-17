@@ -313,5 +313,4 @@ public class AbstractWidgetGroup extends Widget implements IGhostIngredientTarge
             widget.handleClientAction(widgetUpdateId, buffer);
         }
     }
-
 }

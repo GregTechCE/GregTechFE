@@ -16,6 +16,10 @@ public class Size {
         this.height = height;
     }
 
+    public Size add(Size other) {
+        return new Size(this.width + other.width, this.height + other.height);
+    }
+
     public int getWidth() {
         return width;
     }

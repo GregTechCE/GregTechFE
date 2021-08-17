@@ -123,7 +123,7 @@ public class TabGroup extends AbstractWidgetGroup {
         }
     }
 
-    private Pair<ITabInfo, int[]> getTabOnMouse(int mouseX, int mouseY) {
+    private Pair<ITabInfo, int[]> getTabOnMouse(double mouseX, double mouseY) {
         for (int tabIndex = 0; tabIndex < tabInfos.size(); tabIndex++) {
             ITabInfo tabInfo = tabInfos.get(tabIndex);
             int[] tabSizes = tabListRenderer.getTabPos(tabIndex, sizes.getWidth(), sizes.getHeight());
@@ -136,7 +136,7 @@ public class TabGroup extends AbstractWidgetGroup {
         return null;
     }
 
-    private static boolean isMouseOverTab(int mouseX, int mouseY, int[] tabSizes) {
+    private static boolean isMouseOverTab(double mouseX, double mouseY, int[] tabSizes) {
         int minX = tabSizes[0];
         int minY = tabSizes[1];
         int maxX = tabSizes[0] + tabSizes[2];
