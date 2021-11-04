@@ -2,21 +2,27 @@ package gregtech.common.tools;
 
 import alexiil.mc.lib.attributes.Simulation;
 import gregtech.api.capability.item.CustomDamageItem;
+import gregtech.api.items.toolitem.MiningToolItem;
 import gregtech.api.items.toolitem.ToolItemSettings;
 import gregtech.api.items.toolitem.ToolItemType;
 import gregtech.api.unification.material.Material;
+import gregtech.api.util.TaskScheduler;
 import gregtech.mixin.accessor.AxeItemAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.HoneycombItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
@@ -27,7 +33,7 @@ import java.util.Optional;
 public class AxeItem extends MiningToolItem {
 
     public AxeItem(ToolItemSettings settings, ToolItemType toolItemType, Material material) {
-        super(settings, toolItemType, material);
+        super(settings, toolItemType, material, BlockTags.AXE_MINEABLE);
     }
 
     private static Optional<BlockState> tryConvertBlockAndPlayEffects(ItemUsageContext context) {
@@ -92,5 +98,27 @@ public class AxeItem extends MiningToolItem {
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
+    }
+
+    public static boolean applyTimberAxe(ItemStack itemStack, World world, BlockState state, BlockPos blockPos, LivingEntity player) {
+        if(TreeChopTask.isLogBlock(state) == 1) {
+            if(!world.isClient()) {
+                ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
+                if (playerMP.getItemCooldownManager().isCoolingDown(itemStack.getItem()))
+                    return false;
+                TreeChopTask treeChopTask = new TreeChopTask(blockPos, world, playerMP, itemStack);
+                TaskScheduler.scheduleTask(world, treeChopTask);
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
+        return miner.isSneaking() ?
+                CustomDamageItem.damageItem(miner, Hand.MAIN_HAND, damagePerBlockBreak, Simulation.ACTION) :
+                applyTimberAxe(stack, world, state, pos, miner);
     }
 }

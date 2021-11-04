@@ -3,6 +3,7 @@ package gregtech.common.tools;
 import alexiil.mc.lib.attributes.Simulation;
 import com.mojang.datafixers.util.Pair;
 import gregtech.api.capability.item.CustomDamageItem;
+import gregtech.api.items.toolitem.MiningToolItem;
 import gregtech.api.items.toolitem.ToolItemSettings;
 import gregtech.api.items.toolitem.ToolItemType;
 import gregtech.api.unification.material.Material;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,7 +25,7 @@ import java.util.function.Predicate;
 public class HoeItem extends MiningToolItem {
 
     public HoeItem(ToolItemSettings settings, ToolItemType toolItemType, Material material) {
-        super(settings, toolItemType, material);
+        super(settings, toolItemType, material, BlockTags.HOE_MINEABLE);
     }
 
     @Override

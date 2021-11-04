@@ -2,6 +2,7 @@ package gregtech.common.tools;
 
 import alexiil.mc.lib.attributes.Simulation;
 import gregtech.api.capability.item.CustomDamageItem;
+import gregtech.api.items.toolitem.MiningToolItem;
 import gregtech.api.items.toolitem.ToolItemSettings;
 import gregtech.api.items.toolitem.ToolItemType;
 import gregtech.api.unification.material.Material;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -25,7 +27,7 @@ import java.util.Optional;
 public class ShovelItem extends MiningToolItem {
 
     public ShovelItem(ToolItemSettings settings, ToolItemType toolItemType, Material material) {
-        super(settings, toolItemType, material);
+        super(settings, toolItemType, material, BlockTags.SHOVEL_MINEABLE);
     }
 
     private static Optional<BlockState> tryConvertBlockAndPlayEffects(ItemUsageContext context) {
